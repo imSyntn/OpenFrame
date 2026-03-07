@@ -1,0 +1,11 @@
+export const NAME_CHAR_LIMIT = 80;
+export const BIO_CHAR_LIMIT = 160;
+export const LOCATION_CHAR_LIMIT = 100;
+export const LINK_NAME_CHAR_LIMIT = 30;
+export const LINK_URL_CHAR_LIMIT = 150;
+export const PIC_DESCRIPTION_CHAR_LIMIT = 4000;
+export const PIC_ALT_CHAR_LIMIT = 150;
+export const PIC_TITLE_CHAR_LIMIT = 60;
+export const TAG_NAME_CHAR_LIMIT = 30;
+export const COLLECTION_TITLE_CHAR_LIMIT = 60;
+export const COLLECTION_DESCRIPTION_CHAR_LIMIT = 4000;
