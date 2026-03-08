@@ -1,11 +1,15 @@
 import express from "express";
 import passport from "passport";
-import { generateAccessToken, generateRefreshToken } from "../utils/JWT.js";
+import {
+  googleAuthController,
+  signinController,
+  signupController,
+} from "@/controller";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", (req, res) => {});
-authRouter.post("/login", (req, res) => {});
+authRouter.post("/signup", signupController);
+authRouter.post("/signin", signinController);
 
 authRouter.get(
   "/google",
@@ -22,33 +26,7 @@ authRouter.get(
     failureRedirect: "http://localhost:3000/signup?error=Authentication failed",
     session: false,
   }),
-  (req, res) => {
-    if (!req.user) {
-      console.log("Authentication failed");
-      return res.status(400).json({ error: "Authentication failed" });
-    }
-
-    const profile = req.user as any;
-
-    const accessToken = generateAccessToken(profile);
-    const refreshToken = generateRefreshToken(profile);
-
-    res.cookie("access_token", accessToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 15,
-    });
-
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
-
-    res.redirect("http://localhost:3000");
-  },
+  googleAuthController,
 );
 
 authRouter.get("/me", (req, res) => {

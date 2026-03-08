@@ -1,3 +1,5 @@
+import { createUser, getUser } from "@/service/user.service.js";
+import { GoogleUserType } from "@workspace/types";
 import dotenv from "dotenv";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -22,24 +24,13 @@ passport.use(
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
-      // you can write some algorithms here based on your application models and all
-      // an example - not related to this application
-
-      /*
-   const exist = await User.findOne({ email: profile["emails"][0].value });
-   if (!exist) {
-        await User.create({
-        email: profile["emails"][0].value,
-          fullName: profile["displayName"],
-          avatar: profile["photos"][0].value,
-          username: profile["name"]["givenName"],
-          verified: true,
-        });
+      let userExists = await getUser({
+        email: profile["emails"]?.[0].value as string,
+      });
+      if (!userExists) {
+        userExists = await createUser(profile as GoogleUserType);
       }
-    const user = await User.findOne({ email: profile["emails"][0].value });
- return done(null, user);
-*/
-      return done(null, profile);
+      return done(null, { ...profile, userExists });
     },
   ),
 );
