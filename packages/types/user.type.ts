@@ -45,6 +45,6 @@ export interface UserTypeDB {
   joined_at: string;
   avatar: string;
   bio?: string;
-  is_verified: Boolean;
+  is_verified: boolean;
   location?: string;
 }

@@ -1,19 +1,21 @@
 import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
-import axios from "axios";
+import { api } from "../axios";
 
 export const userSignup = (data: UserTypeUnregistered) => {
-  return axios.post("http://localhost:4000/api/auth/signup", data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  });
+  return api.post("/api/auth/signup", data);
 };
 export const userLogin = (data: UserLoginType) => {
-  return axios.post("http://localhost:4000/api/auth/signin", data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  });
+  return api.post("/api/auth/signin", data);
+};
+export const userOTPGenerate = (data: { email: string }) => {
+  return api.post("/api/auth/otp", data);
+};
+export const userOTPVerify = (data: { email: string; otp: string }) => {
+  return api.post("/api/auth/otp/verify", data);
+};
+export const userChangePassword = (data: {
+  email: string;
+  password: string;
+}) => {
+  return api.post("/api/auth/reset-password", data);
 };

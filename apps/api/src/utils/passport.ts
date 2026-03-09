@@ -14,13 +14,12 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   throw new Error("Missing Google OAuth credentials");
 }
 
-//initialize
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:4000/api/auth/google/callback",
+      callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`,
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {

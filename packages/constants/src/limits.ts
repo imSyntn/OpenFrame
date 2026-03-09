@@ -5,6 +5,7 @@ export const EMAIL_MIN_CHAR_LIMIT = 3;
 export const PASSWORD_MAX_CHAR_LIMIT = 30;
 export const PASSWORD_MIN_CHAR_LIMIT = 8;
 export const OTP_CHAR_LIMIT = 6;
+export const OTP_VALIDATION_TIME_LIMIT = 60 * 10;
 
 export const BIO_MAX_CHAR_LIMIT = 160;
 export const LOCATION_MAX_CHAR_LIMIT = 100;

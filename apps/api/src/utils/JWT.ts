@@ -21,6 +21,13 @@ export const generateAccessToken = (user: accessTokenPayload) => {
   );
 };
 
+export const accessTokenVerify = (token: string) => {
+  return jwt.verify(
+    token,
+    process.env.JWT_ACCESS_SECRET!,
+  ) as accessTokenPayload;
+};
+
 export const generateRefreshToken = (user: refreshTokenPayload) => {
   const { email, id } = user;
   return jwt.sign(

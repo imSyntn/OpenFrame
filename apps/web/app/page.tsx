@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@workspace/ui/components/button";
 import { useUserStore } from "@/store";
+import Link from "next/link";
 
 export default function Page() {
   const state = useUserStore((state) => state);
@@ -18,6 +19,7 @@ export default function Page() {
           >
             Outline
           </Button>
+          <Link href="/login">Login</Link>
         </div>
       </div>
     </div>

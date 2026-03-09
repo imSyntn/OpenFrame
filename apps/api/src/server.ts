@@ -17,7 +17,7 @@ dotenv.config({
 
 const app: Application = express();
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
