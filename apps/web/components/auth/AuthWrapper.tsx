@@ -1,13 +1,12 @@
 "use client";
 
-import { GalleryVerticalEndIcon } from "lucide-react";
 import { AUTH_PAGE_IMAGES } from "@workspace/constants";
-import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
+import { Logo } from "../common";
 
 export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const [index, setIndex] = useState<number | null>(null);
@@ -55,14 +54,7 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex gap-2 justify-start">
-          <Link href="/" className="flex items-center gap-2 font-medium">
-            <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <GalleryVerticalEndIcon className="size-4" />
-            </div>
-            Open Frame
-          </Link>
-        </div>
+        <Logo />
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">{children}</div>
         </div>

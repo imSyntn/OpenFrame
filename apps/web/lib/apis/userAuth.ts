@@ -7,6 +7,9 @@ export const userSignup = (data: UserTypeUnregistered) => {
 export const userLogin = (data: UserLoginType) => {
   return api.post("/api/auth/signin", data);
 };
+export const userLogout = () => {
+  return api.get("/api/auth/logout");
+};
 export const userOTPGenerate = (data: { email: string }) => {
   return api.post("/api/auth/otp", data);
 };
