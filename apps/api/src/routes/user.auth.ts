@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import {
   googleAuthController,
+  logoutController,
   meController,
   otpGenerateController,
   otpVerifyController,
@@ -39,10 +40,6 @@ authRouter.get(
 
 authRouter.get("/me", authMiddleware, meController);
 
-authRouter.post("/logout", (req, res) => {
-  req.logout(() => {
-    res.sendStatus(200);
-  });
-});
+authRouter.get("/logout", logoutController);
 
 export { authRouter };

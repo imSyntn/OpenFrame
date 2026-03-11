@@ -91,6 +91,8 @@ model Src {
   pic_id     String
   resolution Resolution
   url        String
+  width      Int
+  height     Int
   type       Type
   size       Int
   picture    Picture    @relation(fields: [pic_id], references: [id], onDelete: Cascade)
