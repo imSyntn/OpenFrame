@@ -39,9 +39,10 @@ type Props = {
   photo: any;
   width: number;
   height: number;
+  showUser: boolean;
 };
 
-export function PhotoWithBlurHash({ photo, width, height }: Props) {
+export function PhotoWithBlurHash({ photo, width, height, showUser }: Props) {
   const [loaded, setLoaded] = useState(false);
   const user = photo?.user;
 
@@ -65,7 +66,7 @@ export function PhotoWithBlurHash({ photo, width, height }: Props) {
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
 
-      {user && (
+      {showUser && user && (
         <div className="absolute inset-0 flex items-end p-3 bg-black/0 group-hover:bg-black/40 transition">
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition text-white">
             <img src={user.avatar} className="w-7 h-7 rounded-full" />

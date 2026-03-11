@@ -2,7 +2,7 @@ import React from "react";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background mx-auto max-w-7xl px-6 pt-10 pb-4">
+    <footer className="border-t bg-background mx-auto max-w-8xl px-6 pt-10 pb-4">
       <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
         <div className="text-center md:text-left">
           <p className="text-lg font-semibold">OpenFrame</p>

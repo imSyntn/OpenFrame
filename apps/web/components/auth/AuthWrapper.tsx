@@ -29,7 +29,7 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   if (index === null) return null;
 
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
+    <div className="max-w-8xl mx-auto grid min-h-svh lg:grid-cols-2">
       <div className="relative hidden lg:block">
         <Image
           src={AUTH_PAGE_IMAGES[index]!}

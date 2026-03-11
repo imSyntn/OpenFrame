@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { TagSelector } from "./TagSelector";
 import { TagDetail } from "./TagDetail";
-import { MasonryGrid } from "../common";
+import { MasonryGrid } from "./MasonryGrid";
 
 export function ExploreSection() {
   const [tags, setTags] = useState<string[]>([
@@ -31,7 +31,7 @@ export function ExploreSection() {
   const [selectedTag, setSelectedTag] = useState("Trending");
 
   return (
-    <main className="px-10 min-h-screen">
+    <div className="px-10 min-h-screen max-w-8xl mx-auto">
       <TagSelector
         tags={tags}
         selectedTag={selectedTag}
@@ -45,6 +45,6 @@ export function ExploreSection() {
       />
 
       <MasonryGrid tag={selectedTag} />
-    </main>
+    </div>
   );
 }

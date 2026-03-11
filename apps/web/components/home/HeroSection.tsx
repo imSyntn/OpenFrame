@@ -6,7 +6,7 @@ const arr = ["Nature", "Architecture", "Wallpapers", "Film", "Minimalist"];
 
 export function HeroSection() {
   return (
-    <section className="relative flex h-[60dvh] flex-col items-center justify-center px-6 text-center">
+    <div className="relative flex h-[60dvh] flex-col items-center justify-center px-6 text-center">
       <div className="absolute inset-0 -z-10">
         <img
           src="https://image.lexica.art/full_webp/20f41277-2043-4f0f-83b8-f1bc4eb31181"
@@ -57,6 +57,6 @@ export function HeroSection() {
           </span>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
