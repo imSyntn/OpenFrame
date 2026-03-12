@@ -1,5 +1,5 @@
 import { Header } from "@/components/common";
-import { Content, HeroSection } from "@/components/profile";
+import { Content, HeroSection, Settings } from "@/components/profile";
 import React from "react";
 
 export default async function page({
@@ -14,6 +14,7 @@ export default async function page({
       <Header />
       <HeroSection id={id} />
       <Content />
+      <Settings />
     </>
   );
 }

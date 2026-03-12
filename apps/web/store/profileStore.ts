@@ -17,4 +17,9 @@ export const useProfileStore = create<ProfileStore>((set) => ({
   pictures: null,
 
   setData: (data) => set({ ...data }),
+  addPictures: (data) =>
+    set((state) => {
+      if (!state.pictures) return { pictures: data };
+      return { pictures: [...state.pictures, ...data] };
+    }),
 }));

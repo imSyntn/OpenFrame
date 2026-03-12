@@ -33,6 +33,9 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { cn } from "@workspace/ui/lib/utils";
+import { notFound, useRouter } from "next/navigation";
+import { useUserDetails } from "@/hooks";
+import { toast } from "sonner";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -71,10 +74,10 @@ export const user: ProfileType = {
     pictures: 24,
   },
   metrics: {
-    follower: 1245,
-    following: 98,
     total_downloads: 54321,
     total_likes: 18234,
+    follower: 1245,
+    following: 98,
   },
   links: [
     {
@@ -2008,23 +2011,50 @@ export const user: ProfileType = {
 
 export function HeroSection({ id }: { id: string }) {
   const loggedInUserID = useUserStore((state) => state.id);
-  const isLoading = useProfileStore((state) => state.isLoading);
-  const setData = useProfileStore((state) => state.setData);
-  const avatar = useProfileStore((state) => state.avatar);
-  const name = useProfileStore((state) => state.name);
-  const location = useProfileStore((state) => state.location);
-  const bio = useProfileStore((state) => state.bio);
-  const links = useProfileStore((state) => state.links);
-  const email = useProfileStore((state) => state.email);
-  const is_verified = useProfileStore((state) => state.is_verified);
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const {
+    isLoading,
+    setData,
+    avatar,
+    name,
+    location,
+    bio,
+    links,
+    email,
+    is_verified,
+    metrics,
+  } = useProfileStore();
+  const {
+    data,
+    isLoading: userDetailsLoading,
+    error,
+    isSuccess,
+  } = useUserDetails(id);
+
+  const router = useRouter();
 
   const isOwner = loggedInUserID === id;
 
   useEffect(() => {
-    setTimeout(() => {
-      setData({ ...user, isLoading: false });
-    }, 2000);
-  }, []);
+    if (!userDetailsLoading) {
+      console.log(data);
+      if (isSuccess) {
+        setData({
+          ...data,
+          isLoading: false,
+        });
+      } else {
+        setData({
+          isLoading: false,
+        });
+        console.log(error?.message);
+        if (error?.message.includes("404")) {
+          notFound();
+        }
+        toast.error("Unexpected error occured.");
+      }
+    }
+  }, [userDetailsLoading]);
 
   return (
     <div className="w-full max-w-8xl mx-auto px-6 md:px-8 my-10">
@@ -2054,7 +2084,13 @@ export function HeroSection({ id }: { id: string }) {
                 <h1 className="text-2xl md:text-3xl font-bold">{name}</h1>
 
                 {isOwner && (
-                  <Button size="icon" variant="ghost">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() =>
+                      router.push(`/profile/${loggedInUserID}?settings=true`)
+                    }
+                  >
                     <Settings size={18} />
                   </Button>
                 )}
@@ -2085,15 +2121,24 @@ export function HeroSection({ id }: { id: string }) {
             ) : (
               <>
                 <span>
-                  <strong className="text-foreground">1.2k</strong> Followers
+                  <strong className="text-foreground">
+                    {metrics?.follower}
+                  </strong>{" "}
+                  Followers
                 </span>
 
                 <span>
-                  <strong className="text-foreground">98</strong> Following
+                  <strong className="text-foreground">
+                    {metrics?.following}
+                  </strong>{" "}
+                  Following
                 </span>
 
                 <span>
-                  <strong className="text-foreground">54k</strong> Downloads
+                  <strong className="text-foreground">
+                    {metrics?.total_downloads}
+                  </strong>{" "}
+                  Downloads
                 </span>
 
                 {isOwner && !is_verified && (
@@ -2121,7 +2166,12 @@ export function HeroSection({ id }: { id: string }) {
             </>
           ) : (
             <>
-              <Button className="w-full md:w-auto px-6">Follow</Button>
+              <Button
+                className="w-full md:w-auto px-6"
+                disabled={isOwner || !isLoggedIn}
+              >
+                Follow
+              </Button>
 
               <ul className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Tooltip>

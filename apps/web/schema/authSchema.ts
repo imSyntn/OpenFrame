@@ -9,7 +9,7 @@ import {
 } from "@workspace/constants";
 import { z } from "zod";
 
-const emailSchema = z
+export const emailSchema = z
   .string()
   .min(
     EMAIL_MIN_CHAR_LIMIT,

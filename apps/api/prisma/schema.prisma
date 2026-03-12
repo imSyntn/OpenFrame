@@ -22,7 +22,7 @@ model User {
   followers   Follow[]     @relation("UserFollowing")
   following   Follow[]     @relation("UserFollowers")
   likes       Like[]
-  Links       Links[]
+  links       Links[]
   metrics     Metrics?
   pictures    Picture[]
 }

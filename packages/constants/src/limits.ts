@@ -17,3 +17,5 @@ export const PIC_TITLE_MAX_CHAR_LIMIT = 60;
 export const TAG_NAME_MAX_CHAR_LIMIT = 30;
 export const COLLECTION_TITLE_MAX_CHAR_LIMIT = 60;
 export const COLLECTION_DESCRIPTION_MAX_CHAR_LIMIT = 4000;
+
+export const PIC_PER_PAGE = 2;

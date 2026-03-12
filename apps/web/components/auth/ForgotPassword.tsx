@@ -1,7 +1,7 @@
 "use client";
 
 import { useChangePassword, useOTPGenerate, useOTPVerify } from "@/hooks";
-import { forgotPasswordSchema } from "@/schema/authSchema";
+import { forgotPasswordSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@workspace/ui/components/button";
 import {

@@ -1,4 +1,5 @@
 import { prisma, userCacheStore } from "@/db";
+import { Prisma } from "@prisma/client";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
 type GetUserPayload =
@@ -16,7 +17,7 @@ interface includeOptions {
   followers?: boolean;
   following?: boolean;
   likes?: boolean;
-  Links?: boolean;
+  links?: boolean;
   metrics?: boolean;
 }
 
@@ -34,17 +35,17 @@ interface omitOptions {
 }
 
 export const getUser = async (
-  data: GetUserPayload,
-  include?: includeOptions,
-  omit?: omitOptions,
+  user: GetUserPayload,
+  include?: Prisma.UserInclude,
+  omit?: Prisma.UserOmit,
 ) => {
   try {
     let key;
 
-    if ("email" in data) {
-      key = data.email;
+    if ("email" in user) {
+      key = user.email;
     } else {
-      key = data.id;
+      key = user.id;
     }
 
     const userInCache = await userCacheStore.hget("user", key);
@@ -52,17 +53,17 @@ export const getUser = async (
       return JSON.parse(userInCache);
     }
 
-    const user = await prisma.user.findFirst({
-      where: data,
+    const userInDb = await prisma.user.findFirst({
+      where: user,
       include,
       omit,
     });
 
-    if (user) {
-      await userCacheStore.hset("user", key, JSON.stringify(user));
+    if (userInDb) {
+      await userCacheStore.hset("user", key, JSON.stringify(userInDb));
     }
 
-    return user;
+    return userInDb;
   } catch (error) {
     throw error;
   }
@@ -93,29 +94,86 @@ export const createUser = async (
   }
 };
 
-type updateUsingEmail = { email: string };
-type updateUsingId = { id: string };
-
 interface UpdateUserPayload {
-  where: updateUsingEmail | updateUsingId;
-  data: {
-    name?: string;
-    password?: string;
-    avatar?: string;
-    bio?: string;
-    is_verified?: boolean;
-    location?: string;
-  };
+  name?: string;
+  password?: string;
+  avatar?: string;
+  bio?: string;
+  is_verified?: boolean;
+  location?: string;
+  links?: {
+    name: string;
+    url: string;
+  }[];
 }
 
-export const updateUser = async (payload: UpdateUserPayload) => {
+export const updateUser = async (
+  user: GetUserPayload,
+  payload: UpdateUserPayload,
+  include?: includeOptions,
+  omit?: omitOptions,
+) => {
   try {
-    const user = await prisma.user.update({
-      where: payload.where,
-      data: payload.data,
+    let key;
+
+    if ("email" in user) {
+      key = user.email;
+    } else {
+      key = user.id;
+    }
+
+    const updates: any = { ...payload };
+
+    if ("links" in updates) {
+      updates.links = {
+        deleteMany: {},
+        create: updates.links,
+      };
+    }
+    const updatedUser = await prisma.user.update({
+      where: user,
+      data: updates,
+      include: include,
+      omit: omit,
     });
-    return user;
+
+    await userCacheStore.hdel("user", key);
+    await userCacheStore.hset("user", key, JSON.stringify(updatedUser));
+    return updatedUser;
   } catch (error) {
     throw error;
   }
 };
+
+// export const updateUser = async (payload: UpdateUserPayload) => {
+//   try {
+//     let key;
+
+//     if ("email" in payload.where) {
+//       key = payload.where.email;
+//     } else {
+//       key = payload.where.id;
+//     }
+
+//     const updates: any = { ...payload.data };
+
+//     if ("links" in updates) {
+//       updates.links = {
+//         deleteMany: {},
+//         create: updates.links,
+//       };
+//     }
+//     const user = await prisma.user.update({
+//       where: payload.where,
+//       data: updates,
+//       include: payload.include,
+//       omit: payload.omit,
+//     });
+
+//     await userCacheStore.hdel("user", key);
+//     await userCacheStore.hset("user", key, JSON.stringify(user));
+//     return user;
+//   } catch (error) {
+//     throw error;
+//   }
+// };

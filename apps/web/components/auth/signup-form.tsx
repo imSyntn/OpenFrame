@@ -15,7 +15,7 @@ import { Input } from "@workspace/ui/components/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/schema/authSchema";
+import { signupSchema } from "@/schema";
 import { googleLoginHandler } from "@/utils";
 import { useSignUp } from "@/hooks";
 import { UserTypeUnregistered } from "@workspace/types";

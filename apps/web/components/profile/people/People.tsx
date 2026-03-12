@@ -1,5 +1,7 @@
 "use client";
 
+import { useProfileStore, useUserStore } from "@/store";
+import { Button } from "@workspace/ui/components/button";
 import {
   Tabs,
   TabsContent,
@@ -42,6 +44,12 @@ export function People() {
 }
 
 function PeopleGrid({ type }: { type: "followers" | "following" }) {
+  const loggedUserId = useUserStore((state) => state.id);
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const id = useProfileStore((state) => state.id);
+
+  const isOwner = loggedUserId === id;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {Array.from({ length: 9 }).map((_, i) => (
@@ -63,9 +71,13 @@ function PeopleGrid({ type }: { type: "followers" | "following" }) {
             </div>
           </div>
 
-          <button className="text-xs px-3 py-1 border rounded-md hover:bg-muted transition">
+          <Button
+            variant="outline"
+            className="text-xs"
+            disabled={isOwner || !isLoggedIn}
+          >
             Follow
-          </button>
+          </Button>
         </div>
       ))}
     </div>

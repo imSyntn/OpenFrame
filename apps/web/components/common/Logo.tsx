@@ -12,7 +12,7 @@ export const Logo = () => {
         alt="Logo"
         className="h-7 w-7 dark:invert-100"
       />
-      <p className="text-nowrap">Open Frame</p>
+      <p className="text-nowrap hidden md:inline-block">Open Frame</p>
     </Link>
   );
 };

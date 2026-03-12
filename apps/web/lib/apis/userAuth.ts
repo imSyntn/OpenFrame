@@ -2,23 +2,23 @@ import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
 import { api } from "../axios";
 
 export const userSignup = (data: UserTypeUnregistered) => {
-  return api.post("/api/auth/signup", data);
+  return api.post("/api/user/signup", data);
 };
 export const userLogin = (data: UserLoginType) => {
-  return api.post("/api/auth/signin", data);
+  return api.post("/api/user/signin", data);
 };
 export const userLogout = () => {
-  return api.get("/api/auth/logout");
+  return api.get("/api/user/logout");
 };
 export const userOTPGenerate = (data: { email: string }) => {
-  return api.post("/api/auth/otp", data);
+  return api.post("/api/user/otp", data);
 };
 export const userOTPVerify = (data: { email: string; otp: string }) => {
-  return api.post("/api/auth/otp/verify", data);
+  return api.post("/api/user/otp/verify", data);
 };
 export const userChangePassword = (data: {
   email: string;
   password: string;
 }) => {
-  return api.post("/api/auth/reset-password", data);
+  return api.post("/api/user/reset-password", data);
 };

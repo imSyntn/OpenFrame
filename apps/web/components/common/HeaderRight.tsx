@@ -20,9 +20,11 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { toast } from "sonner";
 import { userLogout } from "@/lib/apis";
+import { LogIn, Upload, UserPlus } from "lucide-react";
 
 export function HeaderRight() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const id = useUserStore((state) => state.id);
   const avatar = useUserStore((state) => state.avatar);
   const name = useUserStore((state) => state.name);
   const setUser = useUserStore((state) => state.setUser);
@@ -72,9 +74,24 @@ export function HeaderRight() {
 
   if (isLoggedIn) {
     return (
-      <>
-        <Button className="bg-chart-2">Submit Photo</Button>
+      <div className="flex items-center gap-2 md:gap-3">
+        <Button
+          size="icon"
+          className="bg-chart-2 md:hidden"
+          onClick={() => router.push("/submit")}
+        >
+          <Upload size={18} />
+        </Button>
+
+        <Button
+          className="bg-chart-2 hidden md:inline-flex"
+          onClick={() => router.push("/submit")}
+        >
+          Submit Photo
+        </Button>
+
         <ThemeToggle />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
@@ -84,16 +101,21 @@ export function HeaderRight() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent className="w-32">
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => router.push("/profile")}>
+              <DropdownMenuItem onClick={() => router.push(`/profile/${id}`)}>
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/settings")}>
+              <DropdownMenuItem
+                onClick={() => router.push(`/profile?settings=true`)}
+              >
                 Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem variant="destructive" onClick={logoutHandler}>
                 Log out
@@ -101,18 +123,47 @@ export function HeaderRight() {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </>
+      </div>
     );
   }
+
   return (
-    <>
-      <Button variant="ghost" onClick={() => router.push("/login")}>
+    <div className="flex items-center gap-2 md:gap-3">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        onClick={() => router.push("/login")}
+      >
+        <LogIn size={18} />
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        onClick={() => router.push("/signup")}
+      >
+        <UserPlus size={18} />
+      </Button>
+
+      <Button
+        variant="ghost"
+        className="hidden md:inline-flex"
+        onClick={() => router.push("/login")}
+      >
         Login
       </Button>
-      <Button variant="secondary" onClick={() => router.push("/signup")}>
+
+      <Button
+        variant="secondary"
+        className="hidden md:inline-flex"
+        onClick={() => router.push("/signup")}
+      >
         Signup
       </Button>
+
       <ThemeToggle />
-    </>
+    </div>
   );
 }

@@ -39,17 +39,17 @@ export interface ProfileType {
   email: string;
   joined_at: string;
   avatar: string;
-  bio: string;
+  bio: string | null;
   is_verified: boolean;
-  location: string;
+  location: string | null;
   _count: {
     pictures: number;
   } | null;
   metrics: {
-    follower: number;
-    following: number;
     total_downloads: number;
     total_likes: number;
+    follower: number;
+    following: number;
   } | null;
   links:
     | {
@@ -62,4 +62,5 @@ export interface ProfileType {
 export interface ProfileStore extends ProfileType {
   isLoading: boolean;
   setData: (data: Partial<ProfileStore>) => void;
+  addPictures: (data: PictureType[]) => void;
 }

@@ -14,7 +14,7 @@ import {
 import { Input } from "@workspace/ui/components/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "@/schema/authSchema";
+import { loginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ForgotPassword from "./ForgotPassword";
 import { googleLoginHandler } from "@/utils";

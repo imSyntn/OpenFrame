@@ -22,8 +22,10 @@ import bcrypt from "bcryptjs";
 import {
   EMAIL_MAX_CHAR_LIMIT,
   OTP_VALIDATION_TIME_LIMIT,
+  PIC_PER_PAGE,
 } from "@workspace/constants";
 import { otpStore } from "@/db";
+import { Prisma } from "@prisma/client";
 
 export const googleAuthController = async (
   req: Request,
@@ -268,10 +270,7 @@ export const resetPasswordController = async (
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await updateUser({
-      where: { email },
-      data: { password: hashedPassword },
-    });
+    await updateUser({ email }, { password: hashedPassword });
 
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
@@ -284,30 +283,90 @@ export const resetPasswordController = async (
   }
 };
 
-export const meController = async (
+export const getUserController = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { id } = req.user as UserTypeDB;
-    const user = await getUser(
-      { id },
-      {
-        pictures: true,
-        _count: true,
-        collection: true,
-        followers: true,
-        following: true,
-        likes: true,
-        Links: true,
-        metrics: true,
+    const id = req.params.id as string;
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "User ID is required"));
+    }
+
+    const include: Prisma.UserInclude = {
+      pictures: {
+        take: PIC_PER_PAGE,
+        orderBy: {
+          created_at: "desc",
+        },
+        include: {
+          src: true,
+          metadata: true,
+        },
       },
-      {
-        google_id: true,
-        password: true,
+      _count: {
+        select: {
+          pictures: true,
+          collection: true,
+        },
       },
-    );
+      collection: true,
+      followers: true,
+      following: true,
+      likes: true,
+      links: true,
+      metrics: true,
+    };
+    const exclude = {
+      google_id: true,
+      password: true,
+    };
+
+    const user = await getUser({ id }, include, exclude);
+
+    if (!user) {
+      return next(new ErrorWithStatus(404, "User not found"));
+    }
+
+    return res.status(200).json({ data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id as string;
+    const { id: tokenID } = req.user as UserTypeDB;
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "User ID is required"));
+    }
+
+    if (id !== tokenID) {
+      return next(
+        new ErrorWithStatus(
+          403,
+          "You are not authorized to perform this action.",
+        ),
+      );
+    }
+
+    const include = {
+      links: true,
+    };
+    const exclude = {
+      google_id: true,
+      password: true,
+    };
+
+    const user = await updateUser({ id }, req.body, include, exclude);
 
     return res.status(200).json({ data: user });
   } catch (error) {

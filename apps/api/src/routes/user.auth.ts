@@ -1,14 +1,15 @@
 import express from "express";
 import passport from "passport";
 import {
+  getUserController,
   googleAuthController,
   logoutController,
-  meController,
   otpGenerateController,
   otpVerifyController,
   resetPasswordController,
   signinController,
   signupController,
+  updateUserController,
 } from "@/controller";
 import { authMiddleware } from "@/middleware";
 
@@ -38,7 +39,8 @@ authRouter.get(
   googleAuthController,
 );
 
-authRouter.get("/me", authMiddleware, meController);
+authRouter.get("/:id", getUserController);
+authRouter.patch("/:id", authMiddleware, updateUserController);
 
 authRouter.get("/logout", logoutController);
 

@@ -4,7 +4,7 @@ import express, {
   type Response,
 } from "express";
 import dotenv from "dotenv";
-import { authRouter } from "@/routes";
+import { authRouter, pictureRouter } from "@/routes";
 import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
@@ -26,10 +26,11 @@ app.get("/api/health", (req: Request, res: Response) => {
   return res.status(200).json({ message: "OK" });
 });
 
-app.use("/api/auth", authRouter);
+app.use("/api/user", authRouter);
+app.use("/api/picture", pictureRouter);
 
 app.use(errorMiddleware);
 
-app.listen(4000, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("Server started on port 4000");
 });
