@@ -8,6 +8,7 @@ import {
   generateAccessToken,
   generateOtp,
   generateRefreshToken,
+  refreshTokenVerify,
 } from "../utils";
 import { userSigninSchema, userSignupSchema } from "@/schema";
 import { ErrorWithStatus } from "@/middleware";
@@ -24,7 +25,7 @@ import {
   OTP_VALIDATION_TIME_LIMIT,
   PIC_PER_PAGE,
 } from "@workspace/constants";
-import { otpStore } from "@/db";
+import { otpStore } from "@/lib";
 import { Prisma } from "@prisma/client";
 
 export const googleAuthController = async (
@@ -47,12 +48,12 @@ export const googleAuthController = async (
     const accessToken = generateAccessToken({ name, email, id: userExists.id });
     const refreshToken = generateRefreshToken({ email, id: userExists.id });
 
-    res.cookie("access_token", accessToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 15,
-    });
+    // res.cookie("access_token", accessToken, {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   secure: false,
+    //   maxAge: 1000 * 60 * 15,
+    // });
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
@@ -62,7 +63,7 @@ export const googleAuthController = async (
     });
 
     res.redirect(
-      `${process.env.FRONTEND_URL}?id=${userExists.id}&name=${userExists.name}&email=${userExists.email}&avatar=${userExists.avatar}`,
+      `${process.env.FRONTEND_URL}?id=${userExists.id}&name=${userExists.name}&email=${userExists.email}&avatar=${userExists.avatar}&accessToken=${accessToken}`,
     );
   } catch (error) {
     next(error);
@@ -102,12 +103,12 @@ export const signinController = async (
     id: userExists.id,
   });
 
-  res.cookie("access_token", accessToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: false,
-    maxAge: 1000 * 60 * 15,
-  });
+  // res.cookie("access_token", accessToken, {
+  //   httpOnly: true,
+  //   sameSite: "lax",
+  //   secure: false,
+  //   maxAge: 1000 * 60 * 15,
+  // });
 
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
@@ -123,6 +124,7 @@ export const signinController = async (
       avatar: userExists.avatar,
       email,
       id: userExists.id,
+      accessToken,
     },
   });
 };
@@ -152,12 +154,12 @@ export const signupController = async (
     const accessToken = generateAccessToken({ name, email, id: newUser.id });
     const refreshToken = generateRefreshToken({ email, id: newUser.id });
 
-    res.cookie("access_token", accessToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 15,
-    });
+    // res.cookie("access_token", accessToken, {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   secure: false,
+    //   maxAge: 1000 * 60 * 15,
+    // });
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
@@ -168,7 +170,13 @@ export const signupController = async (
 
     return res.status(201).json({
       message: "User created successfully",
-      data: { name, email, avatar: newUser.avatar, id: newUser.id },
+      data: {
+        name,
+        email,
+        avatar: newUser.avatar,
+        id: newUser.id,
+        accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -371,6 +379,43 @@ export const updateUserController = async (
     return res.status(200).json({ data: user });
   } catch (error) {
     next(error);
+  }
+};
+
+export const refreshTokenController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = req.cookies["refresh_token"];
+
+    if (!token) {
+      return next(new ErrorWithStatus(401, "You are not logged in."));
+    }
+    const decoded = refreshTokenVerify(token);
+    const user = await getUser({ id: decoded.id });
+    if (!user) {
+      return next(new ErrorWithStatus(404, "User not found"));
+    }
+
+    const accessToken = generateAccessToken({
+      name: user.name,
+      email: user.email,
+      id: user.id,
+    });
+
+    return res.status(200).json({
+      data: {
+        name: user.name,
+        avatar: user.avatar,
+        email: user.email,
+        id: user.id,
+        accessToken,
+      },
+    });
+  } catch (error) {
+    return next(error);
   }
 };
 

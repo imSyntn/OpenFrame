@@ -6,27 +6,20 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "./Form";
 
-export function Settings() {
-  const params = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const open = !!params.get("settings");
-
+export function SettingsModal({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
   const handleClose = () => {
-    const newParams = new URLSearchParams(params.toString());
-    newParams.delete("settings");
-
-    router.replace(`${pathname}?${newParams.toString()}`);
+    setOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger className="cursor-pointer">{children}</DialogTrigger>
       <DialogContent className="min-w-[95vw] sm:min-w-[80vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Profile Settings</DialogTitle>

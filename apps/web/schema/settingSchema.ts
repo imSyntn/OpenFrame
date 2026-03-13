@@ -6,6 +6,7 @@ import {
 } from "@workspace/constants";
 
 export const settingSchema = z.object({
+  avatar: z.string().url("Invalid URL").optional(),
   name: nameSchema.optional(),
   bio: z
     .string()

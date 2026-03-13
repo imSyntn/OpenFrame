@@ -22,3 +22,7 @@ export const userChangePassword = (data: {
 }) => {
   return api.post("/api/user/reset-password", data);
 };
+export const userRefreshToken = async () => {
+  const res = await api.get("/api/user/refresh-token");
+  return res.data.data;
+};

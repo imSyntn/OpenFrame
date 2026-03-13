@@ -1,3 +1,3 @@
 export * from "./HeroSection";
 export * from "./Content";
-export * from "./Settings";
+export * from "./settings/SettingsModal";

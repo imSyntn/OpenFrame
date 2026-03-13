@@ -1,5 +1,5 @@
 import { ErrorWithStatus } from "@/middleware";
-import { getUserPictures } from "@/service";
+import { getPictureUploadUrl, getUserPictures } from "@/service";
 import { Request, Response, NextFunction } from "express";
 
 export const getUserPicturesController = async (
@@ -20,6 +20,26 @@ export const getUserPicturesController = async (
     );
 
     return res.status(200).json({ data: userPictures });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPictureUploadUrlController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { type, size } = req.body;
+
+    if (!type || !size) {
+      return next(new ErrorWithStatus(400, "Invalid type or size"));
+    }
+
+    const urlData = await getPictureUploadUrl(type, size);
+
+    return res.status(200).json({ data: urlData });
   } catch (error) {
     next(error);
   }

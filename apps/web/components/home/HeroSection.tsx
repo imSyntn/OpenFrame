@@ -18,9 +18,9 @@ export function HeroSection() {
 
         <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/20 to-background dark:from-black/40 dark:via-black/20 dark:to-background" />
       </div>
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-center sm:text-left">
         Free High-Resolution
-        <br />
+        <br className="hidden sm:block" />
         <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
           Photos for Creators
         </span>

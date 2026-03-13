@@ -1,6 +1,9 @@
-import { prisma } from "@/db";
+import { prisma, s3 } from "@/lib";
 import { PIC_PER_PAGE } from "@workspace/constants";
-import { userCacheStore } from "@/db";
+import { userCacheStore } from "@/lib";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { nanoid } from "nanoid";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const getUserPictures = async (id: string, page: number) => {
   const cacheKey = `${id}:${page}`;
@@ -29,4 +32,22 @@ export const getUserPictures = async (id: string, page: number) => {
   );
 
   return pictures;
+};
+
+export const getPictureUploadUrl = async (type: string, size: number) => {
+  const id = nanoid();
+  const Key = `avatars/${id}.${type.split("/")[1]}`;
+  const command = new PutObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key,
+    ContentType: type,
+    ContentLength: size,
+    CacheControl: "public, max-age=31536000, immutable",
+    ACL: "public-read",
+  });
+
+  const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+  const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.${process.env.AWS_ENDPOINT_URL_S3?.split("https://")[1]}/${Key}`;
+
+  return { uploadUrl, fileUrl };
 };

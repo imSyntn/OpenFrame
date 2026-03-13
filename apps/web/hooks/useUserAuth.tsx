@@ -3,9 +3,10 @@ import {
   userLogin,
   userOTPGenerate,
   userOTPVerify,
+  userRefreshToken,
   userSignup,
 } from "@/lib/apis";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
 
 export const useSignUp = () => {
@@ -32,5 +33,12 @@ export const useChangePassword = () => {
   return useMutation({
     mutationFn: (data: { email: string; password: string }) =>
       userChangePassword(data),
+  });
+};
+export const useRefreshToken = () => {
+  return useQuery({
+    queryKey: ["refresh-token"],
+    queryFn: () => userRefreshToken(),
+    retry: false,
   });
 };

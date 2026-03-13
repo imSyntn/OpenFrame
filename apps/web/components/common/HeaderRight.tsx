@@ -36,9 +36,10 @@ export function HeaderRight() {
   const nameParam = params.get("name");
   const emailParam = params.get("email");
   const avatarParam = params.get("avatar");
+  const accessToken = params.get("accessToken");
 
   useEffect(() => {
-    if (!isLoggedIn && idParam && emailParam && nameParam) {
+    if (!isLoggedIn && idParam && emailParam && nameParam && accessToken) {
       console.log(idParam, nameParam, emailParam);
       setUser({
         id: idParam,
@@ -46,12 +47,15 @@ export function HeaderRight() {
         email: emailParam,
         avatar: avatarParam || avatar,
         isLoggedIn: true,
+        accessToken,
       });
       const newParams = new URLSearchParams(params.toString());
-      ["id", "name", "email", "avatar"].forEach((key) => newParams.delete(key));
+      ["id", "name", "email", "avatar", "accessToken"].forEach((key) =>
+        newParams.delete(key),
+      );
       router.replace(`?${newParams.toString()}`);
     }
-  }, [idParam, nameParam, emailParam, avatarParam]);
+  }, [idParam, nameParam, emailParam, avatarParam, accessToken]);
 
   const logoutHandler = async () => {
     try {
@@ -62,6 +66,7 @@ export function HeaderRight() {
           name: "",
           email: "",
           avatar: "",
+          accessToken: "",
           isLoggedIn: false,
         });
         toast.success("Logged out successfully");

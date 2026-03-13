@@ -22,8 +22,8 @@ import {
   Camera,
   Video,
   MapPin,
-  Settings,
   LucideIcon,
+  SettingsIcon,
 } from "lucide-react";
 import { useProfileStore, useUserStore } from "@/store";
 import { ProfileType } from "@/@types";
@@ -33,9 +33,10 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { cn } from "@workspace/ui/lib/utils";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { useUserDetails } from "@/hooks";
 import { toast } from "sonner";
+import { SettingsModal } from "./settings/SettingsModal";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -2013,7 +2014,7 @@ export function HeroSection({ id }: { id: string }) {
   const loggedInUserID = useUserStore((state) => state.id);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const {
-    isLoading,
+    // isLoading,
     setData,
     avatar,
     name,
@@ -2024,37 +2025,26 @@ export function HeroSection({ id }: { id: string }) {
     is_verified,
     metrics,
   } = useProfileStore();
-  const {
-    data,
-    isLoading: userDetailsLoading,
-    error,
-    isSuccess,
-  } = useUserDetails(id);
-
-  const router = useRouter();
+  const { data, isLoading, error, isError } = useUserDetails(id);
 
   const isOwner = loggedInUserID === id;
 
   useEffect(() => {
-    if (!userDetailsLoading) {
+    if (!isLoading && !isError) {
       console.log(data);
-      if (isSuccess) {
-        setData({
-          ...data,
-          isLoading: false,
-        });
-      } else {
-        setData({
-          isLoading: false,
-        });
-        console.log(error?.message);
-        if (error?.message.includes("404")) {
-          notFound();
-        }
-        toast.error("Unexpected error occured.");
-      }
+      setData({
+        ...data,
+        isLoading: false,
+      });
     }
-  }, [userDetailsLoading]);
+  }, [isLoading, isError]);
+
+  if (error) {
+    if ((error as any)?.response?.status === 404) {
+      notFound();
+    }
+    toast.error("Unexpected error occurred");
+  }
 
   return (
     <div className="w-full max-w-8xl mx-auto px-6 md:px-8 my-10">
@@ -2064,7 +2054,7 @@ export function HeroSection({ id }: { id: string }) {
             <Skeleton className="size-28 md:size-36 rounded-full" />
           ) : (
             <img
-              src={avatar}
+              src={avatar || undefined}
               alt={name}
               className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover border-4 border-white shadow-lg"
             />
@@ -2084,15 +2074,9 @@ export function HeroSection({ id }: { id: string }) {
                 <h1 className="text-2xl md:text-3xl font-bold">{name}</h1>
 
                 {isOwner && (
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() =>
-                      router.push(`/profile/${loggedInUserID}?settings=true`)
-                    }
-                  >
-                    <Settings size={18} />
-                  </Button>
+                  <SettingsModal>
+                    <SettingsIcon size={18} />
+                  </SettingsModal>
                 )}
               </div>
 
@@ -2122,21 +2106,21 @@ export function HeroSection({ id }: { id: string }) {
               <>
                 <span>
                   <strong className="text-foreground">
-                    {metrics?.follower}
+                    {metrics?.follower ?? 0}
                   </strong>{" "}
                   Followers
                 </span>
 
                 <span>
                   <strong className="text-foreground">
-                    {metrics?.following}
+                    {metrics?.following ?? 0}
                   </strong>{" "}
                   Following
                 </span>
 
                 <span>
                   <strong className="text-foreground">
-                    {metrics?.total_downloads}
+                    {metrics?.total_downloads ?? 0}
                   </strong>{" "}
                   Downloads
                 </span>

@@ -6,6 +6,7 @@ import {
   logoutController,
   otpGenerateController,
   otpVerifyController,
+  refreshTokenController,
   resetPasswordController,
   signinController,
   signupController,
@@ -39,6 +40,7 @@ authRouter.get(
   googleAuthController,
 );
 
+authRouter.get("/refresh-token", refreshTokenController);
 authRouter.get("/:id", getUserController);
 authRouter.patch("/:id", authMiddleware, updateUserController);
 

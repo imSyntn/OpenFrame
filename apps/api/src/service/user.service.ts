@@ -1,4 +1,4 @@
-import { prisma, userCacheStore } from "@/db";
+import { prisma, userCacheStore } from "@/lib";
 import { Prisma } from "@prisma/client";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
@@ -114,14 +114,6 @@ export const updateUser = async (
   omit?: omitOptions,
 ) => {
   try {
-    let key;
-
-    if ("email" in user) {
-      key = user.email;
-    } else {
-      key = user.id;
-    }
-
     const updates: any = { ...payload };
 
     if ("links" in updates) {
@@ -137,42 +129,44 @@ export const updateUser = async (
       omit: omit,
     });
 
-    await userCacheStore.hdel("user", key);
-    await userCacheStore.hset("user", key, JSON.stringify(updatedUser));
+    const pipeline = userCacheStore.pipeline();
+    pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
+    pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
+
+    const res = await pipeline.exec();
+    if (!res) {
+      console.log("❌ Failed to update user in cache");
+    }
     return updatedUser;
   } catch (error) {
     throw error;
   }
 };
 
-// export const updateUser = async (payload: UpdateUserPayload) => {
+// export const refreshTokenService = async () => {
 //   try {
-//     let key;
-
-//     if ("email" in payload.where) {
-//       key = payload.where.email;
-//     } else {
-//       key = payload.where.id;
-//     }
-
-//     const updates: any = { ...payload.data };
-
-//     if ("links" in updates) {
-//       updates.links = {
-//         deleteMany: {},
-//         create: updates.links,
-//       };
-//     }
-//     const user = await prisma.user.update({
-//       where: payload.where,
-//       data: updates,
-//       include: payload.include,
-//       omit: payload.omit,
+//     const updatedUser = await prisma.user.update({
+//       where: user,
+//       data: {
+//         access_token: generateAccessToken({
+//           name: user.name,
+//           email: user.email,
+//           id: user.id,
+//         }),
+//       },
+//       include: include,
+//       omit: omit,
 //     });
 
-//     await userCacheStore.hdel("user", key);
-//     await userCacheStore.hset("user", key, JSON.stringify(user));
-//     return user;
+//     const pipeline = userCacheStore.pipeline();
+//     pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
+//     pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
+
+//     const res = await pipeline.exec();
+//     if (!res) {
+//       console.log("❌ Failed to update user in cache");
+//     }
+//     return updatedUser;
 //   } catch (error) {
 //     throw error;
 //   }

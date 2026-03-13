@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorWithStatus } from "./error";
-import { accessTokenVerify } from "@/utils";
+import { accessTokenVerify, refreshTokenVerify } from "@/utils";
 
 export const authMiddleware = (
   req: Request,
@@ -8,7 +8,13 @@ export const authMiddleware = (
   next: NextFunction,
 ) => {
   try {
-    const token = req.cookies["access_token"];
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(new ErrorWithStatus(401, "You are not logged in."));
+    }
+
+    const token = authHeader.split(" ")[1];
 
     if (!token) {
       return next(new ErrorWithStatus(401, "You are not logged in."));
@@ -18,6 +24,6 @@ export const authMiddleware = (
     req.user = decoded;
     next();
   } catch (error) {
-    return next(new ErrorWithStatus(401, "Invalid or expired token."));
+    return next(new ErrorWithStatus(401, "You are not logged in."));
   }
 };

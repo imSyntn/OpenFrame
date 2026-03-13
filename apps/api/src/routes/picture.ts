@@ -1,12 +1,22 @@
 import { Router } from "express";
-import { getUserPicturesController } from "../controller/picture.controller";
+import {
+  getPictureUploadUrlController,
+  getUserPicturesController,
+} from "../controller/picture.controller";
+import { authMiddleware } from "@/middleware";
 
 const pictureRouter = Router();
+
+pictureRouter.get("/user/:id/:page", getUserPicturesController);
+
+pictureRouter.post(
+  "/upload-url",
+  authMiddleware,
+  getPictureUploadUrlController,
+);
 
 pictureRouter.get("/:id", (req, res) => {
   return res.status(200).json({ message: "OK" });
 });
-
-pictureRouter.get("/user/:id/:page", getUserPicturesController);
 
 export { pictureRouter };
