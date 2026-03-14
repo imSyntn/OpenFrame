@@ -19,3 +19,5 @@ export const COLLECTION_TITLE_MAX_CHAR_LIMIT = 60;
 export const COLLECTION_DESCRIPTION_MAX_CHAR_LIMIT = 4000;
 
 export const PIC_PER_PAGE = 2;
+export const MAX_AVATAR_SIZE = 2 * 1024 * 1024;
+export const MAX_PICTURE_SIZE = 10 * 1024 * 1024;

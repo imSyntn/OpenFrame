@@ -7,6 +7,7 @@ dotenv.config({
 
 type accessTokenPayload = Pick<UserType, "email" | "name" | "id">;
 type refreshTokenPayload = Pick<UserType, "email" | "id">;
+type verificationTokenPayload = { email: string; otp: string };
 
 export const generateAccessToken = (user: accessTokenPayload) => {
   const { email, name, id } = user;
@@ -19,6 +20,25 @@ export const generateAccessToken = (user: accessTokenPayload) => {
     process.env.JWT_ACCESS_SECRET!,
     { expiresIn: "15m" },
   );
+};
+
+export const generateVerificationToken = (user: verificationTokenPayload) => {
+  const { email, otp } = user;
+  return jwt.sign(
+    {
+      email,
+      otp,
+    },
+    process.env.JWT_VERIFICATION_SECRET!,
+    { expiresIn: "10m" },
+  );
+};
+
+export const verifyVerificationToken = (token: string) => {
+  return jwt.verify(
+    token,
+    process.env.JWT_VERIFICATION_SECRET!,
+  ) as verificationTokenPayload;
 };
 
 export const accessTokenVerify = (token: string) => {

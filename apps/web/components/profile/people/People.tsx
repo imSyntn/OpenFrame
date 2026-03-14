@@ -11,7 +11,7 @@ import {
 
 export function People() {
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[60dvh]">
       <Tabs defaultValue="Follower" className="flex flex-col md:flex-row">
         <TabsList
           variant="line"

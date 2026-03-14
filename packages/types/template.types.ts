@@ -9,7 +9,16 @@ export interface WelcomeTemplateGenerateType {
   dashboardUrl: string;
 }
 
+export interface EmailVerificationTemplateGenerateType {
+  name: string;
+  verificationUrl: string;
+  duration: string;
+}
+
 export interface EmailTemplateGenerateType {
-  type: "otp" | "welcome";
-  data: OTPTemplateGenerateType | WelcomeTemplateGenerateType;
+  type: "otp" | "welcome" | "email-verification";
+  data:
+    | OTPTemplateGenerateType
+    | WelcomeTemplateGenerateType
+    | EmailVerificationTemplateGenerateType;
 }

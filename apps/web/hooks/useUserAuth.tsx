@@ -4,7 +4,9 @@ import {
   userOTPGenerate,
   userOTPVerify,
   userRefreshToken,
+  userSendVerificationLink,
   userSignup,
+  userVerifyEmailToken,
 } from "@/lib/apis";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
@@ -40,5 +42,18 @@ export const useRefreshToken = () => {
     queryKey: ["refresh-token"],
     queryFn: () => userRefreshToken(),
     retry: false,
+  });
+};
+export const useSendVerificationLink = () => {
+  return useMutation({
+    mutationFn: ({ email }: { email: string }) =>
+      userSendVerificationLink(email),
+  });
+};
+export const useVerifyEmailToken = (token: string) => {
+  return useQuery({
+    queryKey: ["verify-email-token", token],
+    queryFn: () => userVerifyEmailToken(token),
+    retry: 1,
   });
 };

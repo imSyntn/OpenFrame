@@ -41,6 +41,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --success: oklch(0.72 0.17 150);
+  --success-foreground: oklch(0.2 0.02 150);
+
+  --processing: oklch(0.75 0.16 85);
+  --processing-foreground: oklch(0.25 0.02 85);
 }
 
 .dark {
@@ -76,6 +81,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --success: oklch(0.68 0.19 150);
+  --success-foreground: oklch(0.98 0.01 150);
+
+  --processing: oklch(0.7 0.17 85);
+  --processing-foreground: oklch(0.98 0.01 85);
 }
 
 @theme inline {
@@ -87,6 +97,10 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-processing: var(--processing);
+  --color-processing-foreground: var(--processing-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

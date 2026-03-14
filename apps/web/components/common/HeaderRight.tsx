@@ -21,8 +21,11 @@ import {
 import { toast } from "sonner";
 import { userLogout } from "@/lib/apis";
 import { LogIn, Upload, UserPlus } from "lucide-react";
+import { useRefreshToken } from "@/hooks";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 
 export function HeaderRight() {
+  const { data, isLoading, isError } = useRefreshToken();
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const id = useUserStore((state) => state.id);
   const avatar = useUserStore((state) => state.avatar);
@@ -57,6 +60,15 @@ export function HeaderRight() {
     }
   }, [idParam, nameParam, emailParam, avatarParam, accessToken]);
 
+  useEffect(() => {
+    if (data && !isLoading && !isError && !isLoggedIn) {
+      setUser({
+        ...data,
+        isLoggedIn: true,
+      });
+    }
+  }, [data, isLoading, isError, isLoggedIn]);
+
   const logoutHandler = async () => {
     try {
       const response = await userLogout();
@@ -76,6 +88,16 @@ export function HeaderRight() {
       toast.error("Logout failed");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 md:gap-3">
+        <Skeleton className="w-16 h-10 rounded-md" />
+        <Skeleton className="w-10 h-10 rounded-md" />
+        <Skeleton className="w-10 h-10 rounded-full" />
+      </div>
+    );
+  }
 
   if (isLoggedIn) {
     return (

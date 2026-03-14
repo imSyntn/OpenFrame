@@ -34,9 +34,16 @@ export const getUserPictures = async (id: string, page: number) => {
   return pictures;
 };
 
-export const getPictureUploadUrl = async (type: string, size: number) => {
+export const getPictureUploadUrl = async (
+  type: string,
+  size: number,
+  isAvatar: boolean,
+) => {
   const id = nanoid();
-  const Key = `avatars/${id}.${type.split("/")[1]}`;
+  const Key = isAvatar
+    ? `avatars/${id}.${type.split("/")[1]}`
+    : `pictures/${id}.${type.split("/")[1]}`;
+
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,
     Key,
@@ -50,4 +57,81 @@ export const getPictureUploadUrl = async (type: string, size: number) => {
   const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.${process.env.AWS_ENDPOINT_URL_S3?.split("https://")[1]}/${Key}`;
 
   return { uploadUrl, fileUrl };
+};
+
+export const getPictureTags = async () => {
+  const availableInCache = await userCacheStore.hget("pictures", "tags");
+
+  if (availableInCache) {
+    return JSON.parse(availableInCache);
+  }
+
+  const tags = await prisma.tag.findMany({});
+
+  await userCacheStore.hset(
+    "pictures",
+    "tags",
+    JSON.stringify(tags),
+    "EX",
+    60 * 60 * 24,
+  );
+
+  return tags;
+};
+
+export const createPicture = async (
+  title: string,
+  description: string,
+  tags: {
+    id: number;
+    name: string;
+  }[],
+  url: string,
+  userId: string,
+) => {
+  const getPreviousUploads = await userCacheStore.hget(
+    "picture:create",
+    userId,
+  );
+  const userUploadedPictures = JSON.parse(getPreviousUploads || "[]");
+
+  const addNew = [
+    ...userUploadedPictures,
+    {
+      id: nanoid(),
+      title,
+      description,
+      tags,
+      url,
+      processing: "ongoing",
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  console.log({
+    id: nanoid(),
+    title,
+    description,
+    tags,
+    url,
+    processing: true,
+  });
+
+  await userCacheStore.hset("picture:create", userId, JSON.stringify(addNew));
+};
+
+export const getAllPictureStatus = async (userId: string) => {
+  const availableInCache = await userCacheStore.hget("picture:create", userId);
+
+  return JSON.parse(availableInCache || "[]");
+};
+
+export const getPictureStatus = async (userId: string, pictureID: string) => {
+  const availableInCache = await userCacheStore.hget("picture:create", userId);
+
+  const data = JSON.parse(availableInCache || "[]");
+
+  const picture = data.find((item: any) => item.id === pictureID) || {};
+
+  return picture;
 };

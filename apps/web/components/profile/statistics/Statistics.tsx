@@ -8,7 +8,7 @@ export function Statistics() {
   const counts = useProfileStore((state) => state._count);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60dvh]">
       <StatCard value={counts?.pictures} label="Photos" />
       <StatCard value={metrics?.total_downloads} label="Downloads" />
       <StatCard value={metrics?.total_likes} label="Likes" />

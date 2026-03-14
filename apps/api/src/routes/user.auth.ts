@@ -8,9 +8,11 @@ import {
   otpVerifyController,
   refreshTokenController,
   resetPasswordController,
+  sendVerificationLinkController,
   signinController,
   signupController,
   updateUserController,
+  verifyEmailTokenController,
 } from "@/controller";
 import { authMiddleware } from "@/middleware";
 
@@ -39,6 +41,13 @@ authRouter.get(
   }),
   googleAuthController,
 );
+
+authRouter.post(
+  "/send-verification-link",
+  authMiddleware,
+  sendVerificationLinkController,
+);
+authRouter.get("/verify-email-token/:token", verifyEmailTokenController);
 
 authRouter.get("/refresh-token", refreshTokenController);
 authRouter.get("/:id", getUserController);

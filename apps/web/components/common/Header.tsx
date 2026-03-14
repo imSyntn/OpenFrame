@@ -4,10 +4,11 @@ import { HeaderRight } from "./HeaderRight";
 import { Input } from "@workspace/ui/components/input";
 import { Search } from "lucide-react";
 import { Logo } from "./Logo";
+import { cn } from "@workspace/ui/lib/utils";
 
-export function Header() {
+export function Header({ className }: { className?: string }) {
   return (
-    <header className="h-14 w-full border-b">
+    <header className={cn("h-14 w-full border-b", className)}>
       <div className="max-w-8xl mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 md:gap-6">
           <Logo />

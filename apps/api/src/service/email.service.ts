@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import {
   EmailTemplateGenerateType,
+  EmailVerificationTemplateGenerateType,
   OTPTemplateGenerateType,
   WelcomeTemplateGenerateType,
 } from "@workspace/types";
@@ -33,6 +34,13 @@ export const generateEmailTemplate = (payload: EmailTemplateGenerateType) => {
     return template
       .replace("{{NAME}}", data.name)
       .replace("{{OTP}}", data.otp)
+      .replace("{{DURATION}}", data.duration);
+  }
+  if (payload.type === "email-verification") {
+    const data = payload.data as EmailVerificationTemplateGenerateType;
+    return template
+      .replace("{{NAME}}", data.name)
+      .replace("{{VERIFICATION_URL}}", data.verificationUrl)
       .replace("{{DURATION}}", data.duration);
   } else {
     const data = payload.data as WelcomeTemplateGenerateType;

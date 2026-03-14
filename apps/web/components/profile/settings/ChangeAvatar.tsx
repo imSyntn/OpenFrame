@@ -7,13 +7,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import { Input } from "@workspace/ui/components/input";
 import { Button } from "@workspace/ui/components/button";
-import { Label } from "@workspace/ui/components/label";
 import { toast } from "sonner";
 import { useGetUploadUrl } from "@/hooks";
-
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
+import { MAX_AVATAR_SIZE } from "@workspace/constants";
+import { ImageInput } from "@/components/common";
 
 export function ChangeAvatar({
   changeAvatar,
@@ -22,35 +20,9 @@ export function ChangeAvatar({
   changeAvatar: (avatar: string) => void;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    console.log(file);
-    if (file && file.size > MAX_FILE_SIZE) {
-      toast.error("File size exceeds the limit of 2MB");
-      return;
-    }
-    if (file) setImageFile(file);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files?.[0];
-
-    console.log(file);
-    if (file && file.type.startsWith("image/")) {
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds the limit of 2MB");
-        return;
-      }
-      setImageFile(file);
-    }
-  };
 
   const handleClearImage = () => {
     setImageFile(null);
@@ -64,6 +36,7 @@ export function ChangeAvatar({
       const { uploadUrl, fileUrl } = await getUploadUrl({
         type,
         size,
+        isAvatar: true,
       });
 
       if (!uploadUrl) {
@@ -82,17 +55,18 @@ export function ChangeAvatar({
       });
 
       changeAvatar(fileUrl);
+      setOpen(false);
       toast.success("Avatar uploaded successfully", {
         description: "You must save the changes to update your avatar.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("Failed to upload image");
+      toast.error(error?.response?.data?.message || "Failed to upload image");
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="sm:max-w-sm">
@@ -104,41 +78,7 @@ export function ChangeAvatar({
         </DialogHeader>
 
         {!imageFile ? (
-          <div
-            className={`border-2 border-dashed rounded-lg p-6 text-center transition
-              ${dragging ? "border-primary bg-muted" : "border-muted"}
-            `}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragging(true);
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={handleDrop}
-          >
-            <p className="text-sm text-muted-foreground mb-2">
-              Drag & drop an image here
-            </p>
-
-            <p className="text-xs text-muted-foreground mb-4">or</p>
-
-            <Label className="cursor-pointer flex items-center justify-center">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                ref={inputRef}
-              />
-
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => inputRef?.current?.click()}
-              >
-                Choose Image
-              </Button>
-            </Label>
-          </div>
+          <ImageInput MAX_SIZE={MAX_AVATAR_SIZE} setImageFile={setImageFile} />
         ) : (
           <div className="flex flex-col items-center gap-3">
             <img

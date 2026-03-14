@@ -8,7 +8,9 @@ import {
   generateAccessToken,
   generateOtp,
   generateRefreshToken,
+  generateVerificationToken,
   refreshTokenVerify,
+  verifyVerificationToken,
 } from "../utils";
 import { userSigninSchema, userSignupSchema } from "@/schema";
 import { ErrorWithStatus } from "@/middleware";
@@ -75,58 +77,55 @@ export const signinController = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = userSigninSchema.parse({ email, password });
+    const user = userSigninSchema.parse({ email, password });
 
-  const userExists = await getUser({ email: user.email });
-  if (!userExists) {
-    return next(new ErrorWithStatus(400, "User doesn't exist"));
-  }
+    const userExists = await getUser({ email: user.email });
+    if (!userExists) {
+      return next(new ErrorWithStatus(400, "User doesn't exist"));
+    }
 
-  const isPasswordValid = await bcrypt.compare(
-    password,
-    userExists.password as string,
-  );
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      userExists.password as string,
+    );
 
-  if (!isPasswordValid) {
-    return next(new ErrorWithStatus(400, "Wrong email or password"));
-  }
+    if (!isPasswordValid) {
+      return next(new ErrorWithStatus(400, "Wrong email or password"));
+    }
 
-  const accessToken = generateAccessToken({
-    name: userExists.name,
-    email: userExists.email,
-    id: userExists.id,
-  });
-  const refreshToken = generateRefreshToken({
-    email: userExists.email,
-    id: userExists.id,
-  });
-
-  // res.cookie("access_token", accessToken, {
-  //   httpOnly: true,
-  //   sameSite: "lax",
-  //   secure: false,
-  //   maxAge: 1000 * 60 * 15,
-  // });
-
-  res.cookie("refresh_token", refreshToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: false,
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  });
-
-  return res.status(200).json({
-    message: "User logged in.",
-    data: {
+    const accessToken = generateAccessToken({
       name: userExists.name,
-      avatar: userExists.avatar,
-      email,
+      email: userExists.email,
       id: userExists.id,
-      accessToken,
-    },
-  });
+    });
+    const refreshToken = generateRefreshToken({
+      email: userExists.email,
+      id: userExists.id,
+    });
+
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
+    return res.status(200).json({
+      message: "User logged in.",
+      data: {
+        name: userExists.name,
+        avatar: userExists.avatar,
+        email,
+        id: userExists.id,
+        accessToken,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const signupController = async (
@@ -153,13 +152,6 @@ export const signupController = async (
 
     const accessToken = generateAccessToken({ name, email, id: newUser.id });
     const refreshToken = generateRefreshToken({ email, id: newUser.id });
-
-    // res.cookie("access_token", accessToken, {
-    //   httpOnly: true,
-    //   sameSite: "lax",
-    //   secure: false,
-    //   maxAge: 1000 * 60 * 15,
-    // });
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
@@ -416,6 +408,72 @@ export const refreshTokenController = async (
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+export const sendVerificationLinkController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { email } = req.body;
+
+    const user = await getUser({ email });
+    if (!user) {
+      return next(new ErrorWithStatus(404, "User not found"));
+    }
+
+    const otp = generateOtp();
+    await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT);
+
+    const verificationToken = generateVerificationToken({ email, otp });
+    const template = generateEmailTemplate({
+      type: "email-verification",
+      data: {
+        name: user.name,
+        verificationUrl: `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`,
+        duration: OTP_VALIDATION_TIME_LIMIT.toString(),
+      },
+    });
+    const emailSent = await sendEmail(email, "Email Verification", template);
+    if (!emailSent) {
+      return next(new ErrorWithStatus(500, "Failed to send email"));
+    }
+    return res.status(200).json({
+      message: "Email verification link sent successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const verifyEmailTokenController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      return next(new ErrorWithStatus(400, "Token is required"));
+    }
+
+    const { email, otp } = verifyVerificationToken(token as string);
+
+    const generatedOtp = await otpStore.get(email);
+    if (!generatedOtp || generatedOtp !== otp) {
+      return next(new ErrorWithStatus(400, "Invalid OTP"));
+    }
+
+    await otpStore.del(email);
+
+    await updateUser({ email }, { is_verified: true });
+    return res.status(200).json({
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    next(error);
   }
 };
 

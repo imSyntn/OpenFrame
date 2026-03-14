@@ -1,6 +1,13 @@
-import { getPictureUploadUrl, getUserPictures } from "@/lib/apis";
+import {
+  createPictureUpload,
+  getAllUploadsStatus,
+  getPictureStatus,
+  getPictureTags,
+  getPictureUploadUrl,
+  getUserPictures,
+} from "@/lib/apis";
 import { useProfileStore } from "@/store";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetPictures = () => {
   const addPictures = useProfileStore((state) => state.addPictures);
@@ -15,7 +22,47 @@ export const useGetPictures = () => {
 
 export const useGetUploadUrl = () => {
   return useMutation({
-    mutationFn: ({ type, size }: { type: string; size: number }) =>
-      getPictureUploadUrl(type, size),
+    mutationFn: ({
+      type,
+      size,
+      isAvatar,
+    }: {
+      type: string;
+      size: number;
+      isAvatar?: boolean;
+    }) => getPictureUploadUrl(type, size, isAvatar),
+  });
+};
+
+export const useGetTags = () => {
+  return useQuery({
+    queryKey: ["tags"],
+    queryFn: () => getPictureTags(),
+  });
+};
+
+export const useCreatePictureUpload = () => {
+  return useMutation({
+    mutationFn: (payload: {
+      title: string;
+      description?: string;
+      tags: { id: number; name: string }[];
+      url: string;
+    }) => createPictureUpload(payload),
+  });
+};
+
+export const useGetAllUploadsStatus = () => {
+  return useQuery({
+    queryKey: ["all-uploads-status"],
+    queryFn: () => getAllUploadsStatus(),
+  });
+};
+
+export const useGetPictureStatus = (pictureID: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: ["picture-status", pictureID],
+    queryFn: () => getPictureStatus(pictureID),
+    enabled,
   });
 };

@@ -26,3 +26,11 @@ export const userRefreshToken = async () => {
   const res = await api.get("/api/user/refresh-token");
   return res.data.data;
 };
+export const userSendVerificationLink = async (email: string) => {
+  const res = await api.post("/api/user/send-verification-link", { email });
+  return res.data.message;
+};
+export const userVerifyEmailToken = async (token: string) => {
+  const res = await api.get(`/api/user/verify-email-token/${token}`);
+  return res.data.message;
+};

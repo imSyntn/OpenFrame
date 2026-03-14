@@ -8,7 +8,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { Logo } from "../common";
 
-export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
+export function AuthWrapper({ children }: { children: React.ReactNode }) {
   const [index, setIndex] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
   const searchParams = useSearchParams();
@@ -26,31 +26,35 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     }
   }, [error]);
 
-  if (index === null) return null;
+  // if (index === null) return null;
 
   return (
     <div className="max-w-8xl mx-auto grid min-h-svh lg:grid-cols-2">
       <div className="relative hidden lg:block">
-        <Image
-          src={AUTH_PAGE_IMAGES[index]!}
-          alt="Blurry background"
-          fill
-          loading="lazy"
-          className="object-cover blur-md opacity-20"
-        />
-        <div className="relative flex items-center justify-center h-full">
+        {!!index && (
           <Image
             src={AUTH_PAGE_IMAGES[index]!}
-            alt="Side image"
-            width={420}
-            height={750}
-            priority
-            onLoadingComplete={() => setVisible(true)}
-            className={cn(
-              "rounded-xl transition-all duration-500",
-              visible ? "opacity-100 shadow-2xl" : "opacity-0 shadow-none",
-            )}
+            alt="Blurry background"
+            fill
+            loading="lazy"
+            className="object-cover blur-md opacity-20"
           />
+        )}
+        <div className="relative flex items-center justify-center h-full">
+          {!!index && (
+            <Image
+              src={AUTH_PAGE_IMAGES[index]!}
+              alt="Side image"
+              width={420}
+              height={750}
+              priority
+              onLoadingComplete={() => setVisible(true)}
+              className={cn(
+                "rounded-xl transition-all duration-500",
+                visible ? "opacity-100 shadow-2xl" : "opacity-0 shadow-none",
+              )}
+            />
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -61,4 +65,4 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
       </div>
     </div>
   );
-};
+}

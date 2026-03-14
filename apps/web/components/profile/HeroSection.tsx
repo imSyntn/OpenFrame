@@ -24,6 +24,7 @@ import {
   MapPin,
   LucideIcon,
   SettingsIcon,
+  BadgeCheck,
 } from "lucide-react";
 import { useProfileStore, useUserStore } from "@/store";
 import { ProfileType } from "@/@types";
@@ -37,6 +38,7 @@ import { notFound } from "next/navigation";
 import { useUserDetails } from "@/hooks";
 import { toast } from "sonner";
 import { SettingsModal } from "./settings/SettingsModal";
+import { VerifyEmail } from "./VerifyEmail";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -2031,7 +2033,6 @@ export function HeroSection({ id }: { id: string }) {
 
   useEffect(() => {
     if (!isLoading && !isError) {
-      console.log(data);
       setData({
         ...data,
         isLoading: false,
@@ -2072,6 +2073,10 @@ export function HeroSection({ id }: { id: string }) {
             <>
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <h1 className="text-2xl md:text-3xl font-bold">{name}</h1>
+
+                {is_verified && (
+                  <BadgeCheck className="h-6 w-6 text-emerald-500 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
+                )}
 
                 {isOwner && (
                   <SettingsModal>
@@ -2125,14 +2130,7 @@ export function HeroSection({ id }: { id: string }) {
                   Downloads
                 </span>
 
-                {isOwner && !is_verified && (
-                  <Button
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    Verify your email
-                  </Button>
-                )}
+                {isOwner && !is_verified && <VerifyEmail />}
               </>
             )}
           </div>

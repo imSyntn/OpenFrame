@@ -12,9 +12,16 @@ import { useProfileStore } from "@/store";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import { People } from "./people/People";
+import { useUserStore } from "@/store";
+import { Processing } from "./processing/Processing";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);
+  const loggedInUserID = useUserStore((state) => state.id);
+  const id = useProfileStore((state) => state.id);
+
+  const isOwner = loggedInUserID === id;
+
   return (
     <div className="max-w-8xl px-8 h-fit mb-8">
       <Tabs
@@ -47,6 +54,15 @@ export function Content() {
           >
             {isLoading ? <Skeleton className="w-16 h-4" /> : "People"}
           </TabsTrigger>
+          {isOwner && (
+            <TabsTrigger
+              value="processing"
+              className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer"
+              disabled={isLoading}
+            >
+              Under Processing
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="Gallery" className="flex-1">
@@ -60,6 +76,11 @@ export function Content() {
         <TabsContent value="People" className="flex-1">
           <People />
         </TabsContent>
+        {isOwner && (
+          <TabsContent value="processing" className="flex-1">
+            <Processing />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );
