@@ -9,7 +9,7 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 
-export function People() {
+export function Collections() {
   return (
     <div className="w-full min-h-[60dvh]">
       <Tabs defaultValue="Follower" className="flex flex-col md:flex-row">

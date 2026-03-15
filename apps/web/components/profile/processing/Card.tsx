@@ -1,10 +1,35 @@
 import { UnderProcessingPictureType } from "@workspace/types";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import React from "react";
 
-export function Card({ data }: { data: UnderProcessingPictureType }) {
+export function CardSkeleton() {
   return (
     <div className="h-[100px] w-[200px] flex items-center gap-4 border rounded-xl p-4 hover:bg-muted/40 transition cursor-pointer">
+      <div className="relative">
+        <Skeleton className="w-16 h-16 rounded-lg" />
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-3 w-22" />
+      </div>
+    </div>
+  );
+}
+
+export function Card({
+  data,
+  onClick,
+}: {
+  data: UnderProcessingPictureType;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      className="h-[100px] w-[200px] flex items-center gap-4 border rounded-xl p-4 hover:bg-muted/40 transition cursor-pointer"
+      onClick={onClick}
+    >
       <div className="relative">
         <img
           src={data.url}

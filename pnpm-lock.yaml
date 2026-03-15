@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
     devDependencies:
       '@workspace/eslint-config':
         specifier: workspace:*
@@ -32,18 +36,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.1008.0
         version: 3.1008.0
-      '@prisma/adapter-pg':
-        specifier: ^7.4.2
-        version: 7.4.2
-      '@prisma/client':
-        specifier: ^7.4.2
-        version: 7.4.2(prisma@7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
       '@types/nodemailer':
         specifier: ^7.0.11
         version: 7.0.11
-      '@types/pg':
-        specifier: ^8.18.0
-        version: 8.18.0
       '@workspace/constants':
         specifier: workspace:*
         version: link:../../packages/constants
@@ -62,9 +57,6 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
-      ioredis:
-        specifier: ^5.10.0
-        version: 5.10.0
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -114,9 +106,6 @@ importers:
       '@workspace/types':
         specifier: workspace:*
         version: link:../../packages/types
-      prisma:
-        specifier: ^7.4.2
-        version: 7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -218,6 +207,22 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  apps/workers:
+    dependencies:
+      '@workspace/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.12.0
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/constants: {}
 
   packages/eslint-config:
@@ -261,6 +266,40 @@ importers:
       typescript-eslint:
         specifier: ^8.54.0
         version: 8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
+
+  packages/lib:
+    dependencies:
+      '@prisma/adapter-pg':
+        specifier: ^7.4.2
+        version: 7.4.2
+      '@prisma/client':
+        specifier: ^7.4.2
+        version: 7.4.2(prisma@7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
+      '@types/ioredis':
+        specifier: ^5.0.0
+        version: 5.0.0
+      '@types/kafkajs':
+        specifier: ^1.9.0
+        version: 1.9.0
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
+      ioredis:
+        specifier: ^5.10.0
+        version: 5.10.0
+      kafkajs:
+        specifier: ^2.2.4
+        version: 2.2.4
+      pg:
+        specifier: ^8.20.0
+        version: 8.20.0
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.18.0
+        version: 8.18.0
+      prisma:
+        specifier: ^7.4.2
+        version: 7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
 
   packages/types: {}
 
@@ -2385,11 +2424,19 @@ packages:
   '@types/inquirer@6.5.0':
     resolution: {integrity: sha512-rjaYQ9b9y/VFGOpqBEXRavc3jh0a+e6evAbI31tMda8VlPaSy0AZJfXsvmIe3wklc7W6C3zCSfleuMXR7NOyXw==}
 
+  '@types/ioredis@5.0.0':
+    resolution: {integrity: sha512-zJbJ3FVE17CNl5KXzdeSPtdltc4tMT3TzC6fxQS0sQngkbFZ6h+0uTafsRqu+eSLIugf6Yb0Ea0SUuRr42Nk9g==}
+    deprecated: This is a stub types definition. ioredis provides its own type definitions, so you do not need this installed.
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
   '@types/jsonwebtoken@9.0.10':
     resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
+
+  '@types/kafkajs@1.9.0':
+    resolution: {integrity: sha512-R9VDNbiw+vNfxWjjFHUrLMF/Dfc7asGXzKtYUwI4FaT24Chf5ZNkfvce54p4dkLMxPcsrEsVazAK0Jp2ib4Zxw==}
+    deprecated: This is a stub types definition. kafkajs provides its own type definitions, so you do not need this installed.
 
   '@types/minimatch@6.0.0':
     resolution: {integrity: sha512-zmPitbQ8+6zNutpwgcQuLcsEpn/Cj54Kbn7L5pX0Os5kdWplB7xPgEh/g+SWOB/qmows2gpuCaPyduq8ZZRnxA==}
@@ -2397,6 +2444,9 @@ packages:
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
+
+  '@types/node@24.12.0':
+    resolution: {integrity: sha512-GYDxsZi3ChgmckRT9HPU0WEhKLP08ev/Yfcq2AstjrDASOYCSXeyjDsHg4v5t4jOj7cyDX3vmprafKlWIG9MXQ==}
 
   '@types/node@25.3.5':
     resolution: {integrity: sha512-oX8xrhvpiyRCQkG1MFchB09f+cXftgIXb3a7UUa4Y3wpmZPw5tyZGTLWhlESOLq1Rq6oDlc8npVU2/9xiCuXMA==}
@@ -3539,6 +3589,10 @@ packages:
   jws@4.0.1:
     resolution: {integrity: sha512-EKI/M/yqPncGUUh44xz0PxSidXFr/+r0pA70+gIYhjv+et7yxM+s29Y+VGDkovRofQem0fs7Uvf4+YmAdyRduA==}
 
+  kafkajs@2.2.4:
+    resolution: {integrity: sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==}
+    engines: {node: '>=14.0.0'}
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -4613,6 +4667,9 @@ packages:
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
+
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
@@ -7185,6 +7242,12 @@ snapshots:
       '@types/through': 0.0.33
       rxjs: 6.6.7
 
+  '@types/ioredis@5.0.0':
+    dependencies:
+      ioredis: 5.10.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@types/json-schema@7.0.15': {}
 
   '@types/jsonwebtoken@9.0.10':
@@ -7192,11 +7255,19 @@ snapshots:
       '@types/ms': 2.1.0
       '@types/node': 25.3.5
 
+  '@types/kafkajs@1.9.0':
+    dependencies:
+      kafkajs: 2.2.4
+
   '@types/minimatch@6.0.0':
     dependencies:
       minimatch: 9.0.5
 
   '@types/ms@2.1.0': {}
+
+  '@types/node@24.12.0':
+    dependencies:
+      undici-types: 7.16.0
 
   '@types/node@25.3.5':
     dependencies:
@@ -8621,6 +8692,8 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
+  kafkajs@2.2.4: {}
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -9755,6 +9828,8 @@ snapshots:
       has-bigints: 1.1.0
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
+
+  undici-types@7.16.0: {}
 
   undici-types@7.18.2: {}
 

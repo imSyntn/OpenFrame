@@ -7,5 +7,3 @@ export const generateOtp = () => {
   );
   return otp.toString();
 };
-
-export const verifyOtp = () => {};

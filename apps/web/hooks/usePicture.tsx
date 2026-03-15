@@ -56,6 +56,7 @@ export const useGetAllUploadsStatus = () => {
   return useQuery({
     queryKey: ["all-uploads-status"],
     queryFn: () => getAllUploadsStatus(),
+    refetchInterval: 10000,
   });
 };
 

@@ -1,14 +1,14 @@
-import { prisma, s3 } from "@/lib";
+import { prisma, cache, kafkaProduceMessage } from "@workspace/lib";
 import { PIC_PER_PAGE } from "@workspace/constants";
-import { userCacheStore } from "@/lib";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3 } from "@/lib/s3client";
 
 export const getUserPictures = async (id: string, page: number) => {
   const cacheKey = `${id}:${page}`;
 
-  const cached = await userCacheStore.hget("user:pictures", cacheKey);
+  const cached = await cache.hget("user:pictures", cacheKey);
   if (cached) {
     return JSON.parse(cached);
   }
@@ -25,11 +25,7 @@ export const getUserPictures = async (id: string, page: number) => {
     take: PIC_PER_PAGE,
   });
 
-  await userCacheStore.hset(
-    "user:pictures",
-    cacheKey,
-    JSON.stringify(pictures),
-  );
+  await cache.hset("user:pictures", cacheKey, JSON.stringify(pictures));
 
   return pictures;
 };
@@ -60,7 +56,7 @@ export const getPictureUploadUrl = async (
 };
 
 export const getPictureTags = async () => {
-  const availableInCache = await userCacheStore.hget("pictures", "tags");
+  const availableInCache = await cache.hget("pictures", "tags");
 
   if (availableInCache) {
     return JSON.parse(availableInCache);
@@ -68,7 +64,7 @@ export const getPictureTags = async () => {
 
   const tags = await prisma.tag.findMany({});
 
-  await userCacheStore.hset(
+  await cache.hset(
     "pictures",
     "tags",
     JSON.stringify(tags),
@@ -89,45 +85,40 @@ export const createPicture = async (
   url: string,
   userId: string,
 ) => {
-  const getPreviousUploads = await userCacheStore.hget(
-    "picture:create",
-    userId,
-  );
+  const getPreviousUploads = await cache.hget("picture:upload", userId);
   const userUploadedPictures = JSON.parse(getPreviousUploads || "[]");
-
-  const addNew = [
-    ...userUploadedPictures,
-    {
-      id: nanoid(),
-      title,
-      description,
-      tags,
-      url,
-      processing: "ongoing",
-      createdAt: new Date().toISOString(),
-    },
-  ];
-
-  console.log({
+  const newPicture = {
     id: nanoid(),
     title,
     description,
     tags,
     url,
-    processing: true,
-  });
+    processing: "ongoing",
+    createdAt: new Date().toISOString(),
+  };
 
-  await userCacheStore.hset("picture:create", userId, JSON.stringify(addNew));
+  const updated = [...userUploadedPictures, newPicture];
+
+  console.log(newPicture);
+
+  await cache.hset("picture:upload", userId, JSON.stringify(updated));
+  await kafkaProduceMessage(
+    "picture:upload",
+    JSON.stringify({
+      ...newPicture,
+      userId,
+    }),
+  );
 };
 
 export const getAllPictureStatus = async (userId: string) => {
-  const availableInCache = await userCacheStore.hget("picture:create", userId);
+  const availableInCache = await cache.hget("picture:upload", userId);
 
   return JSON.parse(availableInCache || "[]");
 };
 
 export const getPictureStatus = async (userId: string, pictureID: string) => {
-  const availableInCache = await userCacheStore.hget("picture:create", userId);
+  const availableInCache = await cache.hget("picture:upload", userId);
 
   const data = JSON.parse(availableInCache || "[]");
 

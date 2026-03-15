@@ -9,11 +9,15 @@ export function Statistics() {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60dvh]">
-      <StatCard value={counts?.pictures} label="Photos" />
-      <StatCard value={metrics?.total_downloads} label="Downloads" />
-      <StatCard value={metrics?.total_likes} label="Likes" />
-      <StatCard value={metrics?.follower} label="Followers" />
-      <StatCard value={metrics?.following} label="Following" />
+      <StatCard value={counts?.pictures} label="Photos" showGradient />
+      <StatCard
+        value={metrics?.total_downloads}
+        label="Downloads"
+        showGradient
+      />
+      <StatCard value={metrics?.total_likes} label="Likes" showGradient />
+      <StatCard value={metrics?.follower} label="Followers" showGradient />
+      <StatCard value={metrics?.following} label="Following" showGradient />
     </div>
   );
 }

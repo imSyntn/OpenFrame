@@ -11,7 +11,7 @@ import { Statistics } from "./statistics/Statistics";
 import { useProfileStore } from "@/store";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
-import { People } from "./people/People";
+import { Collections } from "./Collections/Collections";
 import { useUserStore } from "@/store";
 import { Processing } from "./processing/Processing";
 
@@ -27,9 +27,9 @@ export function Content() {
       <Tabs
         defaultValue="Gallery"
         orientation="vertical"
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-4 md:gap-8"
       >
-        <TabsList variant="line" className="flex gap-10">
+        <TabsList variant="line" className="flex flex-wrap gap-10">
           <TabsTrigger
             value="Gallery"
             className={cn(
@@ -48,19 +48,19 @@ export function Content() {
             {isLoading ? <Skeleton className="w-16 h-4" /> : "Statistics"}
           </TabsTrigger>
           <TabsTrigger
-            value="People"
+            value="Collections"
             className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer"
             disabled={isLoading}
           >
-            {isLoading ? <Skeleton className="w-16 h-4" /> : "People"}
+            {isLoading ? <Skeleton className="w-16 h-4" /> : "Collections"}
           </TabsTrigger>
           {isOwner && (
             <TabsTrigger
               value="processing"
-              className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer"
+              className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
               disabled={isLoading}
             >
-              Under Processing
+              Recents
             </TabsTrigger>
           )}
         </TabsList>
@@ -73,8 +73,8 @@ export function Content() {
           <Statistics />
         </TabsContent>
 
-        <TabsContent value="People" className="flex-1">
-          <People />
+        <TabsContent value="Collections" className="flex-1">
+          <Collections />
         </TabsContent>
         {isOwner && (
           <TabsContent value="processing" className="flex-1">

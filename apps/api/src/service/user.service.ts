@@ -1,5 +1,4 @@
-import { prisma, userCacheStore } from "@/lib";
-import { Prisma } from "@prisma/client";
+import { prisma, cache, Prisma } from "@workspace/lib";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
 type GetUserPayload =
@@ -48,7 +47,7 @@ export const getUser = async (
       key = user.id;
     }
 
-    const userInCache = await userCacheStore.hget("user", key);
+    const userInCache = await cache.hget("user", key);
     if (userInCache) {
       return JSON.parse(userInCache);
     }
@@ -60,7 +59,7 @@ export const getUser = async (
     });
 
     if (userInDb) {
-      await userCacheStore.hset("user", key, JSON.stringify(userInDb));
+      await cache.hset("user", key, JSON.stringify(userInDb));
     }
 
     return userInDb;
@@ -129,7 +128,7 @@ export const updateUser = async (
       omit: omit,
     });
 
-    const pipeline = userCacheStore.pipeline();
+    const pipeline = cache.pipeline();
     pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
     pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
 
@@ -158,7 +157,7 @@ export const updateUser = async (
 //       omit: omit,
 //     });
 
-//     const pipeline = userCacheStore.pipeline();
+//     const pipeline = cache.pipeline();
 //     pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
 //     pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
 

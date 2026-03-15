@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import React, { useState } from "react";
 import { Form } from "./Form";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
 export function SettingsModal({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,9 @@ export function SettingsModal({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
 
-        <Form handleClose={handleClose} />
+        <ScrollArea className="max-h-[70vh]">
+          <Form handleClose={handleClose} />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

@@ -8,15 +8,22 @@ export function StatCard({
   isLoading,
   headingClass,
   textClass,
+  showGradient,
 }: {
   value?: number;
   label: string;
   isLoading?: boolean;
   headingClass?: string;
   textClass?: string;
+  showGradient?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1 border rounded-lg px-4 py-3 bg-card items-center md:items-start">
+    <div
+      className={cn(
+        "flex flex-col gap-1 border rounded-lg px-4 py-3 bg-card items-center md:items-start",
+        showGradient && "bg-gradient-to-b from-card via-card to-muted/30",
+      )}
+    >
       {isLoading ? (
         <>
           <Skeleton className={cn("h-10 w-10", headingClass)} />
