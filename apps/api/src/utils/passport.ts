@@ -1,11 +1,8 @@
 import { createUser, getUser } from "@/service/user.service.js";
 import { GoogleUserType } from "@workspace/types";
-import dotenv from "dotenv";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-dotenv.config({
-  path: "../../.env",
-});
+import "@workspace/lib/env";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -23,9 +20,12 @@ passport.use(
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
-      let userExists = await getUser({
-        email: profile["emails"]?.[0].value as string,
-      });
+      let userExists = await getUser(
+        {
+          email: profile["emails"]?.[0].value as string,
+        },
+        "auth",
+      );
       if (!userExists) {
         userExists = await createUser(profile as GoogleUserType);
       }

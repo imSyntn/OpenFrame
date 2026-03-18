@@ -1,4 +1,6 @@
-import { prisma, cache, kafkaProduceMessage } from "@workspace/lib";
+import { prisma } from "@workspace/lib/prisma";
+import { cache } from "@workspace/lib/redis";
+import { kafkaProduceMessage } from "@workspace/lib/kafka";
 import { PIC_PER_PAGE } from "@workspace/constants";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
@@ -101,9 +103,9 @@ export const createPicture = async (
 
   console.log(newPicture);
 
-  await cache.hset("picture:upload", userId, JSON.stringify(updated));
+  await cache.hset("picture-upload", userId, JSON.stringify(updated));
   await kafkaProduceMessage(
-    "picture:upload",
+    "picture-upload",
     JSON.stringify({
       ...newPicture,
       userId,

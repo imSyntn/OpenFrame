@@ -4,7 +4,11 @@
   "description": "",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./kafka": "./src/kafka/index.ts",
+    "./redis": "./src/redis/index.ts",
+    "./env": "./src/env/index.ts",
+    "./prisma": "./src/prisma/index.ts"
   },
   "types": "./src/index.ts",
   "scripts": {

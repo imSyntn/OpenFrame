@@ -28,7 +28,7 @@ import {
   PIC_PER_PAGE,
 } from "@workspace/constants";
 import { otpStore } from "@/lib";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@workspace/lib";
 
 export const googleAuthController = async (
   req: Request,
@@ -82,7 +82,8 @@ export const signinController = async (
 
     const user = userSigninSchema.parse({ email, password });
 
-    const userExists = await getUser({ email: user.email });
+    const userExists = await getUser({ email: user.email }, "auth");
+    console.log(userExists);
     if (!userExists) {
       return next(new ErrorWithStatus(400, "User doesn't exist"));
     }
@@ -138,7 +139,7 @@ export const signupController = async (
 
     const user = userSignupSchema.parse({ name, email, password });
 
-    const userExists = await getUser({ email: user.email });
+    const userExists = await getUser({ email: user.email }, "auth");
     if (userExists) {
       return next(new ErrorWithStatus(409, "User already exists"));
     }
@@ -187,7 +188,7 @@ export const otpGenerateController = async (
       return next(new ErrorWithStatus(400, "Invalid email"));
     }
 
-    const userExist = await getUser({ email });
+    const userExist = await getUser({ email }, "auth");
     if (!userExist) {
       return next(new ErrorWithStatus(404, "User not found"));
     }
@@ -263,7 +264,7 @@ export const resetPasswordController = async (
       return next(new ErrorWithStatus(400, "OTP not verified"));
     }
 
-    const userExist = await getUser({ email: user.email });
+    const userExist = await getUser({ email: user.email }, "auth");
     if (!userExist) {
       return next(new ErrorWithStatus(404, "User not found"));
     }
@@ -324,7 +325,7 @@ export const getUserController = async (
       password: true,
     };
 
-    const user = await getUser({ id }, include, exclude);
+    const user = await getUser({ id }, "profile", include, exclude);
 
     if (!user) {
       return next(new ErrorWithStatus(404, "User not found"));
@@ -386,7 +387,7 @@ export const refreshTokenController = async (
       return next(new ErrorWithStatus(401, "You are not logged in."));
     }
     const decoded = refreshTokenVerify(token);
-    const user = await getUser({ id: decoded.id });
+    const user = await getUser({ id: decoded.id }, "auth");
     if (!user) {
       return next(new ErrorWithStatus(404, "User not found"));
     }
@@ -419,7 +420,7 @@ export const sendVerificationLinkController = async (
   try {
     const { email } = req.body;
 
-    const user = await getUser({ email });
+    const user = await getUser({ email }, "auth");
     if (!user) {
       return next(new ErrorWithStatus(404, "User not found"));
     }

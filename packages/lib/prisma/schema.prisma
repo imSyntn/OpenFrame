@@ -102,12 +102,7 @@ model Src {
 
 model Metadata {
   pic_id         String  @id
-  camera         String?
-  lens           String?
-  shutter        String?
-  iso            String?
-  focal_length   String?
-  aperture       String?
+  data           Json?
   dominant_color String
   blurhash       String
   picture        Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)

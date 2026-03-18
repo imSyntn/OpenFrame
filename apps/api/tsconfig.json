@@ -20,5 +20,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "../../packages/lib/prisma"]
+  "exclude": ["node_modules", "dist", "../../packages/*"]
 }

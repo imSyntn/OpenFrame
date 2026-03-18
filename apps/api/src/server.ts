@@ -1,19 +1,15 @@
+import "@workspace/lib/env";
 import express, {
   type Application,
   type Request,
   type Response,
 } from "express";
-import dotenv from "dotenv";
 import { authRouter, pictureRouter } from "@/routes";
 import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middleware";
-
-dotenv.config({
-  path: "../../.env",
-});
 
 const app: Application = express();
 

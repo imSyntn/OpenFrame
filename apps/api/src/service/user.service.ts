@@ -33,8 +33,11 @@ interface omitOptions {
   password?: boolean;
 }
 
+type cacheType = "auth" | "profile";
+
 export const getUser = async (
   user: GetUserPayload,
+  cacheKey: cacheType,
   include?: Prisma.UserInclude,
   omit?: Prisma.UserOmit,
 ) => {
@@ -47,7 +50,7 @@ export const getUser = async (
       key = user.id;
     }
 
-    const userInCache = await cache.hget("user", key);
+    const userInCache = await cache.hget(`user:${cacheKey}`, key);
     if (userInCache) {
       return JSON.parse(userInCache);
     }
@@ -129,8 +132,8 @@ export const updateUser = async (
     });
 
     const pipeline = cache.pipeline();
-    pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
-    pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
+    pipeline.hset("user:profile", updatedUser.id, JSON.stringify(updatedUser));
+    pipeline.hset("user:auth", updatedUser.email, JSON.stringify(updatedUser));
 
     const res = await pipeline.exec();
     if (!res) {

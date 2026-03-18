@@ -1,9 +1,6 @@
 import jwt from "jsonwebtoken";
 import { UserType } from "@workspace/types";
-import dotenv from "dotenv";
-dotenv.config({
-  path: "../../.env",
-});
+import "@workspace/lib/env";
 
 type accessTokenPayload = Pick<UserType, "email" | "name" | "id">;
 type refreshTokenPayload = Pick<UserType, "email" | "id">;

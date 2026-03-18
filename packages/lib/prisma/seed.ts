@@ -1,4 +1,4 @@
-import { prisma } from "../src/db/prisma.js";
+import { prisma } from "../src/prisma";
 
 const USER_COUNT = 15;
 const PHOTO_COUNT = 100;
