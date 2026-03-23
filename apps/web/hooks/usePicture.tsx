@@ -57,6 +57,7 @@ export const useGetAllUploadsStatus = () => {
     queryKey: ["all-uploads-status"],
     queryFn: () => getAllUploadsStatus(),
     refetchInterval: 10000,
+    refetchOnMount: true,
   });
 };
 

@@ -96,6 +96,7 @@ export const createPicture = async (
     tags,
     url,
     processing: "ongoing",
+    stepsCompleted: [],
     createdAt: new Date().toISOString(),
   };
 
@@ -103,7 +104,7 @@ export const createPicture = async (
 
   console.log(newPicture);
 
-  await cache.hset("picture-upload", userId, JSON.stringify(updated));
+  await cache.hset("picture:upload", userId, JSON.stringify(updated));
   await kafkaProduceMessage(
     "picture-upload",
     JSON.stringify({

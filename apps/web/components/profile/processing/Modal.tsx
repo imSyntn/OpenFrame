@@ -11,66 +11,99 @@ import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
+import { BadgeCheck, Hash } from "lucide-react";
 
-export function Modal({ data }: { data: UnderProcessingPictureType | null }) {
+export function Modal({
+  data,
+  clearData,
+}: {
+  data: UnderProcessingPictureType | null;
+  clearData: () => void;
+}) {
   if (!data) return null;
   return (
-    <DialogContent className="max-w-2xl max-h-[85vh]">
-      <DialogHeader>
-        <DialogTitle className="text-lg font-semibold">
-          {data.title}
-        </DialogTitle>
-      </DialogHeader>
+    <Dialog open={!!data} onOpenChange={clearData}>
+      <DialogContent className="max-w-2xl max-h-[85vh]">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-semibold">
+            {data.title}
+          </DialogTitle>
+        </DialogHeader>
 
-      <ScrollArea className="max-h-[60vh] w-full">
-        <div className="space-y-4 pb-1">
-          {data.description && (
-            <DialogDescription>{data.description}</DialogDescription>
-          )}
+        <ScrollArea className="max-h-[60vh] w-full">
+          <div className="space-y-4 pb-1">
+            {data.description && (
+              <DialogDescription>{data.description}</DialogDescription>
+            )}
 
-          <div className="overflow-hidden rounded-lg border">
-            <img
-              src={data.url}
-              alt={data.title}
-              className="w-full max-h-[60vh] object-contain"
-            />
-          </div>
-
-          {data.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {data.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="text-xs px-2 py-1 rounded-md border bg-muted"
-                >
-                  #{tag.name}
-                </span>
-              ))}
+            <div className="overflow-hidden rounded-lg border">
+              <img
+                src={data.url}
+                alt={data.title}
+                className="w-full max-h-[60vh] object-contain"
+              />
             </div>
-          )}
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
-              Temp ID: {data.id}
-            </span>
+            {data.tags.length > 0 && (
+              <>
+                <p className="text-sm font-semibold text-muted-foreground mb-2">
+                  Tags
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {data.tags.map((tag) => (
+                    <Badge key={tag.id} variant="secondary">
+                      <Hash data-icon="inline-start" />
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              </>
+            )}
 
-            <Badge
-              className={cn(
-                data.processing === "ongoing"
-                  ? "bg-processing"
-                  : data.processing === "ready"
-                    ? "bg-success"
-                    : "bg-destructive",
-                "text-black",
-              )}
-            >
-              {data.processing}
-            </Badge>
+            {data.stepsCompleted.length > 0 && (
+              <>
+                <p className="text-sm font-semibold text-muted-foreground mb-2">
+                  Steps Completed
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {data.stepsCompleted.map((step) => (
+                    <Badge
+                      key={step}
+                      variant="secondary"
+                      className="bg-success"
+                    >
+                      <BadgeCheck data-icon="inline-start" />
+                      {step}
+                    </Badge>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">
+                Temp ID: {data.id}
+              </span>
+
+              <Badge
+                className={cn(
+                  data.processing === "ongoing"
+                    ? "bg-processing"
+                    : data.processing === "ready"
+                      ? "bg-success"
+                      : "bg-destructive",
+                  "text-black",
+                )}
+              >
+                {data.processing}
+              </Badge>
+            </div>
           </div>
-        </div>
 
-        <ScrollBar orientation="vertical" className="opacity-100" />
-      </ScrollArea>
-    </DialogContent>
+          <ScrollBar orientation="vertical" className="opacity-100" />
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
   );
 }

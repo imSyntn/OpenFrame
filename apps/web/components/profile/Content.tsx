@@ -60,7 +60,7 @@ export function Content() {
               className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
               disabled={isLoading}
             >
-              Recents
+              Processing
             </TabsTrigger>
           )}
         </TabsList>

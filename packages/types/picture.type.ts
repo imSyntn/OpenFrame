@@ -6,4 +6,5 @@ export interface UnderProcessingPictureType {
   url: string;
   processing: "ongoing" | "ready" | "failed";
   createdAt: string;
+  stepsCompleted: string[];
 }

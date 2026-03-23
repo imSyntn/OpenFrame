@@ -26,36 +26,19 @@ export type AggregateMetadata = {
 
 export type MetadataMinAggregateOutputType = {
   pic_id: string | null
-  camera: string | null
-  lens: string | null
-  shutter: string | null
-  iso: string | null
-  focal_length: string | null
-  aperture: string | null
   dominant_color: string | null
   blurhash: string | null
 }
 
 export type MetadataMaxAggregateOutputType = {
   pic_id: string | null
-  camera: string | null
-  lens: string | null
-  shutter: string | null
-  iso: string | null
-  focal_length: string | null
-  aperture: string | null
   dominant_color: string | null
   blurhash: string | null
 }
 
 export type MetadataCountAggregateOutputType = {
   pic_id: number
-  camera: number
-  lens: number
-  shutter: number
-  iso: number
-  focal_length: number
-  aperture: number
+  data: number
   dominant_color: number
   blurhash: number
   _all: number
@@ -64,36 +47,19 @@ export type MetadataCountAggregateOutputType = {
 
 export type MetadataMinAggregateInputType = {
   pic_id?: true
-  camera?: true
-  lens?: true
-  shutter?: true
-  iso?: true
-  focal_length?: true
-  aperture?: true
   dominant_color?: true
   blurhash?: true
 }
 
 export type MetadataMaxAggregateInputType = {
   pic_id?: true
-  camera?: true
-  lens?: true
-  shutter?: true
-  iso?: true
-  focal_length?: true
-  aperture?: true
   dominant_color?: true
   blurhash?: true
 }
 
 export type MetadataCountAggregateInputType = {
   pic_id?: true
-  camera?: true
-  lens?: true
-  shutter?: true
-  iso?: true
-  focal_length?: true
-  aperture?: true
+  data?: true
   dominant_color?: true
   blurhash?: true
   _all?: true
@@ -173,12 +139,7 @@ export type MetadataGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type MetadataGroupByOutputType = {
   pic_id: string
-  camera: string | null
-  lens: string | null
-  shutter: string | null
-  iso: string | null
-  focal_length: string | null
-  aperture: string | null
+  data: runtime.JsonValue | null
   dominant_color: string
   blurhash: string
   _count: MetadataCountAggregateOutputType | null
@@ -206,12 +167,7 @@ export type MetadataWhereInput = {
   OR?: Prisma.MetadataWhereInput[]
   NOT?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
   pic_id?: Prisma.StringFilter<"Metadata"> | string
-  camera?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  lens?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  shutter?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  iso?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  focal_length?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  aperture?: Prisma.StringNullableFilter<"Metadata"> | string | null
+  data?: Prisma.JsonNullableFilter<"Metadata">
   dominant_color?: Prisma.StringFilter<"Metadata"> | string
   blurhash?: Prisma.StringFilter<"Metadata"> | string
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
@@ -219,12 +175,7 @@ export type MetadataWhereInput = {
 
 export type MetadataOrderByWithRelationInput = {
   pic_id?: Prisma.SortOrder
-  camera?: Prisma.SortOrderInput | Prisma.SortOrder
-  lens?: Prisma.SortOrderInput | Prisma.SortOrder
-  shutter?: Prisma.SortOrderInput | Prisma.SortOrder
-  iso?: Prisma.SortOrderInput | Prisma.SortOrder
-  focal_length?: Prisma.SortOrderInput | Prisma.SortOrder
-  aperture?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
   picture?: Prisma.PictureOrderByWithRelationInput
@@ -235,12 +186,7 @@ export type MetadataWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
   OR?: Prisma.MetadataWhereInput[]
   NOT?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
-  camera?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  lens?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  shutter?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  iso?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  focal_length?: Prisma.StringNullableFilter<"Metadata"> | string | null
-  aperture?: Prisma.StringNullableFilter<"Metadata"> | string | null
+  data?: Prisma.JsonNullableFilter<"Metadata">
   dominant_color?: Prisma.StringFilter<"Metadata"> | string
   blurhash?: Prisma.StringFilter<"Metadata"> | string
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
@@ -248,12 +194,7 @@ export type MetadataWhereUniqueInput = Prisma.AtLeast<{
 
 export type MetadataOrderByWithAggregationInput = {
   pic_id?: Prisma.SortOrder
-  camera?: Prisma.SortOrderInput | Prisma.SortOrder
-  lens?: Prisma.SortOrderInput | Prisma.SortOrder
-  shutter?: Prisma.SortOrderInput | Prisma.SortOrder
-  iso?: Prisma.SortOrderInput | Prisma.SortOrder
-  focal_length?: Prisma.SortOrderInput | Prisma.SortOrder
-  aperture?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
   _count?: Prisma.MetadataCountOrderByAggregateInput
@@ -266,23 +207,13 @@ export type MetadataScalarWhereWithAggregatesInput = {
   OR?: Prisma.MetadataScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MetadataScalarWhereWithAggregatesInput | Prisma.MetadataScalarWhereWithAggregatesInput[]
   pic_id?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
-  camera?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
-  lens?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
-  shutter?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
-  iso?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
-  focal_length?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
-  aperture?: Prisma.StringNullableWithAggregatesFilter<"Metadata"> | string | null
+  data?: Prisma.JsonNullableWithAggregatesFilter<"Metadata">
   dominant_color?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
   blurhash?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
 }
 
 export type MetadataCreateInput = {
-  camera?: string | null
-  lens?: string | null
-  shutter?: string | null
-  iso?: string | null
-  focal_length?: string | null
-  aperture?: string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
   picture: Prisma.PictureCreateNestedOneWithoutMetadataInput
@@ -290,23 +221,13 @@ export type MetadataCreateInput = {
 
 export type MetadataUncheckedCreateInput = {
   pic_id: string
-  camera?: string | null
-  lens?: string | null
-  shutter?: string | null
-  iso?: string | null
-  focal_length?: string | null
-  aperture?: string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
 }
 
 export type MetadataUpdateInput = {
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
   picture?: Prisma.PictureUpdateOneRequiredWithoutMetadataNestedInput
@@ -314,47 +235,27 @@ export type MetadataUpdateInput = {
 
 export type MetadataUncheckedUpdateInput = {
   pic_id?: Prisma.StringFieldUpdateOperationsInput | string
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MetadataCreateManyInput = {
   pic_id: string
-  camera?: string | null
-  lens?: string | null
-  shutter?: string | null
-  iso?: string | null
-  focal_length?: string | null
-  aperture?: string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
 }
 
 export type MetadataUpdateManyMutationInput = {
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MetadataUncheckedUpdateManyInput = {
   pic_id?: Prisma.StringFieldUpdateOperationsInput | string
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -366,36 +267,19 @@ export type MetadataNullableScalarRelationFilter = {
 
 export type MetadataCountOrderByAggregateInput = {
   pic_id?: Prisma.SortOrder
-  camera?: Prisma.SortOrder
-  lens?: Prisma.SortOrder
-  shutter?: Prisma.SortOrder
-  iso?: Prisma.SortOrder
-  focal_length?: Prisma.SortOrder
-  aperture?: Prisma.SortOrder
+  data?: Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
 }
 
 export type MetadataMaxOrderByAggregateInput = {
   pic_id?: Prisma.SortOrder
-  camera?: Prisma.SortOrder
-  lens?: Prisma.SortOrder
-  shutter?: Prisma.SortOrder
-  iso?: Prisma.SortOrder
-  focal_length?: Prisma.SortOrder
-  aperture?: Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
 }
 
 export type MetadataMinOrderByAggregateInput = {
   pic_id?: Prisma.SortOrder
-  camera?: Prisma.SortOrder
-  lens?: Prisma.SortOrder
-  shutter?: Prisma.SortOrder
-  iso?: Prisma.SortOrder
-  focal_length?: Prisma.SortOrder
-  aperture?: Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
 }
@@ -433,23 +317,13 @@ export type MetadataUncheckedUpdateOneWithoutPictureNestedInput = {
 }
 
 export type MetadataCreateWithoutPictureInput = {
-  camera?: string | null
-  lens?: string | null
-  shutter?: string | null
-  iso?: string | null
-  focal_length?: string | null
-  aperture?: string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
 }
 
 export type MetadataUncheckedCreateWithoutPictureInput = {
-  camera?: string | null
-  lens?: string | null
-  shutter?: string | null
-  iso?: string | null
-  focal_length?: string | null
-  aperture?: string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
 }
@@ -471,23 +345,13 @@ export type MetadataUpdateToOneWithWhereWithoutPictureInput = {
 }
 
 export type MetadataUpdateWithoutPictureInput = {
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MetadataUncheckedUpdateWithoutPictureInput = {
-  camera?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lens?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shutter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  iso?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  focal_length?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aperture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -496,12 +360,7 @@ export type MetadataUncheckedUpdateWithoutPictureInput = {
 
 export type MetadataSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  camera?: boolean
-  lens?: boolean
-  shutter?: boolean
-  iso?: boolean
-  focal_length?: boolean
-  aperture?: boolean
+  data?: boolean
   dominant_color?: boolean
   blurhash?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
@@ -509,12 +368,7 @@ export type MetadataSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 
 export type MetadataSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  camera?: boolean
-  lens?: boolean
-  shutter?: boolean
-  iso?: boolean
-  focal_length?: boolean
-  aperture?: boolean
+  data?: boolean
   dominant_color?: boolean
   blurhash?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
@@ -522,12 +376,7 @@ export type MetadataSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 
 export type MetadataSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  camera?: boolean
-  lens?: boolean
-  shutter?: boolean
-  iso?: boolean
-  focal_length?: boolean
-  aperture?: boolean
+  data?: boolean
   dominant_color?: boolean
   blurhash?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
@@ -535,17 +384,12 @@ export type MetadataSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 
 export type MetadataSelectScalar = {
   pic_id?: boolean
-  camera?: boolean
-  lens?: boolean
-  shutter?: boolean
-  iso?: boolean
-  focal_length?: boolean
-  aperture?: boolean
+  data?: boolean
   dominant_color?: boolean
   blurhash?: boolean
 }
 
-export type MetadataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"pic_id" | "camera" | "lens" | "shutter" | "iso" | "focal_length" | "aperture" | "dominant_color" | "blurhash", ExtArgs["result"]["metadata"]>
+export type MetadataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"pic_id" | "data" | "dominant_color" | "blurhash", ExtArgs["result"]["metadata"]>
 export type MetadataInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }
@@ -563,12 +407,7 @@ export type $MetadataPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     pic_id: string
-    camera: string | null
-    lens: string | null
-    shutter: string | null
-    iso: string | null
-    focal_length: string | null
-    aperture: string | null
+    data: runtime.JsonValue | null
     dominant_color: string
     blurhash: string
   }, ExtArgs["result"]["metadata"]>
@@ -996,12 +835,7 @@ export interface Prisma__MetadataClient<T, Null = never, ExtArgs extends runtime
  */
 export interface MetadataFieldRefs {
   readonly pic_id: Prisma.FieldRef<"Metadata", 'String'>
-  readonly camera: Prisma.FieldRef<"Metadata", 'String'>
-  readonly lens: Prisma.FieldRef<"Metadata", 'String'>
-  readonly shutter: Prisma.FieldRef<"Metadata", 'String'>
-  readonly iso: Prisma.FieldRef<"Metadata", 'String'>
-  readonly focal_length: Prisma.FieldRef<"Metadata", 'String'>
-  readonly aperture: Prisma.FieldRef<"Metadata", 'String'>
+  readonly data: Prisma.FieldRef<"Metadata", 'Json'>
   readonly dominant_color: Prisma.FieldRef<"Metadata", 'String'>
   readonly blurhash: Prisma.FieldRef<"Metadata", 'String'>
 }
