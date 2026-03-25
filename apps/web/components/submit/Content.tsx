@@ -21,6 +21,7 @@ export function Content() {
   const [isUploading, setIsUploading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [uploadedUrl, setUploadedUrl] = useState("");
+  const [pictureId, setPictureId] = useState("");
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -32,7 +33,7 @@ export function Content() {
       try {
         const { type, size } = file;
 
-        const { uploadUrl, fileUrl } = await getUploadUrl({
+        const { uploadUrl, fileUrl, id } = await getUploadUrl({
           type,
           size,
         });
@@ -55,6 +56,7 @@ export function Content() {
           },
         });
         setUploadedUrl(fileUrl);
+        setPictureId(id);
       } catch (error: any) {
         console.log(error);
         toast.error(error?.response?.data?.message || "Failed to upload image");
@@ -118,7 +120,7 @@ export function Content() {
         )}
       </div>
 
-      <Form uploadedUrl={uploadedUrl} />
+      <Form uploadedUrl={uploadedUrl} pictureId={pictureId} />
     </main>
   );
 }

@@ -69,19 +69,19 @@ model Like {
 }
 
 model Picture {
-  id              String           @id @default(cuid())
-  user_id         String
-  description     String?          @db.VarChar(4000)
-  alt             String           @db.VarChar(150)
-  title           String           @db.VarChar(60)
-  created_at      DateTime         @default(now())
-  collectionItems CollectionItem[]
-  engagement      Engagement?
-  likes           Like[]
-  metadata        Metadata?
-  tags            PicTag[]
-  user            User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  src             Src[]
+  id               String           @id @default(cuid())
+  user_id          String
+  description      String?          @db.VarChar(4000)
+  alt              String           @db.VarChar(150)
+  title            String           @db.VarChar(60)
+  created_at       DateTime         @default(now())
+  collection_items CollectionItem[]
+  engagement       Engagement?
+  likes            Like[]
+  metadata         Metadata?
+  tags             PicTag[]
+  user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  src              Src[]
 
   @@index([user_id, id])
 }
@@ -93,7 +93,6 @@ model Src {
   url        String
   width      Int
   height     Int
-  type       Type
   size       Int
   picture    Picture    @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 
@@ -102,7 +101,7 @@ model Src {
 
 model Metadata {
   pic_id         String  @id
-  data           Json?
+  others         Json?
   dominant_color String
   blurhash       String
   picture        Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)
@@ -163,12 +162,6 @@ enum Resolution {
   MEDIUM
   SMALL
   THUMBNAIL
-}
-
-enum Type {
-  JPG
-  PNG
-  WEBP
 }
 
 enum Visibility {

@@ -54,7 +54,7 @@ export const getPictureUploadUrl = async (
   const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
   const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.${process.env.AWS_ENDPOINT_URL_S3?.split("https://")[1]}/${Key}`;
 
-  return { uploadUrl, fileUrl };
+  return { uploadUrl, fileUrl, id };
 };
 
 export const getPictureTags = async () => {
@@ -86,18 +86,19 @@ export const createPicture = async (
   }[],
   url: string,
   userId: string,
+  pictureId: string,
 ) => {
   const getPreviousUploads = await cache.hget("picture:upload", userId);
   const userUploadedPictures = JSON.parse(getPreviousUploads || "[]");
   const newPicture = {
-    id: nanoid(),
+    id: pictureId,
     title,
     description,
     tags,
     url,
     processing: "ongoing",
     stepsCompleted: [],
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
   };
 
   const updated = [...userUploadedPictures, newPicture];

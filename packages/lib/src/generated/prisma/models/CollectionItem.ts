@@ -198,7 +198,7 @@ export type CollectionItemScalarWhereWithAggregatesInput = {
 
 export type CollectionItemCreateInput = {
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
-  picture: Prisma.PictureCreateNestedOneWithoutCollectionItemsInput
+  picture: Prisma.PictureCreateNestedOneWithoutCollection_itemsInput
 }
 
 export type CollectionItemUncheckedCreateInput = {
@@ -208,7 +208,7 @@ export type CollectionItemUncheckedCreateInput = {
 
 export type CollectionItemUpdateInput = {
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
-  picture?: Prisma.PictureUpdateOneRequiredWithoutCollectionItemsNestedInput
+  picture?: Prisma.PictureUpdateOneRequiredWithoutCollection_itemsNestedInput
 }
 
 export type CollectionItemUncheckedUpdateInput = {
@@ -387,7 +387,7 @@ export type CollectionItemScalarWhereInput = {
 }
 
 export type CollectionItemCreateWithoutCollectionInput = {
-  picture: Prisma.PictureCreateNestedOneWithoutCollectionItemsInput
+  picture: Prisma.PictureCreateNestedOneWithoutCollection_itemsInput
 }
 
 export type CollectionItemUncheckedCreateWithoutCollectionInput = {
@@ -441,7 +441,7 @@ export type CollectionItemCreateManyCollectionInput = {
 }
 
 export type CollectionItemUpdateWithoutCollectionInput = {
-  picture?: Prisma.PictureUpdateOneRequiredWithoutCollectionItemsNestedInput
+  picture?: Prisma.PictureUpdateOneRequiredWithoutCollection_itemsNestedInput
 }
 
 export type CollectionItemUncheckedUpdateWithoutCollectionInput = {

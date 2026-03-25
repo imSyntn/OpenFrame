@@ -54,7 +54,7 @@ export function Card({
           {data.title}
         </span>
         <span className="text-xs text-muted-foreground">
-          {new Date(data.createdAt).toLocaleDateString()}
+          {new Date(data.created_at).toLocaleDateString()}
         </span>
       </div>
     </div>

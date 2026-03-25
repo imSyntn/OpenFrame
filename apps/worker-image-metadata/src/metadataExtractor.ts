@@ -1,6 +1,7 @@
 import exifr from "exifr";
 import { encode } from "blurhash";
 import sharp from "sharp";
+import { Vibrant } from "node-vibrant/node";
 
 export const extractMetadata = async (imageBuffer: Buffer) => {
   const data = await exifr.parse(imageBuffer);
@@ -23,4 +24,12 @@ export const getBlurHash = async (imageBuffer: Buffer) => {
   );
 
   return blurhash;
+};
+
+export const getDominantColor = async (imageBuffer: Buffer) => {
+  const palette = await Vibrant.from(imageBuffer).getPalette();
+
+  const color = palette.Vibrant?.hex;
+
+  return color;
 };

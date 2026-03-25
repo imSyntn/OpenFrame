@@ -11,7 +11,7 @@ import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import { BadgeCheck, Hash } from "lucide-react";
+import { BadgeCheck, Hash, LoaderIcon } from "lucide-react";
 
 export function Modal({
   data,
@@ -77,6 +77,13 @@ export function Modal({
                       {step}
                     </Badge>
                   ))}
+                  <Badge variant="secondary" className="bg-processing">
+                    <LoaderIcon
+                      data-icon="inline-start"
+                      className="animate-spin"
+                    />
+                    working on it
+                  </Badge>
                 </div>
               </>
             )}

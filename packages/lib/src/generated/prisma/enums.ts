@@ -20,15 +20,6 @@ export const Resolution = {
 export type Resolution = (typeof Resolution)[keyof typeof Resolution]
 
 
-export const Type = {
-  JPG: 'JPG',
-  PNG: 'PNG',
-  WEBP: 'WEBP'
-} as const
-
-export type Type = (typeof Type)[keyof typeof Type]
-
-
 export const Visibility = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE'

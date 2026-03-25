@@ -1,0 +1,7 @@
+export const RESOLUTION_MAP = {
+  ORIGINAL: null,
+  LARGE: 1920,
+  MEDIUM: 1280,
+  SMALL: 640,
+  THUMBNAIL: 256,
+};

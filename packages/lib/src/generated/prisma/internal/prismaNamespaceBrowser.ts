@@ -155,7 +155,6 @@ export const SrcScalarFieldEnum = {
   url: 'url',
   width: 'width',
   height: 'height',
-  type: 'type',
   size: 'size'
 } as const
 
@@ -164,7 +163,7 @@ export type SrcScalarFieldEnum = (typeof SrcScalarFieldEnum)[keyof typeof SrcSca
 
 export const MetadataScalarFieldEnum = {
   pic_id: 'pic_id',
-  data: 'data',
+  others: 'others',
   dominant_color: 'dominant_color',
   blurhash: 'blurhash'
 } as const

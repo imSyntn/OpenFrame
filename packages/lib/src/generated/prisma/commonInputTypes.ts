@@ -157,13 +157,6 @@ export type EnumResolutionFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumResolutionFilter<$PrismaModel> | $Enums.Resolution
 }
 
-export type EnumTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.Type | Prisma.EnumTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTypeFilter<$PrismaModel> | $Enums.Type
-}
-
 export type EnumResolutionWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Resolution | Prisma.EnumResolutionFieldRefInput<$PrismaModel>
   in?: $Enums.Resolution[] | Prisma.ListEnumResolutionFieldRefInput<$PrismaModel>
@@ -172,16 +165,6 @@ export type EnumResolutionWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumResolutionFilter<$PrismaModel>
   _max?: Prisma.NestedEnumResolutionFilter<$PrismaModel>
-}
-
-export type EnumTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.Type | Prisma.EnumTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTypeWithAggregatesFilter<$PrismaModel> | $Enums.Type
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTypeFilter<$PrismaModel>
 }
 
 export type JsonNullableFilter<$PrismaModel = never> =
@@ -408,13 +391,6 @@ export type NestedEnumResolutionFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumResolutionFilter<$PrismaModel> | $Enums.Resolution
 }
 
-export type NestedEnumTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.Type | Prisma.EnumTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTypeFilter<$PrismaModel> | $Enums.Type
-}
-
 export type NestedEnumResolutionWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Resolution | Prisma.EnumResolutionFieldRefInput<$PrismaModel>
   in?: $Enums.Resolution[] | Prisma.ListEnumResolutionFieldRefInput<$PrismaModel>
@@ -423,16 +399,6 @@ export type NestedEnumResolutionWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumResolutionFilter<$PrismaModel>
   _max?: Prisma.NestedEnumResolutionFilter<$PrismaModel>
-}
-
-export type NestedEnumTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.Type | Prisma.EnumTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.Type[] | Prisma.ListEnumTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTypeWithAggregatesFilter<$PrismaModel> | $Enums.Type
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTypeFilter<$PrismaModel>
 }
 
 export type NestedJsonNullableFilter<$PrismaModel = never> =

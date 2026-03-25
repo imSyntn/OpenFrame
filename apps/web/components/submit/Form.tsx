@@ -31,7 +31,13 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store";
 
-export function Form({ uploadedUrl }: { uploadedUrl: string }) {
+export function Form({
+  uploadedUrl,
+  pictureId,
+}: {
+  uploadedUrl: string;
+  pictureId: string;
+}) {
   const { data: tags, isLoading, error } = useGetTags();
   const userId = useUserStore((state) => state.id);
   const { mutateAsync: createPictureUpload, isPending } =
@@ -52,10 +58,11 @@ export function Form({ uploadedUrl }: { uploadedUrl: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (uploadedUrl) {
+    if (uploadedUrl && pictureId) {
       setValue("url", uploadedUrl, { shouldValidate: true });
+      setValue("pictureId", pictureId, { shouldValidate: true });
     }
-  }, [uploadedUrl]);
+  }, [uploadedUrl, pictureId]);
 
   const submit = async (data: any) => {
     try {

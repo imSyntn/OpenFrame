@@ -85,10 +85,16 @@ export const createPictureController = async (
   next: NextFunction,
 ) => {
   try {
-    const { title, description, tags, url } = req.body;
+    const { title, description, tags, url, pictureId } = req.body;
     const { id: userID } = req.user as { id: string };
 
-    const picture = pictureSchema.parse({ title, description, tags, url });
+    const picture = pictureSchema.parse({
+      title,
+      description,
+      tags,
+      url,
+      pictureId,
+    });
 
     await createPicture(
       picture.title,
@@ -96,6 +102,7 @@ export const createPictureController = async (
       picture.tags,
       picture.url,
       userID,
+      picture.pictureId,
     );
 
     return res.status(200).json({ message: "Picture uploaded successfully" });

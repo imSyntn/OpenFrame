@@ -1,6 +1,6 @@
 import { useGetAllUploadsStatus } from "@/hooks";
 import { UnderProcessingPictureType } from "@workspace/types";
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardSkeleton } from "./Card";
 import { Modal } from "./Modal";
 
@@ -8,13 +8,6 @@ export function Processing() {
   const { data, isLoading, error } = useGetAllUploadsStatus();
   const [selectedPicture, setSelectedPicture] =
     React.useState<UnderProcessingPictureType | null>(null);
-
-  useEffect(() => {
-    console.log("mount");
-    return () => {
-      console.log("unmount");
-    };
-  }, []);
 
   return (
     <>

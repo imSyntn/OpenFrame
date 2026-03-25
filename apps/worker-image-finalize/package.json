@@ -1,5 +1,5 @@
 {
-  "name": "worker-image-processor",
+  "name": "worker-image-metadata",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -14,13 +14,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1008.0",
-    "@workspace/constants": "workspace:*",
-    "@workspace/lib": "workspace:*",
-    "sharp": "^0.34.5"
+    "@workspace/lib": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@types/sharp": "^0.32.0"
+    "@types/node": "^25.5.0"
   }
 }

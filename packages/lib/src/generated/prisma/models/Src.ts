@@ -47,7 +47,6 @@ export type SrcMinAggregateOutputType = {
   url: string | null
   width: number | null
   height: number | null
-  type: $Enums.Type | null
   size: number | null
 }
 
@@ -58,7 +57,6 @@ export type SrcMaxAggregateOutputType = {
   url: string | null
   width: number | null
   height: number | null
-  type: $Enums.Type | null
   size: number | null
 }
 
@@ -69,7 +67,6 @@ export type SrcCountAggregateOutputType = {
   url: number
   width: number
   height: number
-  type: number
   size: number
   _all: number
 }
@@ -96,7 +93,6 @@ export type SrcMinAggregateInputType = {
   url?: true
   width?: true
   height?: true
-  type?: true
   size?: true
 }
 
@@ -107,7 +103,6 @@ export type SrcMaxAggregateInputType = {
   url?: true
   width?: true
   height?: true
-  type?: true
   size?: true
 }
 
@@ -118,7 +113,6 @@ export type SrcCountAggregateInputType = {
   url?: true
   width?: true
   height?: true
-  type?: true
   size?: true
   _all?: true
 }
@@ -216,7 +210,6 @@ export type SrcGroupByOutputType = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
   _count: SrcCountAggregateOutputType | null
   _avg: SrcAvgAggregateOutputType | null
@@ -250,7 +243,6 @@ export type SrcWhereInput = {
   url?: Prisma.StringFilter<"Src"> | string
   width?: Prisma.IntFilter<"Src"> | number
   height?: Prisma.IntFilter<"Src"> | number
-  type?: Prisma.EnumTypeFilter<"Src"> | $Enums.Type
   size?: Prisma.IntFilter<"Src"> | number
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
 }
@@ -262,7 +254,6 @@ export type SrcOrderByWithRelationInput = {
   url?: Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   size?: Prisma.SortOrder
   picture?: Prisma.PictureOrderByWithRelationInput
 }
@@ -277,7 +268,6 @@ export type SrcWhereUniqueInput = Prisma.AtLeast<{
   url?: Prisma.StringFilter<"Src"> | string
   width?: Prisma.IntFilter<"Src"> | number
   height?: Prisma.IntFilter<"Src"> | number
-  type?: Prisma.EnumTypeFilter<"Src"> | $Enums.Type
   size?: Prisma.IntFilter<"Src"> | number
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
 }, "id">
@@ -289,7 +279,6 @@ export type SrcOrderByWithAggregationInput = {
   url?: Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   size?: Prisma.SortOrder
   _count?: Prisma.SrcCountOrderByAggregateInput
   _avg?: Prisma.SrcAvgOrderByAggregateInput
@@ -308,7 +297,6 @@ export type SrcScalarWhereWithAggregatesInput = {
   url?: Prisma.StringWithAggregatesFilter<"Src"> | string
   width?: Prisma.IntWithAggregatesFilter<"Src"> | number
   height?: Prisma.IntWithAggregatesFilter<"Src"> | number
-  type?: Prisma.EnumTypeWithAggregatesFilter<"Src"> | $Enums.Type
   size?: Prisma.IntWithAggregatesFilter<"Src"> | number
 }
 
@@ -317,7 +305,6 @@ export type SrcCreateInput = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
   picture: Prisma.PictureCreateNestedOneWithoutSrcInput
 }
@@ -329,7 +316,6 @@ export type SrcUncheckedCreateInput = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
 }
 
@@ -338,7 +324,6 @@ export type SrcUpdateInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
   picture?: Prisma.PictureUpdateOneRequiredWithoutSrcNestedInput
 }
@@ -350,7 +335,6 @@ export type SrcUncheckedUpdateInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -361,7 +345,6 @@ export type SrcCreateManyInput = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
 }
 
@@ -370,7 +353,6 @@ export type SrcUpdateManyMutationInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -381,7 +363,6 @@ export type SrcUncheckedUpdateManyInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -402,7 +383,6 @@ export type SrcCountOrderByAggregateInput = {
   url?: Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   size?: Prisma.SortOrder
 }
 
@@ -420,7 +400,6 @@ export type SrcMaxOrderByAggregateInput = {
   url?: Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   size?: Prisma.SortOrder
 }
 
@@ -431,7 +410,6 @@ export type SrcMinOrderByAggregateInput = {
   url?: Prisma.SortOrder
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   size?: Prisma.SortOrder
 }
 
@@ -488,16 +466,11 @@ export type EnumResolutionFieldUpdateOperationsInput = {
   set?: $Enums.Resolution
 }
 
-export type EnumTypeFieldUpdateOperationsInput = {
-  set?: $Enums.Type
-}
-
 export type SrcCreateWithoutPictureInput = {
   resolution: $Enums.Resolution
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
 }
 
@@ -507,7 +480,6 @@ export type SrcUncheckedCreateWithoutPictureInput = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
 }
 
@@ -547,7 +519,6 @@ export type SrcScalarWhereInput = {
   url?: Prisma.StringFilter<"Src"> | string
   width?: Prisma.IntFilter<"Src"> | number
   height?: Prisma.IntFilter<"Src"> | number
-  type?: Prisma.EnumTypeFilter<"Src"> | $Enums.Type
   size?: Prisma.IntFilter<"Src"> | number
 }
 
@@ -557,7 +528,6 @@ export type SrcCreateManyPictureInput = {
   url: string
   width: number
   height: number
-  type: $Enums.Type
   size: number
 }
 
@@ -566,7 +536,6 @@ export type SrcUpdateWithoutPictureInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -576,7 +545,6 @@ export type SrcUncheckedUpdateWithoutPictureInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -586,7 +554,6 @@ export type SrcUncheckedUpdateManyWithoutPictureInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.EnumTypeFieldUpdateOperationsInput | $Enums.Type
   size?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -599,7 +566,6 @@ export type SrcSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   url?: boolean
   width?: boolean
   height?: boolean
-  type?: boolean
   size?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["src"]>
@@ -611,7 +577,6 @@ export type SrcSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   url?: boolean
   width?: boolean
   height?: boolean
-  type?: boolean
   size?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["src"]>
@@ -623,7 +588,6 @@ export type SrcSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   url?: boolean
   width?: boolean
   height?: boolean
-  type?: boolean
   size?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["src"]>
@@ -635,11 +599,10 @@ export type SrcSelectScalar = {
   url?: boolean
   width?: boolean
   height?: boolean
-  type?: boolean
   size?: boolean
 }
 
-export type SrcOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pic_id" | "resolution" | "url" | "width" | "height" | "type" | "size", ExtArgs["result"]["src"]>
+export type SrcOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pic_id" | "resolution" | "url" | "width" | "height" | "size", ExtArgs["result"]["src"]>
 export type SrcInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }
@@ -662,7 +625,6 @@ export type $SrcPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     url: string
     width: number
     height: number
-    type: $Enums.Type
     size: number
   }, ExtArgs["result"]["src"]>
   composites: {}
@@ -1094,7 +1056,6 @@ export interface SrcFieldRefs {
   readonly url: Prisma.FieldRef<"Src", 'String'>
   readonly width: Prisma.FieldRef<"Src", 'Int'>
   readonly height: Prisma.FieldRef<"Src", 'Int'>
-  readonly type: Prisma.FieldRef<"Src", 'Type'>
   readonly size: Prisma.FieldRef<"Src", 'Int'>
 }
     

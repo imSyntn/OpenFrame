@@ -1490,7 +1490,6 @@ export const SrcScalarFieldEnum = {
   url: 'url',
   width: 'width',
   height: 'height',
-  type: 'type',
   size: 'size'
 } as const
 
@@ -1499,7 +1498,7 @@ export type SrcScalarFieldEnum = (typeof SrcScalarFieldEnum)[keyof typeof SrcSca
 
 export const MetadataScalarFieldEnum = {
   pic_id: 'pic_id',
-  data: 'data',
+  others: 'others',
   dominant_color: 'dominant_color',
   blurhash: 'blurhash'
 } as const
@@ -1663,20 +1662,6 @@ export type EnumResolutionFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'Resolution[]'
  */
 export type ListEnumResolutionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Resolution[]'>
-    
-
-
-/**
- * Reference to a field of type 'Type'
- */
-export type EnumTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Type'>
-    
-
-
-/**
- * Reference to a field of type 'Type[]'
- */
-export type ListEnumTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Type[]'>
     
 
 

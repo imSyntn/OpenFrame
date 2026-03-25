@@ -6,6 +6,7 @@ import { z } from "zod";
 
 export const pictureSchema = z.object({
   url: z.string().url("Invalid URL"),
+  pictureId: z.string().min(1, "Invalid picture ID"),
   title: z
     .string()
     .min(3, "Title must be at least 3 characters long")

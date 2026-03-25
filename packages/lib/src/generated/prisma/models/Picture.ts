@@ -190,7 +190,7 @@ export type PictureWhereInput = {
   alt?: Prisma.StringFilter<"Picture"> | string
   title?: Prisma.StringFilter<"Picture"> | string
   created_at?: Prisma.DateTimeFilter<"Picture"> | Date | string
-  collectionItems?: Prisma.CollectionItemListRelationFilter
+  collection_items?: Prisma.CollectionItemListRelationFilter
   engagement?: Prisma.XOR<Prisma.EngagementNullableScalarRelationFilter, Prisma.EngagementWhereInput> | null
   likes?: Prisma.LikeListRelationFilter
   metadata?: Prisma.XOR<Prisma.MetadataNullableScalarRelationFilter, Prisma.MetadataWhereInput> | null
@@ -206,7 +206,7 @@ export type PictureOrderByWithRelationInput = {
   alt?: Prisma.SortOrder
   title?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  collectionItems?: Prisma.CollectionItemOrderByRelationAggregateInput
+  collection_items?: Prisma.CollectionItemOrderByRelationAggregateInput
   engagement?: Prisma.EngagementOrderByWithRelationInput
   likes?: Prisma.LikeOrderByRelationAggregateInput
   metadata?: Prisma.MetadataOrderByWithRelationInput
@@ -225,7 +225,7 @@ export type PictureWhereUniqueInput = Prisma.AtLeast<{
   alt?: Prisma.StringFilter<"Picture"> | string
   title?: Prisma.StringFilter<"Picture"> | string
   created_at?: Prisma.DateTimeFilter<"Picture"> | Date | string
-  collectionItems?: Prisma.CollectionItemListRelationFilter
+  collection_items?: Prisma.CollectionItemListRelationFilter
   engagement?: Prisma.XOR<Prisma.EngagementNullableScalarRelationFilter, Prisma.EngagementWhereInput> | null
   likes?: Prisma.LikeListRelationFilter
   metadata?: Prisma.XOR<Prisma.MetadataNullableScalarRelationFilter, Prisma.MetadataWhereInput> | null
@@ -264,7 +264,7 @@ export type PictureCreateInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
@@ -280,7 +280,7 @@ export type PictureUncheckedCreateInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
@@ -294,7 +294,7 @@ export type PictureUpdateInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
@@ -310,7 +310,7 @@ export type PictureUncheckedUpdateInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
@@ -498,18 +498,18 @@ export type PictureUpdateOneRequiredWithoutEngagementNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PictureUpdateToOneWithWhereWithoutEngagementInput, Prisma.PictureUpdateWithoutEngagementInput>, Prisma.PictureUncheckedUpdateWithoutEngagementInput>
 }
 
-export type PictureCreateNestedOneWithoutCollectionItemsInput = {
-  create?: Prisma.XOR<Prisma.PictureCreateWithoutCollectionItemsInput, Prisma.PictureUncheckedCreateWithoutCollectionItemsInput>
-  connectOrCreate?: Prisma.PictureCreateOrConnectWithoutCollectionItemsInput
+export type PictureCreateNestedOneWithoutCollection_itemsInput = {
+  create?: Prisma.XOR<Prisma.PictureCreateWithoutCollection_itemsInput, Prisma.PictureUncheckedCreateWithoutCollection_itemsInput>
+  connectOrCreate?: Prisma.PictureCreateOrConnectWithoutCollection_itemsInput
   connect?: Prisma.PictureWhereUniqueInput
 }
 
-export type PictureUpdateOneRequiredWithoutCollectionItemsNestedInput = {
-  create?: Prisma.XOR<Prisma.PictureCreateWithoutCollectionItemsInput, Prisma.PictureUncheckedCreateWithoutCollectionItemsInput>
-  connectOrCreate?: Prisma.PictureCreateOrConnectWithoutCollectionItemsInput
-  upsert?: Prisma.PictureUpsertWithoutCollectionItemsInput
+export type PictureUpdateOneRequiredWithoutCollection_itemsNestedInput = {
+  create?: Prisma.XOR<Prisma.PictureCreateWithoutCollection_itemsInput, Prisma.PictureUncheckedCreateWithoutCollection_itemsInput>
+  connectOrCreate?: Prisma.PictureCreateOrConnectWithoutCollection_itemsInput
+  upsert?: Prisma.PictureUpsertWithoutCollection_itemsInput
   connect?: Prisma.PictureWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PictureUpdateToOneWithWhereWithoutCollectionItemsInput, Prisma.PictureUpdateWithoutCollectionItemsInput>, Prisma.PictureUncheckedUpdateWithoutCollectionItemsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PictureUpdateToOneWithWhereWithoutCollection_itemsInput, Prisma.PictureUpdateWithoutCollection_itemsInput>, Prisma.PictureUncheckedUpdateWithoutCollection_itemsInput>
 }
 
 export type PictureCreateWithoutUserInput = {
@@ -518,7 +518,7 @@ export type PictureCreateWithoutUserInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
@@ -532,7 +532,7 @@ export type PictureUncheckedCreateWithoutUserInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
@@ -584,7 +584,7 @@ export type PictureCreateWithoutLikesInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
   tags?: Prisma.PicTagCreateNestedManyWithoutPictureInput
@@ -599,7 +599,7 @@ export type PictureUncheckedCreateWithoutLikesInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
   tags?: Prisma.PicTagUncheckedCreateNestedManyWithoutPictureInput
@@ -628,7 +628,7 @@ export type PictureUpdateWithoutLikesInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
   tags?: Prisma.PicTagUpdateManyWithoutPictureNestedInput
@@ -643,7 +643,7 @@ export type PictureUncheckedUpdateWithoutLikesInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
   tags?: Prisma.PicTagUncheckedUpdateManyWithoutPictureNestedInput
@@ -656,7 +656,7 @@ export type PictureCreateWithoutSrcInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
@@ -671,7 +671,7 @@ export type PictureUncheckedCreateWithoutSrcInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
@@ -700,7 +700,7 @@ export type PictureUpdateWithoutSrcInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
@@ -715,7 +715,7 @@ export type PictureUncheckedUpdateWithoutSrcInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
@@ -728,7 +728,7 @@ export type PictureCreateWithoutMetadataInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   tags?: Prisma.PicTagCreateNestedManyWithoutPictureInput
@@ -743,7 +743,7 @@ export type PictureUncheckedCreateWithoutMetadataInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   tags?: Prisma.PicTagUncheckedCreateNestedManyWithoutPictureInput
@@ -772,7 +772,7 @@ export type PictureUpdateWithoutMetadataInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   tags?: Prisma.PicTagUpdateManyWithoutPictureNestedInput
@@ -787,7 +787,7 @@ export type PictureUncheckedUpdateWithoutMetadataInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   tags?: Prisma.PicTagUncheckedUpdateManyWithoutPictureNestedInput
@@ -800,7 +800,7 @@ export type PictureCreateWithoutTagsInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
@@ -815,7 +815,7 @@ export type PictureUncheckedCreateWithoutTagsInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   engagement?: Prisma.EngagementUncheckedCreateNestedOneWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
@@ -844,7 +844,7 @@ export type PictureUpdateWithoutTagsInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
@@ -859,7 +859,7 @@ export type PictureUncheckedUpdateWithoutTagsInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
@@ -872,7 +872,7 @@ export type PictureCreateWithoutEngagementInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemCreateNestedManyWithoutPictureInput
   likes?: Prisma.LikeCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataCreateNestedOneWithoutPictureInput
   tags?: Prisma.PicTagCreateNestedManyWithoutPictureInput
@@ -887,7 +887,7 @@ export type PictureUncheckedCreateWithoutEngagementInput = {
   alt: string
   title: string
   created_at?: Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
+  collection_items?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutPictureInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPictureInput
   metadata?: Prisma.MetadataUncheckedCreateNestedOneWithoutPictureInput
   tags?: Prisma.PicTagUncheckedCreateNestedManyWithoutPictureInput
@@ -916,7 +916,7 @@ export type PictureUpdateWithoutEngagementInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
   tags?: Prisma.PicTagUpdateManyWithoutPictureNestedInput
@@ -931,14 +931,14 @@ export type PictureUncheckedUpdateWithoutEngagementInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
   tags?: Prisma.PicTagUncheckedUpdateManyWithoutPictureNestedInput
   src?: Prisma.SrcUncheckedUpdateManyWithoutPictureNestedInput
 }
 
-export type PictureCreateWithoutCollectionItemsInput = {
+export type PictureCreateWithoutCollection_itemsInput = {
   id?: string
   description?: string | null
   alt: string
@@ -952,7 +952,7 @@ export type PictureCreateWithoutCollectionItemsInput = {
   src?: Prisma.SrcCreateNestedManyWithoutPictureInput
 }
 
-export type PictureUncheckedCreateWithoutCollectionItemsInput = {
+export type PictureUncheckedCreateWithoutCollection_itemsInput = {
   id?: string
   user_id: string
   description?: string | null
@@ -966,23 +966,23 @@ export type PictureUncheckedCreateWithoutCollectionItemsInput = {
   src?: Prisma.SrcUncheckedCreateNestedManyWithoutPictureInput
 }
 
-export type PictureCreateOrConnectWithoutCollectionItemsInput = {
+export type PictureCreateOrConnectWithoutCollection_itemsInput = {
   where: Prisma.PictureWhereUniqueInput
-  create: Prisma.XOR<Prisma.PictureCreateWithoutCollectionItemsInput, Prisma.PictureUncheckedCreateWithoutCollectionItemsInput>
+  create: Prisma.XOR<Prisma.PictureCreateWithoutCollection_itemsInput, Prisma.PictureUncheckedCreateWithoutCollection_itemsInput>
 }
 
-export type PictureUpsertWithoutCollectionItemsInput = {
-  update: Prisma.XOR<Prisma.PictureUpdateWithoutCollectionItemsInput, Prisma.PictureUncheckedUpdateWithoutCollectionItemsInput>
-  create: Prisma.XOR<Prisma.PictureCreateWithoutCollectionItemsInput, Prisma.PictureUncheckedCreateWithoutCollectionItemsInput>
+export type PictureUpsertWithoutCollection_itemsInput = {
+  update: Prisma.XOR<Prisma.PictureUpdateWithoutCollection_itemsInput, Prisma.PictureUncheckedUpdateWithoutCollection_itemsInput>
+  create: Prisma.XOR<Prisma.PictureCreateWithoutCollection_itemsInput, Prisma.PictureUncheckedCreateWithoutCollection_itemsInput>
   where?: Prisma.PictureWhereInput
 }
 
-export type PictureUpdateToOneWithWhereWithoutCollectionItemsInput = {
+export type PictureUpdateToOneWithWhereWithoutCollection_itemsInput = {
   where?: Prisma.PictureWhereInput
-  data: Prisma.XOR<Prisma.PictureUpdateWithoutCollectionItemsInput, Prisma.PictureUncheckedUpdateWithoutCollectionItemsInput>
+  data: Prisma.XOR<Prisma.PictureUpdateWithoutCollection_itemsInput, Prisma.PictureUncheckedUpdateWithoutCollection_itemsInput>
 }
 
-export type PictureUpdateWithoutCollectionItemsInput = {
+export type PictureUpdateWithoutCollection_itemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alt?: Prisma.StringFieldUpdateOperationsInput | string
@@ -996,7 +996,7 @@ export type PictureUpdateWithoutCollectionItemsInput = {
   src?: Prisma.SrcUpdateManyWithoutPictureNestedInput
 }
 
-export type PictureUncheckedUpdateWithoutCollectionItemsInput = {
+export type PictureUncheckedUpdateWithoutCollection_itemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1024,7 +1024,7 @@ export type PictureUpdateWithoutUserInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUpdateOneWithoutPictureNestedInput
@@ -1038,7 +1038,7 @@ export type PictureUncheckedUpdateWithoutUserInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
+  collection_items?: Prisma.CollectionItemUncheckedUpdateManyWithoutPictureNestedInput
   engagement?: Prisma.EngagementUncheckedUpdateOneWithoutPictureNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPictureNestedInput
   metadata?: Prisma.MetadataUncheckedUpdateOneWithoutPictureNestedInput
@@ -1060,14 +1060,14 @@ export type PictureUncheckedUpdateManyWithoutUserInput = {
  */
 
 export type PictureCountOutputType = {
-  collectionItems: number
+  collection_items: number
   likes: number
   tags: number
   src: number
 }
 
 export type PictureCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  collectionItems?: boolean | PictureCountOutputTypeCountCollectionItemsArgs
+  collection_items?: boolean | PictureCountOutputTypeCountCollection_itemsArgs
   likes?: boolean | PictureCountOutputTypeCountLikesArgs
   tags?: boolean | PictureCountOutputTypeCountTagsArgs
   src?: boolean | PictureCountOutputTypeCountSrcArgs
@@ -1086,7 +1086,7 @@ export type PictureCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * PictureCountOutputType without action
  */
-export type PictureCountOutputTypeCountCollectionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PictureCountOutputTypeCountCollection_itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CollectionItemWhereInput
 }
 
@@ -1119,7 +1119,7 @@ export type PictureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   alt?: boolean
   title?: boolean
   created_at?: boolean
-  collectionItems?: boolean | Prisma.Picture$collectionItemsArgs<ExtArgs>
+  collection_items?: boolean | Prisma.Picture$collection_itemsArgs<ExtArgs>
   engagement?: boolean | Prisma.Picture$engagementArgs<ExtArgs>
   likes?: boolean | Prisma.Picture$likesArgs<ExtArgs>
   metadata?: boolean | Prisma.Picture$metadataArgs<ExtArgs>
@@ -1160,7 +1160,7 @@ export type PictureSelectScalar = {
 
 export type PictureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "description" | "alt" | "title" | "created_at", ExtArgs["result"]["picture"]>
 export type PictureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  collectionItems?: boolean | Prisma.Picture$collectionItemsArgs<ExtArgs>
+  collection_items?: boolean | Prisma.Picture$collection_itemsArgs<ExtArgs>
   engagement?: boolean | Prisma.Picture$engagementArgs<ExtArgs>
   likes?: boolean | Prisma.Picture$likesArgs<ExtArgs>
   metadata?: boolean | Prisma.Picture$metadataArgs<ExtArgs>
@@ -1179,7 +1179,7 @@ export type PictureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $PicturePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Picture"
   objects: {
-    collectionItems: Prisma.$CollectionItemPayload<ExtArgs>[]
+    collection_items: Prisma.$CollectionItemPayload<ExtArgs>[]
     engagement: Prisma.$EngagementPayload<ExtArgs> | null
     likes: Prisma.$LikePayload<ExtArgs>[]
     metadata: Prisma.$MetadataPayload<ExtArgs> | null
@@ -1588,7 +1588,7 @@ readonly fields: PictureFieldRefs;
  */
 export interface Prisma__PictureClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  collectionItems<T extends Prisma.Picture$collectionItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Picture$collectionItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollectionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  collection_items<T extends Prisma.Picture$collection_itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Picture$collection_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollectionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   engagement<T extends Prisma.Picture$engagementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Picture$engagementArgs<ExtArgs>>): Prisma.Prisma__EngagementClient<runtime.Types.Result.GetResult<Prisma.$EngagementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   likes<T extends Prisma.Picture$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Picture$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   metadata<T extends Prisma.Picture$metadataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Picture$metadataArgs<ExtArgs>>): Prisma.Prisma__MetadataClient<runtime.Types.Result.GetResult<Prisma.$MetadataPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2031,9 +2031,9 @@ export type PictureDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Picture.collectionItems
+ * Picture.collection_items
  */
-export type Picture$collectionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Picture$collection_itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the CollectionItem
    */
