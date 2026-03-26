@@ -83,7 +83,6 @@ export const signinController = async (
     const user = userSigninSchema.parse({ email, password });
 
     const userExists = await getUser({ email: user.email }, "auth");
-    console.log(userExists);
     if (!userExists) {
       return next(new ErrorWithStatus(400, "User doesn't exist"));
     }

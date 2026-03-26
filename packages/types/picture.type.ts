@@ -26,7 +26,7 @@ export interface UnderProcessingPictureType {
   tags: tagsType[];
   src?: SrcType[];
   url: string;
-  processing: "ongoing" | "ready" | "failed";
+  processing: "ongoing" | "ready" | "failed" | "done";
   created_at: string;
   stepsCompleted: string[];
   metadata?: Record<string, string>;

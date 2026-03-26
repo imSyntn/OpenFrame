@@ -14,7 +14,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
-    "@workspace/lib": "workspace:*"
+    "@workspace/lib": "workspace:*",
+    "@workspace/types": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.5.0"

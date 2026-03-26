@@ -1,8 +1,10 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
 import { cache } from "@workspace/lib";
+import { logger } from "@workspace/lib/logger";
 import { resizeImage } from "./processImage";
 import { uploadVariants } from "./lib/upload";
+import { type UnderProcessingPictureType } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-processor" });
 
@@ -16,7 +18,7 @@ const run = async () => {
       try {
         data = JSON.parse(message.value?.toString() || "{}");
       } catch (err) {
-        console.error("Invalid JSON", {
+        logger.error("Invalid JSON", {
           topic,
           partition,
           value: message.value?.toString(),
@@ -26,37 +28,30 @@ const run = async () => {
 
       try {
         const availableInCache = await cache.hget(
-          "picture:upload",
-          data.userId,
+          `picture:upload:${data.userId}`,
+          data.id,
         );
         if (!availableInCache) return;
 
-        const parsed = JSON.parse(availableInCache);
+        const parsed: UnderProcessingPictureType = JSON.parse(availableInCache);
 
-        const existing = parsed.find((i: any) => i.id === data.id);
-        if (!existing) return;
-
-        if (existing.stepsCompleted?.includes("variants")) {
-          console.log("Already processed, skipping", data.id);
+        if (parsed.stepsCompleted?.includes("variants")) {
+          logger.info("Already processed, skipping", data.id);
           return;
         }
         const { original, variants } = await resizeImage(data.url);
 
         const variantsUploaded = await uploadVariants(data.id, variants);
 
-        const updatedCache = parsed.map((item: any) => {
-          if (item.id !== data.id) return item;
-
-          return {
-            ...item,
-            stepsCompleted: [...item.stepsCompleted, "variants"],
-            src: [original, ...variantsUploaded],
-          };
-        });
+        const updatedCache: UnderProcessingPictureType = {
+          ...parsed,
+          stepsCompleted: [...parsed.stepsCompleted, "variants"],
+          src: [original, ...variantsUploaded],
+        };
 
         await cache.hset(
-          "picture:upload",
-          data.userId,
+          `picture:upload:${data.userId}`,
+          data.id,
           JSON.stringify(updatedCache),
         );
 
@@ -65,7 +60,7 @@ const run = async () => {
           JSON.stringify({ id: data.id, userId: data.userId }),
         );
       } catch (err: any) {
-        console.error("Processing failed", {
+        logger.error("Processing failed", {
           id: data?.id,
           error: err.message,
         });
@@ -76,6 +71,6 @@ const run = async () => {
 };
 
 run().catch((err) => {
-  console.error("Crashed", err);
+  logger.error("Crashed", err);
   process.exit(1);
 });

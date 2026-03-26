@@ -1,7 +1,9 @@
 import "@workspace/lib/env";
-import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
+import { kafka } from "@workspace/lib/kafka";
+import { logger } from "@workspace/lib/logger";
 import { cache } from "@workspace/lib";
 import { bulkWrite } from "./bulkWrite";
+import type { UnderProcessingPictureType } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-db-write" });
 
@@ -9,7 +11,6 @@ const run = async () => {
   await consumer.connect();
   await consumer.subscribe({
     topics: ["picture-ready-for-DB-write"],
-    fromBeginning: true,
   });
 
   await consumer.run({
@@ -22,8 +23,8 @@ const run = async () => {
       isRunning,
       isStale,
     }) => {
-      console.log("batch received...");
-      const parsedMessages = [];
+      logger.info("batch received...");
+      const parsedMessages: UnderProcessingPictureType[] = [];
 
       for (const message of batch.messages) {
         if (!isRunning() || isStale()) break;
@@ -34,32 +35,45 @@ const run = async () => {
             resolveOffset(message.offset);
             continue;
           }
-          const parsed = JSON.parse(value);
+          const parsed: UnderProcessingPictureType = JSON.parse(value);
           parsedMessages.push(parsed);
         } catch (err) {
-          console.error("JSON parse error:", err);
+          logger.error("JSON parse error:", err);
           resolveOffset(message.offset);
         }
       }
 
       try {
         if (parsedMessages.length > 0) {
-          console.log(`Processing ${parsedMessages.length} messages...`);
+          logger.info(`Processing ${parsedMessages.length} messages...`);
 
           await heartbeat();
 
           await bulkWrite(parsedMessages);
 
-          console.log("Batch processed successfully");
+          logger.info("Batch processed successfully");
         }
 
         for (const message of batch.messages) {
           resolveOffset(message.offset);
         }
 
+        const pipeline = cache.pipeline();
+
+        for (const message of parsedMessages) {
+          pipeline.hset(
+            `picture:upload:${message.userId}`,
+            message.id,
+            JSON.stringify({ ...message, processing: "done" }),
+          );
+          pipeline.expire(`picture:upload:${message.userId}`, 60 * 60 * 2);
+        }
+
+        await pipeline.exec();
+
         await commitOffsetsIfNecessary();
       } catch (err) {
-        console.error("Batch failed", err);
+        logger.error("Batch failed", err);
 
         return;
       }
@@ -70,6 +84,6 @@ const run = async () => {
 };
 
 run().catch((err) => {
-  console.error("Crashed", err);
+  logger.error("Crashed", err);
   process.exit(1);
 });

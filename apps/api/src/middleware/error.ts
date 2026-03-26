@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
+import { logger } from "@workspace/lib/logger";
 
 export class ErrorWithStatus extends Error {
   constructor(
@@ -16,7 +17,7 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.error(err);
+  logger.error(err);
 
   if (err instanceof ZodError) {
     return res.status(400).json({

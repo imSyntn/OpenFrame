@@ -6,6 +6,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
+import { UnderProcessingPictureType } from "@workspace/types";
 
 export const getUserPictures = async (id: string, page: number) => {
   const cacheKey = `${id}:${page}`;
@@ -88,9 +89,7 @@ export const createPicture = async (
   userId: string,
   pictureId: string,
 ) => {
-  const getPreviousUploads = await cache.hget("picture:upload", userId);
-  const userUploadedPictures = JSON.parse(getPreviousUploads || "[]");
-  const newPicture = {
+  const newPicture: UnderProcessingPictureType = {
     id: pictureId,
     title,
     description,
@@ -99,34 +98,25 @@ export const createPicture = async (
     processing: "ongoing",
     stepsCompleted: [],
     created_at: new Date().toISOString(),
+    userId,
   };
 
-  const updated = [...userUploadedPictures, newPicture];
-
-  console.log(newPicture);
-
-  await cache.hset("picture:upload", userId, JSON.stringify(updated));
-  await kafkaProduceMessage(
-    "picture-upload",
-    JSON.stringify({
-      ...newPicture,
-      userId,
-    }),
+  await cache.hset(
+    `picture:upload:${userId}`,
+    pictureId,
+    JSON.stringify(newPicture),
   );
+  await kafkaProduceMessage("picture-upload", JSON.stringify(newPicture));
 };
 
 export const getAllPictureStatus = async (userId: string) => {
-  const availableInCache = await cache.hget("picture:upload", userId);
+  const data = await cache.hgetall(`picture:upload:${userId}`);
 
-  return JSON.parse(availableInCache || "[]");
+  return Object.values(data).map((item) => JSON.parse(item));
 };
 
 export const getPictureStatus = async (userId: string, pictureID: string) => {
-  const availableInCache = await cache.hget("picture:upload", userId);
+  const data = await cache.hget(`picture:upload:${userId}`, pictureID);
 
-  const data = JSON.parse(availableInCache || "[]");
-
-  const picture = data.find((item: any) => item.id === pictureID) || {};
-
-  return picture;
+  return JSON.parse(data || "{}");
 };

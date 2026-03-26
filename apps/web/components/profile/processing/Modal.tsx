@@ -83,18 +83,26 @@ export function Modal({
                           data-icon="inline-start"
                           className="animate-spin"
                         />
-                        working on it
+                        processing
                       </>
                     ) : (
                       <>
                         <Check data-icon="inline-start" />
-                        Ready
+                        ready
                       </>
                     )}
                   </Badge>
                 </div>
               </>
             )}
+
+            <div className="flex items-center justify-center">
+              <span className="text-xs text-muted-foreground">
+                {data.processing === "done"
+                  ? "Processing completed, picture is now available in your profile"
+                  : "Processing in progress, picture will be available in your profile once completed"}
+              </span>
+            </div>
 
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">
@@ -105,7 +113,7 @@ export function Modal({
                 className={cn(
                   data.processing === "ongoing"
                     ? "bg-processing"
-                    : data.processing === "ready"
+                    : ["ready", "done"].includes(data.processing)
                       ? "bg-success"
                       : "bg-destructive",
                   "text-black",

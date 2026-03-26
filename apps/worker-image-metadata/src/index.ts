@@ -1,11 +1,13 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
+import { logger } from "@workspace/lib/logger";
 import {
   extractMetadata,
   getBlurHash,
   getDominantColor,
 } from "./metadataExtractor";
 import { cache } from "@workspace/lib";
+import { type UnderProcessingPictureType } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-metadata" });
 
@@ -15,12 +17,13 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ message, topic, partition }) => {
-      let data: any;
+      let data: UnderProcessingPictureType;
 
       try {
         data = JSON.parse(message.value?.toString() || "{}");
+        logger.info("kafka data", data);
       } catch (err) {
-        console.error("Invalid JSON", {
+        logger.error("Invalid JSON", {
           topic,
           partition,
           value: message.value?.toString(),
@@ -30,22 +33,21 @@ const run = async () => {
 
       try {
         const availableInCache = await cache.hget(
-          "picture:upload",
-          data.userId,
+          `picture:upload:${data.userId}`,
+          data.id,
         );
+        logger.info("cache data", availableInCache);
         if (!availableInCache) return;
 
-        const parsed = JSON.parse(availableInCache);
-
-        const existing = parsed.find((i: any) => i.id === data.id);
-        if (!existing) return;
+        const parsed: UnderProcessingPictureType = JSON.parse(availableInCache);
+        logger.info("parsed data", parsed);
 
         if (
-          existing.stepsCompleted?.includes("metadata") &&
-          existing.stepsCompleted?.includes("blurhash") &&
-          existing.stepsCompleted?.includes("dominant_color")
+          parsed.stepsCompleted.includes("metadata") &&
+          parsed.stepsCompleted.includes("blurhash") &&
+          parsed.stepsCompleted.includes("dominant_color")
         ) {
-          console.log("Already processed metadata, skipping", data.id);
+          logger.info("Already processed metadata, skipping", data.id);
           return;
         }
 
@@ -60,32 +62,27 @@ const run = async () => {
           getDominantColor(buffer),
         ]);
 
-        const updatedCache = parsed.map((item: any) => {
-          if (item.id !== data.id) return item;
-
-          return {
-            ...item,
-            metadata: {
-              others: metadata,
-              blurhash,
-              dominant_color,
-            },
-            stepsCompleted: [
-              ...new Set([
-                ...item.stepsCompleted,
-                "metadata",
-                "blurhash",
-                "dominant_color",
-              ]),
-            ],
-          };
-        });
+        const updatedCache = {
+          ...parsed,
+          metadata: {
+            others: metadata,
+            blurhash,
+            dominant_color,
+          },
+          stepsCompleted: [
+            ...parsed.stepsCompleted,
+            "metadata",
+            "blurhash",
+            "dominant_color",
+          ],
+        };
 
         await cache.hset(
-          "picture:upload",
-          data.userId,
+          `picture:upload:${data.userId}`,
+          data.id,
           JSON.stringify(updatedCache),
         );
+        console.log(updatedCache);
 
         await kafkaProduceMessage(
           "metadata-extraction-complete",
@@ -95,7 +92,7 @@ const run = async () => {
           }),
         );
       } catch (err: any) {
-        console.error("Metadata processing failed", {
+        logger.error("Metadata processing failed", {
           id: data?.id,
           error: err.message,
         });
@@ -107,6 +104,6 @@ const run = async () => {
 };
 
 run().catch((err) => {
-  console.error("Crashed", err);
+  logger.error("Crashed", err);
   process.exit(1);
 });

@@ -1,6 +1,8 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
 import { cache } from "@workspace/lib";
+import { logger } from "@workspace/lib/logger";
+import type { UnderProcessingPictureType } from "@workspace/types";
 
 const REQUIRED_STEPS = ["metadata", "blurhash", "dominant_color", "variants"];
 
@@ -20,7 +22,7 @@ const run = async () => {
       try {
         data = JSON.parse(message.value?.toString() || "{}");
       } catch (err) {
-        console.error("Invalid JSON", {
+        logger.error("Invalid JSON", {
           topic,
           partition,
           value: message.value?.toString(),
@@ -28,56 +30,48 @@ const run = async () => {
         return;
       }
 
-      const availableInCache = await cache.hget("picture:upload", data.userId);
+      const availableInCache = await cache.hget(
+        `picture:upload:${data.userId}`,
+        data.id,
+      );
       if (!availableInCache) return;
 
-      let parsed: any[];
+      let parsed: UnderProcessingPictureType;
       try {
         parsed = JSON.parse(availableInCache);
       } catch {
-        console.error("Corrupted cache data", { userId: data.userId });
+        logger.error("Corrupted cache data", { userId: data.userId });
         return;
       }
 
-      let obj = parsed.find((i: any) => i.id === data.id);
-      if (!obj) return;
-
-      const steps = obj.stepsCompleted || [];
+      const steps = parsed.stepsCompleted || [];
       const isComplete = REQUIRED_STEPS.every((step) => steps.includes(step));
 
       if (!isComplete) return;
 
       if (steps.includes("finalized")) return;
 
-      const updatedCache = parsed.map((item: any) => {
-        if (item.id === data.id) {
-          const updated = {
-            ...item,
-            stepsCompleted: [...item.stepsCompleted, "finalized"],
-            processing: "ready",
-          };
-          obj = updated;
-          return updated;
-        } else {
-          return item;
-        }
-      });
+      const updatedCache: UnderProcessingPictureType = {
+        ...parsed,
+        stepsCompleted: [...parsed.stepsCompleted, "finalized"],
+        processing: "ready",
+      };
 
       await cache.hset(
-        "picture:upload",
-        data.userId,
+        `picture:upload:${data.userId}`,
+        data.id,
         JSON.stringify(updatedCache),
       );
 
       await kafkaProduceMessage(
         "picture-ready-for-DB-write",
-        JSON.stringify({ ...obj, userId: data.userId }),
+        JSON.stringify(updatedCache),
       );
     },
   });
 };
 
 run().catch((err) => {
-  console.error("Crashed", err);
+  logger.error("Crashed", err);
   process.exit(1);
 });

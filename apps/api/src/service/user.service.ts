@@ -1,4 +1,5 @@
 import { prisma, cache, Prisma } from "@workspace/lib";
+import { logger } from "@workspace/lib/logger";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
 type GetUserPayload =
@@ -137,39 +138,10 @@ export const updateUser = async (
 
     const res = await pipeline.exec();
     if (!res) {
-      console.log("❌ Failed to update user in cache");
+      logger.error("Failed to update user in cache");
     }
     return updatedUser;
   } catch (error) {
     throw error;
   }
 };
-
-// export const refreshTokenService = async () => {
-//   try {
-//     const updatedUser = await prisma.user.update({
-//       where: user,
-//       data: {
-//         access_token: generateAccessToken({
-//           name: user.name,
-//           email: user.email,
-//           id: user.id,
-//         }),
-//       },
-//       include: include,
-//       omit: omit,
-//     });
-
-//     const pipeline = cache.pipeline();
-//     pipeline.hset("user", updatedUser.id, JSON.stringify(updatedUser));
-//     pipeline.hset("user", updatedUser.email, JSON.stringify(updatedUser));
-
-//     const res = await pipeline.exec();
-//     if (!res) {
-//       console.log("❌ Failed to update user in cache");
-//     }
-//     return updatedUser;
-//   } catch (error) {
-//     throw error;
-//   }
-// };

@@ -42,7 +42,7 @@ export function Card({
             "absolute -top-1 -right-1 h-3 w-3 rounded-full",
             data.processing == "ongoing"
               ? "bg-processing animate-pulse"
-              : data.processing == "ready"
+              : ["ready", "done"].includes(data.processing)
                 ? "bg-success"
                 : "bg-destructive",
           )}

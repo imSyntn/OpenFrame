@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import { logger } from "@workspace/lib/logger";
 
 if (!process.env.REDIS_OTP_DB_URL) {
   throw new Error("REDIS_OTP_DB_URL - env is not set.");
@@ -7,9 +8,9 @@ if (!process.env.REDIS_OTP_DB_URL) {
 export const otpStore = new Redis(process.env.REDIS_OTP_DB_URL);
 
 otpStore.on("connect", () => {
-  console.log("Connected to Redis OTP store successfully!");
+  logger.info("Connected to Redis OTP store successfully!");
 });
 
 otpStore.on("error", (error) => {
-  console.error("Redis otp store connection error:", error);
+  logger.error("Redis otp store connection error:", error);
 });
