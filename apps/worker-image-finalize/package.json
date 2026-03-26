@@ -1,5 +1,5 @@
 {
-  "name": "worker-image-metadata",
+  "name": "worker-image-finalize",
   "version": "1.0.0",
   "description": "",
   "type": "module",

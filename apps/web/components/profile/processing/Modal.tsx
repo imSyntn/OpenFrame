@@ -5,13 +5,12 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@workspace/ui/components/dialog";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import { BadgeCheck, Hash, LoaderIcon } from "lucide-react";
+import { BadgeCheck, Check, Hash, LoaderIcon } from "lucide-react";
 
 export function Modal({
   data,
@@ -78,11 +77,20 @@ export function Modal({
                     </Badge>
                   ))}
                   <Badge variant="secondary" className="bg-processing">
-                    <LoaderIcon
-                      data-icon="inline-start"
-                      className="animate-spin"
-                    />
-                    working on it
+                    {data.stepsCompleted.length < 5 ? (
+                      <>
+                        <LoaderIcon
+                          data-icon="inline-start"
+                          className="animate-spin"
+                        />
+                        working on it
+                      </>
+                    ) : (
+                      <>
+                        <Check data-icon="inline-start" />
+                        Ready
+                      </>
+                    )}
                   </Badge>
                 </div>
               </>

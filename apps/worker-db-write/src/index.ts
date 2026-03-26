@@ -1,6 +1,7 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
 import { cache } from "@workspace/lib";
+import { bulkWrite } from "./bulkWrite";
 
 const consumer = kafka.consumer({ groupId: "worker-db-write" });
 
@@ -12,49 +13,63 @@ const run = async () => {
   });
 
   await consumer.run({
-    eachBatch: async ({ batch }) => {
-      console.log(batch);
+    autoCommit: false,
+    eachBatch: async ({
+      batch,
+      resolveOffset,
+      commitOffsetsIfNecessary,
+      heartbeat,
+      isRunning,
+      isStale,
+    }) => {
+      console.log("batch received...");
+      const parsedMessages = [];
+
+      for (const message of batch.messages) {
+        if (!isRunning() || isStale()) break;
+
+        try {
+          const value = message.value?.toString();
+          if (!value) {
+            resolveOffset(message.offset);
+            continue;
+          }
+          const parsed = JSON.parse(value);
+          parsedMessages.push(parsed);
+        } catch (err) {
+          console.error("JSON parse error:", err);
+          resolveOffset(message.offset);
+        }
+      }
+
+      try {
+        if (parsedMessages.length > 0) {
+          console.log(`Processing ${parsedMessages.length} messages...`);
+
+          await heartbeat();
+
+          await bulkWrite(parsedMessages);
+
+          console.log("Batch processed successfully");
+        }
+
+        for (const message of batch.messages) {
+          resolveOffset(message.offset);
+        }
+
+        await commitOffsetsIfNecessary();
+      } catch (err) {
+        console.error("Batch failed", err);
+
+        return;
+      }
+
+      await heartbeat();
     },
-    // eachMessage: async ({ message }) => {
-    //   const data = JSON.parse(message.value?.toString() || "{}");
-
-    //   const availableInCache = await cache.hget("picture:upload", data.userId);
-    //   const parsed = JSON.parse(availableInCache || "[]");
-
-    //   const item = parsed.find((i: any) => i.id === data.id);
-    //   if (!item) return;
-
-    //   const steps = item.stepsCompleted || [];
-
-    //   if (steps.includes("finalized")) return;
-
-    //   const updatedCache = parsed.map((item: any) => {
-    //     if (item.id === data.id) {
-    //       const updated = {
-    //         ...item,
-    //         stepsCompleted: [...item.stepsCompleted, "finalized"],
-    //       };
-    //       return updated;
-    //     } else {
-    //       return item;
-    //     }
-    //   });
-
-    //   await cache.hset(
-    //     "picture:upload",
-    //     data.userId,
-    //     JSON.stringify(updatedCache),
-    //   );
-
-    //   await kafkaProduceMessage(
-    //     "picture-ready-for-DB-write",
-    //     JSON.stringify({ id: data.id, userId: data.userId }),
-    //   );
-    // },
   });
 };
 
 run().catch((err) => {
-  console.error(err);
+  console.error("Crashed", err);
   process.exit(1);
 });

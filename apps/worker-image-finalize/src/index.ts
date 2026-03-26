@@ -14,16 +14,35 @@ const run = async () => {
   });
 
   await consumer.run({
-    eachMessage: async ({ message }) => {
-      const data = JSON.parse(message.value?.toString() || "{}");
+    eachMessage: async ({ message, topic, partition }) => {
+      let data: any;
+
+      try {
+        data = JSON.parse(message.value?.toString() || "{}");
+      } catch (err) {
+        console.error("Invalid JSON", {
+          topic,
+          partition,
+          value: message.value?.toString(),
+        });
+        return;
+      }
 
       const availableInCache = await cache.hget("picture:upload", data.userId);
-      const parsed = JSON.parse(availableInCache || "[]");
+      if (!availableInCache) return;
 
-      const item = parsed.find((i: any) => i.id === data.id);
-      if (!item) return;
+      let parsed: any[];
+      try {
+        parsed = JSON.parse(availableInCache);
+      } catch {
+        console.error("Corrupted cache data", { userId: data.userId });
+        return;
+      }
 
-      const steps = item.stepsCompleted || [];
+      let obj = parsed.find((i: any) => i.id === data.id);
+      if (!obj) return;
+
+      const steps = obj.stepsCompleted || [];
       const isComplete = REQUIRED_STEPS.every((step) => steps.includes(step));
 
       if (!isComplete) return;
@@ -35,7 +54,9 @@ const run = async () => {
           const updated = {
             ...item,
             stepsCompleted: [...item.stepsCompleted, "finalized"],
+            processing: "ready",
           };
+          obj = updated;
           return updated;
         } else {
           return item;
@@ -50,13 +71,13 @@ const run = async () => {
 
       await kafkaProduceMessage(
         "picture-ready-for-DB-write",
-        JSON.stringify({ id: data.id, userId: data.userId }),
+        JSON.stringify({ ...obj, userId: data.userId }),
       );
     },
   });
 };
 
 run().catch((err) => {
-  console.error(err);
+  console.error("Crashed", err);
   process.exit(1);
 });

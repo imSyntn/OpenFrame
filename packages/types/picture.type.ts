@@ -1,5 +1,13 @@
+enum Resolution {
+  ORIGINAL = "ORIGINAL",
+  LARGE = "LARGE",
+  MEDIUM = "MEDIUM",
+  SMALL = "SMALL",
+  THUMBNAIL = "THUMBNAIL",
+}
+
 export interface SrcType {
-  resolution: string;
+  resolution: Resolution;
   url: string;
   width: number;
   height: number;
@@ -22,4 +30,5 @@ export interface UnderProcessingPictureType {
   created_at: string;
   stepsCompleted: string[];
   metadata?: Record<string, string>;
+  userId?: string;
 }

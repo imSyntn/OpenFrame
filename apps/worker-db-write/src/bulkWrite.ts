@@ -4,15 +4,12 @@ import {
   type UnderProcessingPictureType,
 } from "@workspace/types";
 
-export const bulkWrite = async (
-  items: UnderProcessingPictureType[],
-  userId: string,
-) => {
+export const bulkWrite = async (items: UnderProcessingPictureType[]) => {
   await prisma.$transaction(async (tx) => {
     await tx.picture.createMany({
       data: items.map((item) => ({
         id: item.id,
-        user_id: userId,
+        user_id: item.userId as string,
         title: item.title,
         description: item.description,
         alt: item.title,
@@ -23,26 +20,32 @@ export const bulkWrite = async (
     await tx.metadata.createMany({
       data: items.map((item) => ({
         pic_id: item.id,
-        others: item.metadata?.others,
-        blurhash: item.metadata?.blurhash,
-        dominant_color: item.metadata?.dominant_color,
+        others: item.metadata?.others as string,
+        blurhash: item.metadata?.blurhash as string,
+        dominant_color: item.metadata?.dominant_color as string,
       })),
       skipDuplicates: true,
     });
 
-    await tx.src.createMany({
-      data: items.flatMap((item) =>
-        item.src?.map((s: SrcType) => ({
-          pic_id: item.id,
-          resolution: s.resolution,
-          url: s.url,
-          width: s.width,
-          height: s.height,
-          size: s.size,
-        })),
-      ),
-      skipDuplicates: true,
-    });
+    const sources = items.flatMap((item) =>
+      item.src
+        ? item.src.map((s: SrcType) => ({
+            pic_id: item.id,
+            resolution: s.resolution,
+            url: s.url,
+            width: s.width,
+            height: s.height,
+            size: s.size,
+          }))
+        : [],
+    );
+
+    if (sources.length > 0) {
+      await tx.src.createMany({
+        data: sources,
+        skipDuplicates: true,
+      });
+    }
 
     const tagNames = [
       ...new Set(items.flatMap((item) => item.tags.map((t) => t.name))),
