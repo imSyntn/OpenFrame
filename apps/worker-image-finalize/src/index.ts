@@ -12,7 +12,7 @@ const run = async () => {
   await consumer.connect();
   await consumer.subscribe({
     topics: ["metadata-extraction-complete", "processing-complete"],
-    fromBeginning: true,
+    // fromBeginning: true,
   });
 
   await consumer.run({
@@ -44,6 +44,40 @@ const run = async () => {
         return;
       }
 
+      const getMeta = cache.get(
+        `picture:upload:metadata:${data.userId}:${data.id}`,
+      );
+      const getVariants = cache.get(
+        `picture:upload:variants:${data.userId}:${data.id}`,
+      );
+
+      const [meta, variants] = await Promise.allSettled([getMeta, getVariants]);
+
+      if (meta.status === "rejected" || variants.status === "rejected") {
+        logger.error("Failed to get metadata or variants", {
+          userId: data.userId,
+          id: data.id,
+        });
+        return;
+      } else if (
+        meta.status === "fulfilled" &&
+        variants.status === "fulfilled"
+      ) {
+        const metaData = JSON.parse(meta.value as string);
+        const variantsData = JSON.parse(variants.value as string);
+        if (!metaData || !variantsData) return;
+        parsed = {
+          ...parsed,
+          metadata: metaData.metadata,
+          src: variantsData.src,
+          stepsCompleted: [
+            ...parsed.stepsCompleted,
+            ...metaData.stepsCompleted,
+            ...variantsData.stepsCompleted,
+          ],
+        };
+      }
+
       const steps = parsed.stepsCompleted || [];
       const isComplete = REQUIRED_STEPS.every((step) => steps.includes(step));
 
@@ -57,11 +91,15 @@ const run = async () => {
         processing: "ready",
       };
 
-      await cache.hset(
+      const pipeline = cache.pipeline();
+      pipeline.hset(
         `picture:upload:${data.userId}`,
         data.id,
         JSON.stringify(updatedCache),
       );
+      pipeline.del(`picture:upload:metadata:${data.userId}:${data.id}`);
+      pipeline.del(`picture:upload:variants:${data.userId}:${data.id}`);
+      await pipeline.exec();
 
       await kafkaProduceMessage(
         "picture-ready-for-DB-write",

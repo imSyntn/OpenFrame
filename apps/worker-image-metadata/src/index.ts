@@ -63,26 +63,30 @@ const run = async () => {
         ]);
 
         const updatedCache = {
-          ...parsed,
+          // ...parsed,
           metadata: {
             others: metadata,
             blurhash,
             dominant_color,
           },
           stepsCompleted: [
-            ...parsed.stepsCompleted,
+            // ...parsed.stepsCompleted,
             "metadata",
             "blurhash",
             "dominant_color",
           ],
         };
-
-        await cache.hset(
-          `picture:upload:${data.userId}`,
-          data.id,
+        await cache.set(
+          `picture:upload:metadata:${data.userId}:${data.id}`,
           JSON.stringify(updatedCache),
         );
-        console.log(updatedCache);
+
+        // await cache.hset(
+        //   `picture:upload:${data.userId}`,
+        //   data.id,
+        //   JSON.stringify(updatedCache),
+        // );
+        // console.log(updatedCache);
 
         await kafkaProduceMessage(
           "metadata-extraction-complete",

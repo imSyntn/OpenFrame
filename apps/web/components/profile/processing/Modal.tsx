@@ -59,7 +59,7 @@ export function Modal({
               </>
             )}
 
-            {data.stepsCompleted.length > 0 && (
+            {Array.isArray(data.stepsCompleted) && (
               <>
                 <p className="text-sm font-semibold text-muted-foreground mb-2">
                   Steps Completed

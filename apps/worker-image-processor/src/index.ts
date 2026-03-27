@@ -43,17 +43,24 @@ const run = async () => {
 
         const variantsUploaded = await uploadVariants(data.id, variants);
 
-        const updatedCache: UnderProcessingPictureType = {
-          ...parsed,
-          stepsCompleted: [...parsed.stepsCompleted, "variants"],
+        const updatedCache = {
+          // ...parsed,
+          stepsCompleted: [
+            // ...parsed.stepsCompleted,
+            "variants",
+          ],
           src: [original, ...variantsUploaded],
         };
 
-        await cache.hset(
-          `picture:upload:${data.userId}`,
-          data.id,
+        await cache.set(
+          `picture:upload:variants:${data.userId}:${data.id}`,
           JSON.stringify(updatedCache),
         );
+        // await cache.hset(
+        //   `picture:upload:${data.userId}`,
+        //   data.id,
+        //   JSON.stringify(updatedCache),
+        // );
 
         await kafkaProduceMessage(
           "processing-complete",
