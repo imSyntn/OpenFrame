@@ -49,7 +49,8 @@ export function PhotoWithBlurHash({ photo, width, height, showUser }: Props) {
   return (
     <div
       className="group relative overflow-hidden rounded-lg"
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
+      onClick={photo.onClick}
     >
       {!loaded && (
         <div className="absolute inset-0">

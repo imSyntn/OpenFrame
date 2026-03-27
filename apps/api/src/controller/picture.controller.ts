@@ -18,6 +18,7 @@ export const getUserPicturesController = async (
 ) => {
   try {
     const { id, page } = req.params;
+    const nextCursor = req.query.nextCursor as string;
 
     if (!id || !page) {
       return next(new ErrorWithStatus(400, "Invalid id or page"));
@@ -26,6 +27,7 @@ export const getUserPicturesController = async (
     const userPictures = await getUserPictures(
       id as string,
       parseInt(page as string),
+      nextCursor as string,
     );
 
     return res.status(200).json({ data: userPictures });

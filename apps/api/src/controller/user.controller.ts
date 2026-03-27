@@ -304,6 +304,11 @@ export const getUserController = async (
         include: {
           src: true,
           metadata: true,
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
         },
       },
       _count: {

@@ -11,6 +11,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BadgeCheck, Check, Hash, LoaderIcon } from "lucide-react";
+import { ImageTags } from "@/components/common";
 
 export function Modal({
   data,
@@ -43,21 +44,7 @@ export function Modal({
               />
             </div>
 
-            {data.tags.length > 0 && (
-              <>
-                <p className="text-sm font-semibold text-muted-foreground mb-2">
-                  Tags
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {data.tags.map((tag) => (
-                    <Badge key={tag.id} variant="secondary">
-                      <Hash data-icon="inline-start" />
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-              </>
-            )}
+            {data.tags.length > 0 && <ImageTags tags={data.tags} />}
 
             {Array.isArray(data.stepsCompleted) && (
               <>
@@ -99,8 +86,8 @@ export function Modal({
             <div className="flex items-center justify-center">
               <span className="text-xs text-muted-foreground">
                 {data.processing === "done"
-                  ? "Processing completed, picture is now available in your profile"
-                  : "Processing in progress, picture will be available in your profile once completed"}
+                  ? "Processing completed, picture will be available in your profile"
+                  : "Processing in progress"}
               </span>
             </div>
 

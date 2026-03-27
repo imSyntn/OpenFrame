@@ -1,37 +1,4 @@
-export interface PictureType {
-  id: string;
-  title: string;
-  alt: string;
-  description: string;
-  created_at: string;
-
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
-
-  src: {
-    resolution: "SMALL" | "MEDIUM" | "LARGE" | "ORIGINAL";
-    url: string;
-    type: "JPG" | "PNG" | "WEBP";
-    width?: number;
-    height?: number;
-    size: number;
-  }[];
-
-  metadata: {
-    blurhash: string;
-    camera?: string;
-    lens?: string;
-    iso?: string;
-    shutter?: string;
-    aperture?: string;
-    focal_length?: string;
-  };
-
-  tags: string[];
-}
+import { PictureType } from "./picture";
 
 export interface ProfileType {
   id: string;
@@ -58,9 +25,10 @@ export interface ProfileType {
       }[]
     | null;
   pictures: PictureType[] | null;
+  nextCursor: string | null;
 }
 export interface ProfileStore extends ProfileType {
   isLoading: boolean;
   setData: (data: Partial<ProfileStore>) => void;
-  addPictures: (data: PictureType[]) => void;
+  addPictures: (data: PictureType[], nextCursor?: string) => void;
 }

@@ -8,29 +8,45 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
 import { UnderProcessingPictureType } from "@workspace/types";
 
-export const getUserPictures = async (id: string, page: number) => {
-  const cacheKey = `${id}:${page}`;
+export const getUserPictures = async (
+  id: string,
+  page: number,
+  lastId: string | null,
+) => {
+  const cacheKey = `${id}:${page}:${lastId}`;
 
-  const cached = await cache.hget("user:pictures", cacheKey);
+  const cached = await cache.get(`user:pictures:${cacheKey}`);
   if (cached) {
     return JSON.parse(cached);
   }
 
   const pictures = await prisma.picture.findMany({
-    where: {
-      user_id: id,
-    },
+    where: { user_id: id },
+    take: PIC_PER_PAGE,
+    cursor: lastId ? { id: lastId } : undefined,
+    skip: lastId ? 1 : 0,
+    orderBy: { created_at: "desc" },
     include: {
       src: true,
       metadata: true,
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
     },
-    skip: (page - 1) * PIC_PER_PAGE,
-    take: PIC_PER_PAGE,
   });
 
-  await cache.hset("user:pictures", cacheKey, JSON.stringify(pictures));
+  const nextCursor = pictures[pictures.length - 1]?.id || null;
 
-  return pictures;
+  await cache.set(
+    `user:pictures:${cacheKey}`,
+    JSON.stringify({ pictures, nextCursor }),
+    "EX",
+    60 * 60 * 2,
+  );
+
+  return { pictures, nextCursor };
 };
 
 export const getPictureUploadUrl = async (
@@ -59,7 +75,7 @@ export const getPictureUploadUrl = async (
 };
 
 export const getPictureTags = async () => {
-  const availableInCache = await cache.hget("pictures", "tags");
+  const availableInCache = await cache.get("pictures:tags");
 
   if (availableInCache) {
     return JSON.parse(availableInCache);
@@ -67,13 +83,7 @@ export const getPictureTags = async () => {
 
   const tags = await prisma.tag.findMany({});
 
-  await cache.hset(
-    "pictures",
-    "tags",
-    JSON.stringify(tags),
-    "EX",
-    60 * 60 * 24,
-  );
+  await cache.set("pictures:tags", JSON.stringify(tags), "EX", 60 * 60 * 24);
 
   return tags;
 };

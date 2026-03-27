@@ -5,8 +5,11 @@ import { UnderProcessingPictureType } from "@workspace/types";
 export const getUserPictures = async (
   id: string,
   page: number,
-): Promise<PictureType[]> => {
-  const res = await api.get(`/api/picture/user/${id}/${page}`);
+  nextCursor: string,
+): Promise<{ pictures: PictureType[]; nextCursor?: string }> => {
+  const res = await api.get(`/api/picture/user/${id}/${page}`, {
+    params: { nextCursor },
+  });
   return res.data.data;
 };
 

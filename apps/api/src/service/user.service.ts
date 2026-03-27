@@ -51,7 +51,7 @@ export const getUser = async (
       key = user.id;
     }
 
-    const userInCache = await cache.hget(`user:${cacheKey}`, key);
+    const userInCache = await cache.get(`user:${cacheKey}:${key}`);
     if (userInCache) {
       return JSON.parse(userInCache);
     }
@@ -63,7 +63,12 @@ export const getUser = async (
     });
 
     if (userInDb) {
-      await cache.hset("user", key, JSON.stringify(userInDb));
+      await cache.set(
+        `user:${cacheKey}:${key}`,
+        JSON.stringify(userInDb),
+        "EX",
+        60 * 60 * 2,
+      );
     }
 
     return userInDb;

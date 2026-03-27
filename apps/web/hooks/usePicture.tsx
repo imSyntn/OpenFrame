@@ -11,11 +11,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetPictures = () => {
   const addPictures = useProfileStore((state) => state.addPictures);
+  const nextCursor = useProfileStore((state) => state.nextCursor);
   return useMutation({
     mutationFn: ({ id, page }: { id: string; page: number }) =>
-      getUserPictures(id, page),
+      getUserPictures(id, page, nextCursor || ""),
     onSuccess: (data) => {
-      addPictures(data);
+      addPictures(data.pictures, data.nextCursor);
     },
   });
 };
