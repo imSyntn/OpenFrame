@@ -17,6 +17,7 @@ export interface SrcType {
 export interface tagsType {
   id: number;
   name: string;
+  url?: string;
 }
 
 export interface UnderProcessingPictureType {

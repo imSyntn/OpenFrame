@@ -3,6 +3,7 @@ import {
   createPictureController,
   downloadPictureController,
   getAllPictureStatusController,
+  getExplorePicturesController,
   getPictureStatusController,
   getPictureTagsController,
   getPictureUploadUrlController,
@@ -14,6 +15,7 @@ import { authMiddleware } from "@/middleware";
 const pictureRouter = Router();
 
 pictureRouter.get("/tags", getPictureTagsController);
+pictureRouter.get("/explore", getExplorePicturesController);
 
 pictureRouter.post("/create", authMiddleware, createPictureController);
 pictureRouter.get("/status", authMiddleware, getAllPictureStatusController);

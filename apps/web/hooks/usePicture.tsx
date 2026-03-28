@@ -1,6 +1,7 @@
 import {
   createPictureUpload,
   getAllUploadsStatus,
+  getExplorePictures,
   getPictureStatus,
   getPictureTags,
   getPictureUploadUrl,
@@ -20,6 +21,12 @@ export const useGetPictures = () => {
     onSuccess: (data) => {
       addPictures(data.pictures, data.nextCursor);
     },
+  });
+};
+
+export const useGetExplorePictures = () => {
+  return useMutation({
+    mutationFn: (nextCursor: string) => getExplorePictures(nextCursor),
   });
 };
 

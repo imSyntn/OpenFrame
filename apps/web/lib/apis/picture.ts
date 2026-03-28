@@ -31,6 +31,15 @@ export const getPictureTags = async () => {
   return res.data.data;
 };
 
+export const getExplorePictures = async (
+  nextCursor: string,
+): Promise<{ pictures: PictureType[]; nextCursor?: string }> => {
+  const res = await api.get("/api/picture/explore", {
+    params: { nextCursor },
+  });
+  return res.data.data;
+};
+
 export const createPictureUpload = async (payload: {
   title: string;
   description?: string;

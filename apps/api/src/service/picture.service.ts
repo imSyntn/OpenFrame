@@ -1,7 +1,7 @@
 import { prisma } from "@workspace/lib/prisma";
 import { cache } from "@workspace/lib/redis";
 import { kafkaProduceMessage } from "@workspace/lib/kafka";
-import { PIC_PER_PAGE } from "@workspace/constants";
+import { PIC_PER_PAGE, EXPLORE_PIC_PER_PAGE } from "@workspace/constants";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -87,11 +87,87 @@ export const getPictureTags = async () => {
     return JSON.parse(availableInCache);
   }
 
-  const tags = await prisma.tag.findMany({});
+  const tags = await prisma.tag.findMany({
+    include: {
+      pictures: {
+        take: 1,
+        select: {
+          picture: {
+            select: {
+              src: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
-  await cache.set("pictures:tags", JSON.stringify(tags), "EX", 60 * 60 * 24);
+  const formattedTags = tags.map((tag) => ({
+    id: tag.id,
+    name: tag.name,
+    url:
+      tag.pictures[0]?.picture.src.sort((a, b) => a.size - b.size)[0]?.url ||
+      "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
+  }));
 
-  return tags;
+  const exploreTag = {
+    id: "explore",
+    name: "explore",
+    url: "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
+  };
+
+  const withDefault = [exploreTag, ...formattedTags];
+
+  await cache.set(
+    "pictures:tags",
+    JSON.stringify(withDefault),
+    "EX",
+    60 * 60 * 24,
+  );
+
+  return withDefault;
+};
+
+export const getExplorePictures = async (lastId: string | null) => {
+  const cacheKey = `${lastId}`;
+
+  const cached = await cache.get(`explore:pictures:${cacheKey}`);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  const pictures = await prisma.picture.findMany({
+    take: EXPLORE_PIC_PER_PAGE,
+    cursor: lastId ? { id: lastId } : undefined,
+    skip: lastId ? 1 : 0,
+    orderBy: { created_at: "desc" },
+    include: {
+      src: true,
+      metadata: true,
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+      engagement: true,
+    },
+  });
+
+  const nextCursor = pictures[pictures.length - 1]?.id || null;
+
+  await cache.set(
+    `explore:pictures:${cacheKey}`,
+    JSON.stringify({ pictures, nextCursor }),
+    "EX",
+    60 * 60 * 24,
+  );
+
+  return { pictures, nextCursor };
 };
 
 export const createPicture = async (

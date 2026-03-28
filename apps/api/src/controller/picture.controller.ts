@@ -3,6 +3,7 @@ import { pictureSchema } from "@/schema";
 import {
   createPicture,
   getAllPictureStatus,
+  getExplorePictures,
   getPictureStatus,
   getPictureTags,
   getPictureUploadUrl,
@@ -78,6 +79,22 @@ export const getPictureTagsController = async (
     const tags = await getPictureTags();
 
     return res.status(200).json({ data: tags });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getExplorePicturesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const nextCursor = req.query.nextCursor as string;
+
+    const data = await getExplorePictures(nextCursor as string);
+
+    return res.status(200).json({ data });
   } catch (error) {
     next(error);
   }

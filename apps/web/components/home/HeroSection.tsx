@@ -9,7 +9,7 @@ export function HeroSection() {
     <div className="relative flex h-[60dvh] flex-col items-center justify-center px-6 text-center">
       <div className="absolute inset-0 -z-10">
         <img
-          src="https://image.lexica.art/full_webp/20f41277-2043-4f0f-83b8-f1bc4eb31181"
+          src="https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718349/20f41277-2043-4f0f-83b8-f1bc4eb31181_rykctm.webp"
           alt=""
           className="h-full w-full object-cover"
         />
