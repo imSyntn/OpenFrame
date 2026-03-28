@@ -1,6 +1,6 @@
 import React from "react";
 import { MasonryPhotoAlbum, Photo } from "react-photo-album";
-import { PhotoWithBlurHash } from "../common/BlurhashCanvas";
+import { PhotoWithBlurHash } from "../common/image/BlurhashCanvas";
 import { Masonry } from "../common";
 import { GalleryPhoto } from "@/@types";
 
@@ -63,9 +63,9 @@ const pictures = Array.from({ length: 50 }).map((_, i) => {
 
 export function MasonryGrid({ tag }: { tag: string }) {
   const photos: GalleryPhoto[] = pictures.map((pic) => ({
-    src: pic.src[0]?.url,
-    width: pic.src[0]?.width,
-    height: pic.src[0]?.height,
+    src: pic.src[0]?.url!,
+    width: pic.src[0]?.width!,
+    height: pic.src[0]?.height!,
     blurhash: pic.metadata.blurhash,
     user: pic.user,
     key: pic.id,

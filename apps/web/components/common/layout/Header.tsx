@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import { HeaderRight } from "./HeaderRight";
 import { Input } from "@workspace/ui/components/input";
 import { Search } from "lucide-react";
-import { Logo } from "./Logo";
+import { Logo } from "../Logo";
 import { cn } from "@workspace/ui/lib/utils";
+import { HeaderRight } from "./HeaderRight";
 
 export function Header({ className }: { className?: string }) {
   return (

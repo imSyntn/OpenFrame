@@ -2,7 +2,7 @@
 
 import { MasonryPhotoAlbum } from "react-photo-album";
 import "react-photo-album/masonry.css";
-import { PhotoWithBlurHash } from "./BlurhashCanvas";
+import { PhotoWithBlurHash } from "../image/BlurhashCanvas";
 import { GalleryPhoto } from "@/@types";
 
 export function Masonry({
@@ -23,14 +23,9 @@ export function Masonry({
         return 4;
       }}
       render={{
-        photo: ({ onClick }, { photo, width, height }) => (
+        photo: ({ onClick }, { photo }) => (
           <div key={photo.key} onClick={onClick}>
-            <PhotoWithBlurHash
-              photo={photo}
-              width={width}
-              height={height}
-              showUser={showUser}
-            />
+            <PhotoWithBlurHash photo={photo} showUser={showUser} />
           </div>
         ),
       }}

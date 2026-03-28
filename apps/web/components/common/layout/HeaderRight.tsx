@@ -9,7 +9,6 @@ import {
 } from "@workspace/ui/components/avatar";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import ThemeToggle from "../ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +22,7 @@ import { userLogout } from "@/lib/apis";
 import { LogIn, Upload, UserPlus } from "lucide-react";
 import { useRefreshToken } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export function HeaderRight() {
   const { data, isLoading, isError } = useRefreshToken();

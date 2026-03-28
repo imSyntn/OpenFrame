@@ -52,3 +52,17 @@ export const getPictureStatus = async (pictureID: string) => {
   const res = await api.get(`/api/picture/status/${pictureID}`);
   return res.data.data;
 };
+
+export const incrementViewCount = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const res = await api.post(`/api/picture/view/${id}`);
+  return res.data;
+};
+
+export const incrementDownloadCount = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const res = await api.post(`/api/picture/download/${id}`);
+  return res.data;
+};

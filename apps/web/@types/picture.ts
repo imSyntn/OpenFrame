@@ -25,11 +25,19 @@ export interface PictureType {
 
   metadata: {
     blurhash: string;
-    dominantColor: string;
+    dominant_color: string;
     others?: Record<string, string>;
   };
 
   tags: string[] | { tag: tagsType }[];
+  user_id: string;
+  _count: {
+    likes: number;
+  };
+  engagement: {
+    views: number;
+    downloads: number;
+  };
 }
 
 export type GalleryPhoto = Photo & {

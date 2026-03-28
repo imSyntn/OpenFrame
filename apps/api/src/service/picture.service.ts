@@ -34,6 +34,12 @@ export const getUserPictures = async (
           tag: true,
         },
       },
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+      engagement: true,
     },
   });
 
@@ -130,3 +136,53 @@ export const getPictureStatus = async (userId: string, pictureID: string) => {
 
   return JSON.parse(data || "{}");
 };
+
+export const incrementViewCount = async (pictureID: string) => {
+  await prisma.engagement.upsert({
+    where: {
+      pic_id: pictureID,
+    },
+    update: {
+      views: {
+        increment: 1,
+      },
+    },
+    create: {
+      pic_id: pictureID,
+      views: 1,
+    },
+  });
+};
+export const incrementDownloadCount = async (pictureID: string) => {
+  await prisma.engagement.upsert({
+    where: {
+      pic_id: pictureID,
+    },
+    update: {
+      downloads: {
+        increment: 1,
+      },
+    },
+    create: {
+      pic_id: pictureID,
+      downloads: 1,
+    },
+  });
+};
+
+// export const incrementLikeCount = async (pictureID: string) => {
+//   await prisma.engagement.upsert({
+//     where: {
+//       pic_id: pictureID,
+//     },
+//     update: {
+//       views: {
+//         increment: 1,
+//       },
+//     },
+//     create: {
+//       pic_id: pictureID,
+//       views: 1,
+//     },
+//   });
+// };

@@ -25,10 +25,12 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>{children}</Providers>
-        <Toaster richColors />
-        <ImageModal />
-        <Footer />
+        <Providers>
+          {children}
+          <Toaster richColors />
+          <ImageModal />
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

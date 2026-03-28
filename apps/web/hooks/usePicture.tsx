@@ -5,6 +5,8 @@ import {
   getPictureTags,
   getPictureUploadUrl,
   getUserPictures,
+  incrementDownloadCount,
+  incrementViewCount,
 } from "@/lib/apis";
 import { useProfileStore } from "@/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -67,5 +69,17 @@ export const useGetPictureStatus = (pictureID: string, enabled: boolean) => {
     queryKey: ["picture-status", pictureID],
     queryFn: () => getPictureStatus(pictureID),
     enabled,
+  });
+};
+
+export const useIncrementViewCount = () => {
+  return useMutation({
+    mutationFn: (id: string) => incrementViewCount(id),
+  });
+};
+
+export const useIncrementDownloadCount = () => {
+  return useMutation({
+    mutationFn: (id: string) => incrementDownloadCount(id),
   });
 };

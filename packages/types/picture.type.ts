@@ -9,9 +9,9 @@ enum Resolution {
 export interface SrcType {
   resolution: Resolution;
   url: string;
-  width: number;
-  height: number;
-  size: number;
+  width?: number;
+  height?: number;
+  size?: number;
 }
 
 export interface tagsType {

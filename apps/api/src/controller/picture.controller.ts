@@ -7,6 +7,8 @@ import {
   getPictureTags,
   getPictureUploadUrl,
   getUserPictures,
+  incrementDownloadCount,
+  incrementViewCount,
 } from "@/service";
 import { MAX_AVATAR_SIZE, MAX_PICTURE_SIZE } from "@workspace/constants";
 import { Request, Response, NextFunction } from "express";
@@ -152,6 +154,46 @@ export const getPictureStatusController = async (
     const picture = await getPictureStatus(userID, pictureID);
 
     return res.status(200).json({ data: picture });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const viewPictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+
+    await incrementViewCount(id);
+
+    return res.status(200).json({ message: "Viewed" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const downloadPictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+
+    await incrementDownloadCount(id);
+
+    return res.status(200).json({ message: "Downloaded" });
   } catch (error) {
     next(error);
   }

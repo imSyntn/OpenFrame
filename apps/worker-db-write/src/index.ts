@@ -66,6 +66,7 @@ const run = async () => {
             message.id,
             JSON.stringify({ ...message, processing: "done" }),
           );
+          pipeline.del(`user:${message.userId}:profile`);
           pipeline.expire(`picture:upload:${message.userId}`, 60 * 60 * 2);
         }
 

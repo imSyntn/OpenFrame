@@ -39,6 +39,11 @@ import { useUserDetails } from "@/hooks";
 import { toast } from "sonner";
 import { SettingsModal } from "./settings/SettingsModal";
 import { VerifyEmail } from "./VerifyEmail";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -106,11 +111,10 @@ export function HeroSection({ id }: { id: string }) {
           {isLoading ? (
             <Skeleton className="size-28 md:size-36 rounded-full" />
           ) : (
-            <img
-              src={avatar || undefined}
-              alt={name}
-              className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover border-4 border-black dark:border-white shadow-lg"
-            />
+            <Avatar className="w-28 h-28 md:w-36 md:h-36">
+              <AvatarImage src={avatar} alt={name} />
+              <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+            </Avatar>
           )}
         </div>
 

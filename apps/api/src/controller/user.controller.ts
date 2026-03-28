@@ -309,6 +309,12 @@ export const getUserController = async (
               tag: true,
             },
           },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+          engagement: true,
         },
       },
       _count: {

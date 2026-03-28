@@ -1,2 +1,2 @@
-export * from "./user.auth";
+export * from "./user";
 export * from "./picture";
