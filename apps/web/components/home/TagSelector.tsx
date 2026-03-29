@@ -1,23 +1,25 @@
+"use client";
+
 import { tagsType } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import React, { useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type ScrollDirection = "left" | "right";
 
 export function TagSelector({
   tags,
   loading,
-  selectedTag,
-  setSelectedTag,
 }: {
   tags: tagsType[];
   loading: boolean;
-  selectedTag: number;
-  setSelectedTag: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const router = useRouter();
+  const params = useSearchParams();
+  const selectedTag = params.get("tag");
   const containerRef = useRef<null | HTMLDivElement>(null);
 
   const handleScroll = (direction: ScrollDirection) => {
@@ -51,13 +53,13 @@ export function TagSelector({
                 </div>
               );
             })
-          : tags.map((tag, index) => {
-              const isSelected = index === selectedTag;
+          : tags.map((tag) => {
+              const isSelected = tag.id === Number(selectedTag);
               return (
                 <div key={tag.id} className="flex flex-col items-center gap-1">
                   <Button
                     variant="ghost"
-                    onClick={() => setSelectedTag(index)}
+                    onClick={() => router.push(`/explore?tag=${tag.id}`)}
                     className={cn(
                       "rounded-full px-4 py-2 text-sm hover:bg-primary! hover:text-primary-foreground!",
                       isSelected

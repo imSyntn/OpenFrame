@@ -8,6 +8,7 @@ import {
   getPictureTagsController,
   getPictureUploadUrlController,
   getUserPicturesController,
+  likePictureController,
   viewPictureController,
 } from "../controller/picture.controller";
 import { authMiddleware } from "@/middleware";
@@ -36,9 +37,7 @@ pictureRouter.post(
 pictureRouter.post("/view/:id", viewPictureController);
 pictureRouter.post("/download/:id", downloadPictureController);
 
-pictureRouter.post("/like/:id", authMiddleware, (req, res) => {
-  return res.status(200).json({ message: "OK" });
-});
+pictureRouter.post("/like/:id", authMiddleware, likePictureController);
 
 pictureRouter.get("/:id", (req, res) => {
   return res.status(200).json({ message: "OK" });

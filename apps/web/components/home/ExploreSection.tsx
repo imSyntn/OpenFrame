@@ -6,20 +6,22 @@ import { MasonryGrid } from "./MasonryGrid";
 import { useGetTags } from "@/hooks";
 
 export function ExploreSection() {
-  const { data: tags, isLoading, error } = useGetTags();
-  const [selectedTag, setSelectedTag] = useState(0);
+  const { data: tags, isLoading, isError } = useGetTags();
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center">
+        <p className="text-destructive">Something went wrong</p>
+      </div>
+    );
+  }
 
   return (
     <div className="px-10 min-h-screen max-w-8xl mx-auto">
-      <TagSelector
-        tags={tags}
-        loading={isLoading}
-        selectedTag={selectedTag}
-        setSelectedTag={setSelectedTag}
-      />
-      <TagDetail tags={tags} selectedTag={selectedTag} loading={isLoading} />
+      <TagSelector tags={tags} loading={isLoading} />
+      <TagDetail tags={tags} loading={isLoading} />
 
-      <MasonryGrid tags={tags} selectedTag={selectedTag} />
+      <MasonryGrid />
     </div>
   );
 }

@@ -32,10 +32,11 @@ export const getPictureTags = async () => {
 };
 
 export const getExplorePictures = async (
+  tag: string,
   nextCursor: string,
 ): Promise<{ pictures: PictureType[]; nextCursor?: string }> => {
   const res = await api.get("/api/picture/explore", {
-    params: { nextCursor },
+    params: { tag, nextCursor },
   });
   return res.data.data;
 };

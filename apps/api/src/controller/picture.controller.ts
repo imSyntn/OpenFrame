@@ -9,6 +9,7 @@ import {
   getPictureUploadUrl,
   getUserPictures,
   incrementDownloadCount,
+  incrementLikeCount,
   incrementViewCount,
 } from "@/service";
 import { MAX_AVATAR_SIZE, MAX_PICTURE_SIZE } from "@workspace/constants";
@@ -90,9 +91,12 @@ export const getExplorePicturesController = async (
   next: NextFunction,
 ) => {
   try {
-    const nextCursor = req.query.nextCursor as string;
+    const { nextCursor, tag } = req.query as {
+      nextCursor: string;
+      tag: string;
+    };
 
-    const data = await getExplorePictures(nextCursor as string);
+    const data = await getExplorePictures(tag, nextCursor);
 
     return res.status(200).json({ data });
   } catch (error) {
@@ -211,6 +215,30 @@ export const downloadPictureController = async (
     await incrementDownloadCount(id);
 
     return res.status(200).json({ message: "Downloaded" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const likePictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id: userID } = req.user as { id: string };
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+    if (!userID) {
+      return next(new ErrorWithStatus(400, "Invalid user id"));
+    }
+
+    await incrementLikeCount(id, userID);
+
+    return res.status(200).json({ message: "Liked" });
   } catch (error) {
     next(error);
   }

@@ -134,11 +134,6 @@ export function HeaderRight() {
               <DropdownMenuItem onClick={() => router.push(`/profile/${id}`)}>
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => router.push(`/profile?settings=true`)}
-              >
-                Settings
-              </DropdownMenuItem>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />

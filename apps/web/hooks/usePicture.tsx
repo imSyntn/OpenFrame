@@ -9,8 +9,9 @@ import {
   incrementDownloadCount,
   incrementViewCount,
 } from "@/lib/apis";
-import { useProfileStore } from "@/store";
+import { useGlobalStateStore, useProfileStore } from "@/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useGetPictures = () => {
   const addPictures = useProfileStore((state) => state.addPictures);
@@ -25,8 +26,47 @@ export const useGetPictures = () => {
 };
 
 export const useGetExplorePictures = () => {
+  const setPictures = useGlobalStateStore((state) => state.setPictures);
+  const pictures = useGlobalStateStore((state) => state.pictures);
+  const setLoading = useGlobalStateStore((state) => state.setPicturesLoading);
   return useMutation({
-    mutationFn: (nextCursor: string) => getExplorePictures(nextCursor),
+    mutationFn: ({ tag, nextCursor }: { tag: string; nextCursor: string }) =>
+      getExplorePictures(tag, nextCursor),
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: (data, { tag, nextCursor }) => {
+      if (!tag) {
+        if (!data.nextCursor) {
+          toast.info("No more pictures found");
+          return;
+        }
+        setPictures({
+          pictures: [...pictures, ...data.pictures],
+          nextCursor: data.nextCursor,
+        });
+      } else {
+        if (!data.nextCursor) {
+          toast.info("No more pictures found");
+          return;
+        }
+        if (!nextCursor) {
+          setPictures(data);
+        } else {
+          setPictures({
+            pictures: [...pictures, ...data.pictures],
+            nextCursor: data.nextCursor,
+          });
+        }
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Failed to fetch pictures");
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
   });
 };
 

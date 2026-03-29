@@ -1,6 +1,6 @@
 import { GalleryPhoto, PictureType } from "@/@types";
 import { useGlobalStateStore, useProfileStore } from "@/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Masonry } from "@/components/common";
 import { useGetPictures } from "@/hooks";
@@ -15,20 +15,24 @@ export function GalleryPhotosContainer() {
   const [page, setPage] = useState(1);
   const { mutateAsync, isPending } = useGetPictures();
 
-  const photos: GalleryPhoto[] = pictures.map((pic) => {
-    const ORIGINAL = pic.src?.find((s) => s.resolution === "ORIGINAL");
-    return {
-      src: pic.src.sort((a, b) => a.size - b.size)[0]?.url!,
-      width: ORIGINAL?.width!,
-      height: ORIGINAL?.height!,
-      blurhash: pic.metadata.blurhash,
-      user: pic.user,
-      key: pic.id,
-      onClick: (e: React.MouseEvent<HTMLDivElement>) => {
-        setOpen(true, pic);
-      },
-    };
-  });
+  const photos: GalleryPhoto[] = useMemo(
+    () =>
+      pictures.map((pic) => {
+        const ORIGINAL = pic.src?.find((s) => s.resolution === "ORIGINAL");
+        return {
+          src: pic.src.sort((a, b) => a.size - b.size)[0]?.url!,
+          width: ORIGINAL?.width!,
+          height: ORIGINAL?.height!,
+          blurhash: pic.metadata.blurhash,
+          user: pic.user,
+          key: pic.id,
+          onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+            setOpen(true, pic);
+          },
+        };
+      }),
+    [pictures],
+  );
 
   const handleNextPage = async () => {
     try {

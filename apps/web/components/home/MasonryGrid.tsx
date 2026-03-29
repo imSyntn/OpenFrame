@@ -1,62 +1,38 @@
-import React, { useEffect } from "react";
-import { MasonryPhotoAlbum, Photo } from "react-photo-album";
-import { PhotoWithBlurHash } from "../common/image/BlurhashCanvas";
+"use client";
+
+import React, { useEffect, useMemo, useRef } from "react";
 import { Masonry } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore } from "@/store";
 import { useGetExplorePictures } from "@/hooks";
-import { useState } from "react";
-import { PictureType } from "@/@types";
-import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { Loader2 } from "lucide-react";
-import { tagsType } from "@workspace/types";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@workspace/ui/lib/utils";
 
-export function MasonryGrid({
-  tags,
-  selectedTag,
-}: {
-  tags: tagsType[];
-  selectedTag: number;
-}) {
+export function MasonryGrid() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   const setOpen = useGlobalStateStore((state) => state.setOpen);
-  const [data, setData] = useState<{
-    pictures: PictureType[];
-    nextCursor?: string;
-  }>({
-    pictures: [],
-    nextCursor: "",
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-  const {
-    mutateAsync: getExplorePictures,
-    isPending,
-    isError,
-    error,
-  } = useGetExplorePictures();
+  const nextCursor = useGlobalStateStore((state) => state.nextCursor);
+  const pictures = useGlobalStateStore((state) => state.pictures);
+  const loading = useGlobalStateStore((state) => state.picturesLoading);
+  const { mutateAsync: getExplorePictures, isError } = useGetExplorePictures();
+  const tagDiff = useRef(params.get("tag"));
 
-  const fetchPictures = async () => {
-    try {
-      setLoading(true);
-      const newData = await getExplorePictures(data.nextCursor || "");
-      setData((prev) => ({
-        ...prev,
-        pictures: [...prev.pictures, ...newData.pictures],
-        nextCursor: newData.nextCursor,
-      }));
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch pictures");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const tag = params.get("tag");
 
   useEffect(() => {
-    fetchPictures();
-  }, []);
+    if (tagDiff.current !== tag) {
+      tagDiff.current = tag;
+      getExplorePictures({ tag: tag || "", nextCursor: "" });
+    } else {
+      getExplorePictures({ tag: tag || "", nextCursor });
+    }
+  }, [tag]);
 
-  if (!loading && data.pictures.length == 0) {
+  if (!loading && pictures.length == 0) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p>No pictures found</p>
@@ -64,24 +40,44 @@ export function MasonryGrid({
     );
   }
 
-  const photos: GalleryPhoto[] = data.pictures.map((pic) => {
-    const original = pic.src.find((src) => src.resolution === "ORIGINAL");
-    const thumbnail = pic.src.find((src) => src.resolution === "THUMBNAIL");
-    return {
-      src: thumbnail?.url! || original?.url!,
-      width: original?.width!,
-      height: original?.height!,
-      blurhash: pic.metadata.blurhash,
-      user: pic.user,
-      key: pic.id,
-      onClick: () => {
-        setOpen(true, pic);
-      },
-    };
-  });
+  if (!loading && isError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-destructive">Something went wrong</p>
+      </div>
+    );
+  }
+
+  const photos: GalleryPhoto[] = useMemo(
+    () =>
+      pictures.map((pic) => {
+        const original = pic.src.find((src) => src.resolution === "ORIGINAL");
+        const thumbnail = pic.src.find((src) => src.resolution === "THUMBNAIL");
+        return {
+          src: thumbnail?.url! || original?.url!,
+          width: original?.width!,
+          height: original?.height!,
+          blurhash: pic.metadata.blurhash,
+          user: pic.user,
+          key: pic.id,
+          onClick: () => {
+            setOpen(true, pic);
+          },
+        };
+      }),
+    [pictures],
+  );
+
+  const handleLoadMore = () => {
+    if (pathname === "/explore") {
+      getExplorePictures({ tag: tag || "", nextCursor });
+    } else {
+      router.push("/explore");
+    }
+  };
 
   return (
-    <div className="w-full">
+    <div className={cn("w-full", loading && "opacity-50")}>
       <Masonry photos={photos} />
       {loading && (
         <div className="flex w-full justify-center my-3">
@@ -89,8 +85,8 @@ export function MasonryGrid({
         </div>
       )}
       <div className="flex w-full justify-center my-3">
-        <Button className="mx-auto" onClick={fetchPictures} disabled={loading}>
-          Load More
+        <Button className="mx-auto" onClick={handleLoadMore} disabled={loading}>
+          More
         </Button>
       </div>
     </div>

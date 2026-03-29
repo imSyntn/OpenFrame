@@ -110,26 +110,25 @@ export const getPictureTags = async () => {
       "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
   }));
 
-  const exploreTag = {
-    id: "explore",
-    name: "explore",
-    url: "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
-  };
-
-  const withDefault = [exploreTag, ...formattedTags];
-
   await cache.set(
     "pictures:tags",
-    JSON.stringify(withDefault),
+    JSON.stringify(formattedTags),
     "EX",
     60 * 60 * 24,
   );
 
-  return withDefault;
+  return formattedTags;
 };
 
-export const getExplorePictures = async (lastId: string | null) => {
-  const cacheKey = `${lastId}`;
+export const getExplorePictures = async (
+  tag: string,
+  lastId: string | null,
+) => {
+  let tagID: number = -1;
+  if (tag) {
+    tagID = Number(tag);
+  }
+  const cacheKey = `${tagID}:${lastId}`;
 
   const cached = await cache.get(`explore:pictures:${cacheKey}`);
   if (cached) {
@@ -137,6 +136,11 @@ export const getExplorePictures = async (lastId: string | null) => {
   }
 
   const pictures = await prisma.picture.findMany({
+    where: {
+      tags: {
+        some: tagID !== -1 ? { tag_id: tagID } : undefined,
+      },
+    },
     take: EXPLORE_PIC_PER_PAGE,
     cursor: lastId ? { id: lastId } : undefined,
     skip: lastId ? 1 : 0,
@@ -229,6 +233,7 @@ export const incrementViewCount = async (pictureID: string) => {
     },
   });
 };
+
 export const incrementDownloadCount = async (pictureID: string) => {
   await prisma.engagement.upsert({
     where: {
@@ -246,19 +251,27 @@ export const incrementDownloadCount = async (pictureID: string) => {
   });
 };
 
-// export const incrementLikeCount = async (pictureID: string) => {
-//   await prisma.engagement.upsert({
-//     where: {
-//       pic_id: pictureID,
-//     },
-//     update: {
-//       views: {
-//         increment: 1,
-//       },
-//     },
-//     create: {
-//       pic_id: pictureID,
-//       views: 1,
-//     },
-//   });
-// };
+export const incrementLikeCount = async (pictureID: string, userID: string) => {
+  await prisma.$transaction([
+    prisma.like.create({
+      data: {
+        user_id: userID,
+        pic_id: pictureID,
+      },
+    }),
+    prisma.engagement.upsert({
+      where: {
+        pic_id: pictureID,
+      },
+      update: {
+        likes: {
+          increment: 1,
+        },
+      },
+      create: {
+        pic_id: pictureID,
+        likes: 1,
+      },
+    }),
+  ]);
+};
