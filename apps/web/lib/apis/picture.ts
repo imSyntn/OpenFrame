@@ -76,3 +76,10 @@ export const incrementDownloadCount = async (
   const res = await api.post(`/api/picture/download/${id}`);
   return res.data;
 };
+
+export const incrementLikeCount = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const res = await api.post(`/api/picture/like/${id}`);
+  return res.data;
+};

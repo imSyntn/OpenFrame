@@ -1,5 +1,5 @@
 {
-  "name": "worker-db-write",
+  "name": "worker-image-db-write",
   "version": "1.0.0",
   "description": "",
   "type": "module",

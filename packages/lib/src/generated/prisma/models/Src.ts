@@ -218,7 +218,7 @@ export type SrcGroupByOutputType = {
   _max: SrcMaxAggregateOutputType | null
 }
 
-type GetSrcGroupByPayload<T extends SrcGroupByArgs> = Prisma.PrismaPromise<
+export type GetSrcGroupByPayload<T extends SrcGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SrcGroupByOutputType, T['by']> &
       {

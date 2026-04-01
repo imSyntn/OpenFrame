@@ -185,7 +185,7 @@ export type LinksGroupByOutputType = {
   _max: LinksMaxAggregateOutputType | null
 }
 
-type GetLinksGroupByPayload<T extends LinksGroupByArgs> = Prisma.PrismaPromise<
+export type GetLinksGroupByPayload<T extends LinksGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<LinksGroupByOutputType, T['by']> &
       {

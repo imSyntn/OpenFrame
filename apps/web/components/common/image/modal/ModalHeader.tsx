@@ -23,7 +23,11 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import { useGlobalStateStore, useUserStore } from "@/store";
-import { useIncrementDownloadCount, useUserDetails } from "@/hooks";
+import {
+  useIncrementDownloadCount,
+  useIncrementLikeCount,
+  useUserDetails,
+} from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Avatar,
@@ -257,9 +261,19 @@ function OwnerInfo({ id }: { id: string }) {
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const { mutateAsync: incrementLikeCount } = useIncrementLikeCount();
   if (!image) {
     return null;
   }
+
+  const handleLike = async () => {
+    try {
+      await incrementLikeCount(image.id);
+      toast.success("Liked successfully.");
+    } catch (error) {
+      toast.error("Failed to like.");
+    }
+  };
 
   return (
     <DialogHeader className="h-fit! flex flex-row justify-between px-6 pt-6">
@@ -271,7 +285,12 @@ export function ModalHeader() {
       <div className="flex items-center gap-2">
         {isLoggedIn && (
           <>
-            <TooltipButton value={<ThumbsUp />} size="icon" content="Like" />
+            <TooltipButton
+              value={<ThumbsUp />}
+              size="icon"
+              content="Like"
+              onClick={handleLike}
+            />
             <TooltipButton
               value={<Plus />}
               size="icon"

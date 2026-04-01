@@ -200,7 +200,7 @@ export type EngagementGroupByOutputType = {
   _max: EngagementMaxAggregateOutputType | null
 }
 
-type GetEngagementGroupByPayload<T extends EngagementGroupByArgs> = Prisma.PrismaPromise<
+export type GetEngagementGroupByPayload<T extends EngagementGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<EngagementGroupByOutputType, T['by']> &
       {

@@ -7,6 +7,7 @@ import {
   getPictureUploadUrl,
   getUserPictures,
   incrementDownloadCount,
+  incrementLikeCount,
   incrementViewCount,
 } from "@/lib/apis";
 import { useGlobalStateStore, useProfileStore } from "@/store";
@@ -128,5 +129,11 @@ export const useIncrementViewCount = () => {
 export const useIncrementDownloadCount = () => {
   return useMutation({
     mutationFn: (id: string) => incrementDownloadCount(id),
+  });
+};
+
+export const useIncrementLikeCount = () => {
+  return useMutation({
+    mutationFn: (id: string) => incrementLikeCount(id),
   });
 };

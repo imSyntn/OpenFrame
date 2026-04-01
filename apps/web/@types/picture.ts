@@ -37,6 +37,7 @@ export interface PictureType {
   engagement: {
     views: number;
     downloads: number;
+    likes: number;
   };
 }
 

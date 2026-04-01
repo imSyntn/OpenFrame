@@ -321,6 +321,7 @@ export const getUserController = async (
         select: {
           pictures: true,
           collection: true,
+          likes: true,
         },
       },
       collection: true,

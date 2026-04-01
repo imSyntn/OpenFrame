@@ -119,7 +119,7 @@ export function Content() {
             <div>
               <p className="text-muted-foreground">Likes</p>
               <p className="text-lg font-semibold">
-                {image._count?.likes || 0}
+                {image.engagement?.likes || 0}
               </p>
             </div>
             <div>

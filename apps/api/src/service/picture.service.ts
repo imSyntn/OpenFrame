@@ -75,7 +75,7 @@ export const getPictureUploadUrl = async (
   });
 
   const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
-  const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.${process.env.AWS_ENDPOINT_URL_S3?.split("https://")[1]}/${Key}`;
+  const fileUrl = `${process.env.CDN_URL}/${Key}`;
 
   return { uploadUrl, fileUrl, id };
 };
@@ -218,60 +218,32 @@ export const getPictureStatus = async (userId: string, pictureID: string) => {
 };
 
 export const incrementViewCount = async (pictureID: string) => {
-  await prisma.engagement.upsert({
-    where: {
-      pic_id: pictureID,
-    },
-    update: {
-      views: {
-        increment: 1,
-      },
-    },
-    create: {
-      pic_id: pictureID,
-      views: 1,
-    },
-  });
+  await kafkaProduceMessage(
+    "engagement-events",
+    JSON.stringify({
+      type: "view",
+      pictureID,
+    }),
+  );
 };
 
 export const incrementDownloadCount = async (pictureID: string) => {
-  await prisma.engagement.upsert({
-    where: {
-      pic_id: pictureID,
-    },
-    update: {
-      downloads: {
-        increment: 1,
-      },
-    },
-    create: {
-      pic_id: pictureID,
-      downloads: 1,
-    },
-  });
+  await kafkaProduceMessage(
+    "engagement-events",
+    JSON.stringify({
+      type: "download",
+      pictureID,
+    }),
+  );
 };
 
 export const incrementLikeCount = async (pictureID: string, userID: string) => {
-  await prisma.$transaction([
-    prisma.like.create({
-      data: {
-        user_id: userID,
-        pic_id: pictureID,
-      },
+  await kafkaProduceMessage(
+    "engagement-events",
+    JSON.stringify({
+      type: "like",
+      pictureID,
+      userID,
     }),
-    prisma.engagement.upsert({
-      where: {
-        pic_id: pictureID,
-      },
-      update: {
-        likes: {
-          increment: 1,
-        },
-      },
-      create: {
-        pic_id: pictureID,
-        likes: 1,
-      },
-    }),
-  ]);
+  );
 };

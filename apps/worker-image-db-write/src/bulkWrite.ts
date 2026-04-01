@@ -33,9 +33,9 @@ export const bulkWrite = async (items: UnderProcessingPictureType[]) => {
             pic_id: item.id,
             resolution: s.resolution,
             url: s.url,
-            width: s.width,
-            height: s.height,
-            size: s.size,
+            width: s.width!,
+            height: s.height!,
+            size: s.size!,
           }))
         : [],
     );

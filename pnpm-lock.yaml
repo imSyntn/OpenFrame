@@ -228,7 +228,20 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  apps/worker-db-write:
+  apps/worker-engagement-db-write:
+    dependencies:
+      '@workspace/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
+
+  apps/worker-image-db-write:
     dependencies:
       '@workspace/lib':
         specifier: workspace:*
