@@ -7,13 +7,19 @@ import {
   getCollectionByIdController,
   addCollectionItemsController,
   removeCollectionItemsController,
+  getUserCollectionController,
 } from "@/controller";
-import { authMiddleware, checkOwner } from "@/middleware";
+import { authMiddleware, checkOwner, getIfUserIsLoggedIn } from "@/middleware";
 
 const collectionRouter = Router();
 
 collectionRouter.get("/", getCollectionController);
-collectionRouter.get("/:id", getCollectionByIdController);
+collectionRouter.get(
+  "/user/:userId",
+  getIfUserIsLoggedIn,
+  getUserCollectionController,
+);
+collectionRouter.get("/:id", getIfUserIsLoggedIn, getCollectionByIdController);
 collectionRouter.post("/", authMiddleware, createCollectionController);
 collectionRouter.patch(
   "/:id",

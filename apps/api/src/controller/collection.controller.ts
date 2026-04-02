@@ -7,6 +7,7 @@ import {
   addCollectionItems,
   removeCollectionItems,
   updateCollection,
+  getUserCollections,
 } from "@/service";
 import {
   collectionItemSchema,
@@ -30,6 +31,28 @@ export const getCollectionController = async (
   }
 };
 
+export const getUserCollectionController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = req.params;
+    const loggedInUserId = req.user?.id || "";
+    if (!userId) {
+      return next(new ErrorWithStatus(400, "User id is required"));
+    }
+    const isOwner = loggedInUserId === userId;
+
+    const collections = await getUserCollections(userId as string, isOwner);
+    return res.status(200).json({
+      data: collections,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getCollectionByIdController = async (
   req: Request,
   res: Response,
@@ -42,7 +65,10 @@ export const getCollectionByIdController = async (
       return next(new ErrorWithStatus(400, "Collection ID is required"));
     }
 
-    const collection = await getCollectionById(id as string);
+    const loggedInUserId = req.user?.id || "";
+    const isOwner = loggedInUserId === id;
+
+    const collection = await getCollectionById(id as string, isOwner);
     if (!collection) {
       return next(new ErrorWithStatus(404, "Collection not found"));
     }

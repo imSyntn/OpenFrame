@@ -2,11 +2,11 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Explore",
-  description: "Explore",
+  title: "Collections",
+  description: "Collections",
 };
 
-export default function ExploreLayout({
+export default function CollectionsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -14,7 +14,9 @@ export default function ExploreLayout({
   return (
     <>
       <Header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60" />
-      {children}
+      <div className="px-10 min-h-screen max-w-8xl mx-auto pt-4">
+        {children}
+      </div>
     </>
   );
 }
