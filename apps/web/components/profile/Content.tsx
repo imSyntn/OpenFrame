@@ -11,7 +11,6 @@ import { Statistics } from "./statistics/Statistics";
 import { useProfileStore } from "@/store";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
-import { Collections } from "./Collections/Collections";
 import { useUserStore } from "@/store";
 import { Processing } from "./processing/Processing";
 
@@ -26,8 +25,8 @@ export function Content() {
     <div className="max-w-8xl px-8 h-fit mb-8">
       <Tabs
         defaultValue="Gallery"
-        orientation="vertical"
-        className="flex flex-col gap-4 md:gap-8"
+        orientation="horizontal"
+        className="gap-4 md:gap-8"
       >
         <TabsList variant="line" className="flex flex-wrap gap-10">
           <TabsTrigger
@@ -74,7 +73,7 @@ export function Content() {
         </TabsContent>
 
         <TabsContent value="Collections" className="flex-1">
-          <Collections />
+          Updated soon
         </TabsContent>
         {isOwner && (
           <TabsContent value="processing" className="flex-1">

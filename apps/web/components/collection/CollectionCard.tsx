@@ -13,7 +13,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 
 export function CollecTionCardSkeleton() {
   return (
-    <Card className="overflow-hidden pt-0">
+    <Card className="overflow-hidden p-0 border border-muted h-fit">
       <Skeleton className="h-40 w-full" />
       <CardContent className="p-4 space-y-3">
         <Skeleton className="h-4 w-3/4" />
@@ -39,7 +39,7 @@ export function CollectionCard({ collection }: { collection: Collection }) {
   return (
     <Card
       key={collection.id}
-      className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2"
+      className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted"
     >
       <div className="relative h-40 w-full overflow-hidden">
         <img

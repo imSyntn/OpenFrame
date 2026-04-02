@@ -21,7 +21,7 @@ export function SettingsModal({ children }: { children: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="cursor-pointer">{children}</DialogTrigger>
-      <DialogContent className="min-w-[95vw] sm:min-w-[80vw] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-[95vw] sm:min-w-[80vw] max-h-[90vh] overflow-y-auto pr-0">
         <DialogHeader>
           <DialogTitle>Profile Settings</DialogTitle>
           <DialogDescription>
@@ -29,7 +29,7 @@ export function SettingsModal({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[70vh]">
+        <ScrollArea className="max-h-[70vh] pr-4">
           <Form handleClose={handleClose} />
         </ScrollArea>
       </DialogContent>

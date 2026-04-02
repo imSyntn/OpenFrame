@@ -24,6 +24,7 @@ export const getIfUserIsLoggedIn = (
     try {
       const decoded = accessTokenVerify(token);
       req.user = decoded;
+      return next();
     } catch (error) {
       logger.info("User not logged in.");
       return next();

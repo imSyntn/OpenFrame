@@ -37,6 +37,7 @@ export const getUserCollectionController = async (
   next: NextFunction,
 ) => {
   try {
+    console.log("api hit controller");
     const { userId } = req.params;
     const loggedInUserId = req.user?.id || "";
     if (!userId) {
