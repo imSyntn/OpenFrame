@@ -144,7 +144,7 @@ model Collection {
   creator     User             @relation(fields: [creator_id], references: [id], onDelete: Cascade)
   items       CollectionItem[]
 
-  @@index([creator_id])
+  @@index([creator_id, id])
 }
 
 model CollectionItem {

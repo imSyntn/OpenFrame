@@ -19,6 +19,6 @@ const logFormat = printf((info) => {
 
 export const logger = winston.createLogger({
   level: "info",
-  format: combine(colorize({ all: true }), timestamp(), logFormat),
+  format: combine(colorize({ level: true }), timestamp(), logFormat),
   transports: [new winston.transports.Console()],
 });

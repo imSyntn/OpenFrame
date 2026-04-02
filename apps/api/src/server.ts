@@ -4,7 +4,7 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import { authRouter, pictureRouter } from "@/routes";
+import { authRouter, collectionRouter, pictureRouter } from "@/routes";
 import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
@@ -24,6 +24,7 @@ app.get("/api/health", (req: Request, res: Response) => {
 
 app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
+app.use("/api/collection", collectionRouter);
 
 app.use(errorMiddleware);
 
