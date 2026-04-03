@@ -22,9 +22,11 @@ export const getCollectionController = async (
   next: NextFunction,
 ) => {
   try {
-    const collections = await getCollections();
+    const lastId = req.query.nextCursor as string;
+    const { collections, nextCursor } = await getCollections(lastId);
     return res.status(200).json({
       data: collections,
+      nextCursor: nextCursor,
     });
   } catch (error) {
     next(error);
@@ -37,7 +39,6 @@ export const getUserCollectionController = async (
   next: NextFunction,
 ) => {
   try {
-    console.log("api hit controller");
     const { userId } = req.params;
     const loggedInUserId = req.user?.id || "";
     if (!userId) {
@@ -136,6 +137,7 @@ export const addCollectionItemsController = async (
   try {
     const { items } = req.body;
     const { id: collection_id } = req.params;
+    const { id: user_id } = req.user as { id: string };
 
     const parsedData = collectionItemSchema.parse(items);
 
@@ -147,7 +149,7 @@ export const addCollectionItemsController = async (
       collection_id: collection_id as string,
     }));
 
-    const collection = await addCollectionItems(updates);
+    const collection = await addCollectionItems(user_id, updates);
     return res
       .status(201)
       .json({ message: "Items added successfully", data: collection });
@@ -164,12 +166,14 @@ export const removeCollectionItemsController = async (
   try {
     const { items } = req.body;
     const { id: collection_id } = req.params;
+    const { id: user_id } = req.user as { id: string };
 
     const parsedData = collectionItemSchema.parse(items);
 
     const collection = await removeCollectionItems(
       collection_id as string,
       parsedData,
+      user_id,
     );
     return res
       .status(200)
@@ -186,10 +190,11 @@ export const deleteCollectionController = async (
 ) => {
   try {
     const { id } = req.params;
+    const { id: user_id } = req.user as { id: string };
     if (!id) {
       return res.status(400).json({ message: "Collection ID is required" });
     }
-    const collection = await deleteCollection(id as string);
+    const collection = await deleteCollection(id as string, user_id);
     return res
       .status(200)
       .json({ message: "Collection deleted successfully", data: collection });

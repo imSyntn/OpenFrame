@@ -1,5 +1,5 @@
 import React from "react";
-import { Collection } from "@workspace/types";
+import { Collection, SrcType } from "@workspace/types";
 import { Clock, RefreshCcw } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardContent, CardFooter } from "@workspace/ui/components/card";
@@ -27,11 +27,17 @@ export function CollecTionCardSkeleton() {
   );
 }
 
-export function CollectionCard({ collection }: { collection: Collection }) {
+export function CollectionCard({
+  collection,
+  setOpen,
+}: {
+  collection: Collection;
+  setOpen: (open: Collection) => void;
+}) {
   const previewImages = collection.items
     ?.map(
       (item) =>
-        item.picture?.src?.find((img) => img.resolution === "SMALL")?.url,
+        item.picture?.src?.find((img) => img.resolution == "THUMBNAIL")?.url,
     )
     .filter(Boolean);
 
@@ -39,7 +45,8 @@ export function CollectionCard({ collection }: { collection: Collection }) {
   return (
     <Card
       key={collection.id}
-      className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted"
+      className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted h-fit"
+      onClick={() => setOpen(collection)}
     >
       <div className="relative h-40 w-full overflow-hidden">
         <img
@@ -68,9 +75,15 @@ export function CollectionCard({ collection }: { collection: Collection }) {
           <h3 className="font-semibold text-lg line-clamp-1">
             {collection.title}
           </h3>
-          <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-            {collection.visibility}
-          </Badge>
+          {collection.visibility == "PUBLIC" ? (
+            <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+              Public
+            </Badge>
+          ) : (
+            <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
+              Private
+            </Badge>
+          )}
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2">

@@ -8,16 +8,14 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
 import { UnderProcessingPictureType } from "@workspace/types";
 
-export const getUserPictures = async (
-  id: string,
-  page: number,
-  lastId: string | null,
-) => {
-  const cacheKey = `${id}:${page}:${lastId}`;
+export const getUserPictures = async (id: string, lastId: string | null) => {
+  const cacheKey = `user:pictures:${id}:${lastId || "-1"}`;
 
-  const cached = await cache.get(`user:pictures:${cacheKey}`);
+  const cached = await cache.get(cacheKey);
   if (cached) {
-    return JSON.parse(cached);
+    const pictures = JSON.parse(cached);
+    const nextCursor = pictures[pictures.length - 1]?.id || null;
+    return { pictures, nextCursor };
   }
 
   const pictures = await prisma.picture.findMany({
@@ -45,14 +43,39 @@ export const getUserPictures = async (
 
   const nextCursor = pictures[pictures.length - 1]?.id || null;
 
-  await cache.set(
-    `user:pictures:${cacheKey}`,
-    JSON.stringify({ pictures, nextCursor }),
-    "EX",
-    60 * 60 * 2,
-  );
+  await cache.set(cacheKey, JSON.stringify(pictures), "EX", 60 * 60 * 2);
 
   return { pictures, nextCursor };
+};
+
+export const getPictureById = async (id: string) => {
+  const cached = await cache.get(`picture:${id}`);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  const picture = await prisma.picture.findUnique({
+    where: { id },
+    include: {
+      src: true,
+      metadata: true,
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+      engagement: true,
+    },
+  });
+
+  await cache.set(`picture:${id}`, JSON.stringify(picture), "EX", 60 * 60 * 2);
+
+  return picture;
 };
 
 export const getPictureUploadUrl = async (
@@ -128,11 +151,13 @@ export const getExplorePictures = async (
   if (tag) {
     tagID = Number(tag);
   }
-  const cacheKey = `${tagID}:${lastId}`;
+  const cacheKey = `explore:pictures:${tagID}:${lastId || "-1"}`;
 
-  const cached = await cache.get(`explore:pictures:${cacheKey}`);
+  const cached = await cache.get(cacheKey);
   if (cached) {
-    return JSON.parse(cached);
+    const pictures = JSON.parse(cached);
+    const nextCursor = pictures[pictures.length - 1]?.id || null;
+    return { pictures, nextCursor };
   }
 
   const pictures = await prisma.picture.findMany({
@@ -164,12 +189,7 @@ export const getExplorePictures = async (
 
   const nextCursor = pictures[pictures.length - 1]?.id || null;
 
-  await cache.set(
-    `explore:pictures:${cacheKey}`,
-    JSON.stringify({ pictures, nextCursor }),
-    "EX",
-    60 * 60 * 24,
-  );
+  await cache.set(cacheKey, JSON.stringify(pictures), "EX", 60 * 60 * 24);
 
   return { pictures, nextCursor };
 };

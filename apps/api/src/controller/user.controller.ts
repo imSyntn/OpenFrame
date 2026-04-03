@@ -296,27 +296,6 @@ export const getUserController = async (
     }
 
     const include: Prisma.UserInclude = {
-      pictures: {
-        take: PIC_PER_PAGE,
-        orderBy: {
-          created_at: "desc",
-        },
-        include: {
-          src: true,
-          metadata: true,
-          tags: {
-            include: {
-              tag: true,
-            },
-          },
-          _count: {
-            select: {
-              likes: true,
-            },
-          },
-          engagement: true,
-        },
-      },
       _count: {
         select: {
           pictures: true,

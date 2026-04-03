@@ -4,6 +4,7 @@ import {
   downloadPictureController,
   getAllPictureStatusController,
   getExplorePicturesController,
+  getPictureByIdController,
   getPictureStatusController,
   getPictureTagsController,
   getPictureUploadUrlController,
@@ -26,7 +27,7 @@ pictureRouter.get(
   getPictureStatusController,
 );
 
-pictureRouter.get("/user/:id/:page", getUserPicturesController);
+pictureRouter.get("/user/:id", getUserPicturesController);
 
 pictureRouter.post(
   "/upload-url",
@@ -39,8 +40,6 @@ pictureRouter.post("/download/:id", downloadPictureController);
 
 pictureRouter.post("/like/:id", authMiddleware, likePictureController);
 
-pictureRouter.get("/:id", (req, res) => {
-  return res.status(200).json({ message: "OK" });
-});
+pictureRouter.get("/:id", getPictureByIdController);
 
 export { pictureRouter };

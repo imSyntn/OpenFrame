@@ -1,10 +1,17 @@
 import { api } from "../axios";
 import { Collection } from "@workspace/types";
 
-export const getCollections = async (): Promise<{
+export const getCollections = async (
+  nextCursor?: string,
+): Promise<{
   data: Collection[];
+  nextCursor?: string;
 }> => {
-  const res = await api.get(`/api/collection`);
+  const res = await api.get(`/api/collection`, {
+    params: {
+      nextCursor,
+    },
+  });
   return res.data;
 };
 
@@ -28,7 +35,7 @@ export const getCollectionById = async (
 
 export const createCollection = async (data: {
   title: string;
-  description: string;
+  description?: string;
   visibility: string;
 }) => {
   const res = await api.post(`/api/collection`, data);
@@ -38,9 +45,9 @@ export const createCollection = async (data: {
 export const updateCollection = async (
   id: string,
   data: {
-    title: string;
-    description: string;
-    visibility: string;
+    title?: string;
+    description?: string;
+    visibility?: string;
   },
 ) => {
   const res = await api.patch(`/api/collection/${id}`, data);

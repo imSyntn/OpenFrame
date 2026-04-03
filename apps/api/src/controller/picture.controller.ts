@@ -4,6 +4,7 @@ import {
   createPicture,
   getAllPictureStatus,
   getExplorePictures,
+  getPictureById,
   getPictureStatus,
   getPictureTags,
   getPictureUploadUrl,
@@ -21,20 +22,19 @@ export const getUserPicturesController = async (
   next: NextFunction,
 ) => {
   try {
-    const { id, page } = req.params;
-    const nextCursor = req.query.nextCursor as string;
+    const { id } = req.params;
+    const lastId = req.query.nextCursor as string;
 
-    if (!id || !page) {
-      return next(new ErrorWithStatus(400, "Invalid id or page"));
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid id"));
     }
 
-    const userPictures = await getUserPictures(
+    const { pictures, nextCursor } = await getUserPictures(
       id as string,
-      parseInt(page as string),
-      nextCursor as string,
+      lastId,
     );
 
-    return res.status(200).json({ data: userPictures });
+    return res.status(200).json({ data: pictures, nextCursor });
   } catch (error) {
     next(error);
   }
@@ -91,14 +91,14 @@ export const getExplorePicturesController = async (
   next: NextFunction,
 ) => {
   try {
-    const { nextCursor, tag } = req.query as {
+    const { nextCursor: lastId, tag } = req.query as {
       nextCursor: string;
       tag: string;
     };
 
-    const data = await getExplorePictures(tag, nextCursor);
+    const { pictures, nextCursor } = await getExplorePictures(tag, lastId);
 
-    return res.status(200).json({ data });
+    return res.status(200).json({ data: pictures, nextCursor });
   } catch (error) {
     next(error);
   }
@@ -239,6 +239,26 @@ export const likePictureController = async (
     await incrementLikeCount(id, userID);
 
     return res.status(200).json({ message: "Liked" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPictureByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+
+    const picture = await getPictureById(id);
+
+    return res.status(200).json({ data: picture });
   } catch (error) {
     next(error);
   }

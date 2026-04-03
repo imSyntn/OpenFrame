@@ -4,13 +4,12 @@ import { UnderProcessingPictureType } from "@workspace/types";
 
 export const getUserPictures = async (
   id: string,
-  page: number,
   nextCursor: string,
-): Promise<{ pictures: PictureType[]; nextCursor?: string }> => {
-  const res = await api.get(`/api/picture/user/${id}/${page}`, {
+): Promise<{ data: PictureType[]; nextCursor?: string }> => {
+  const res = await api.get(`/api/picture/user/${id}`, {
     params: { nextCursor },
   });
-  return res.data.data;
+  return res.data;
 };
 
 export const getPictureUploadUrl = async (
@@ -32,13 +31,13 @@ export const getPictureTags = async () => {
 };
 
 export const getExplorePictures = async (
-  tag: string,
-  nextCursor: string,
-): Promise<{ pictures: PictureType[]; nextCursor?: string }> => {
+  tag?: string,
+  nextCursor?: string,
+): Promise<{ data: PictureType[]; nextCursor?: string }> => {
   const res = await api.get("/api/picture/explore", {
     params: { tag, nextCursor },
   });
-  return res.data.data;
+  return res.data;
 };
 
 export const createPictureUpload = async (payload: {
@@ -81,5 +80,12 @@ export const incrementLikeCount = async (
   id: string,
 ): Promise<{ message: string }> => {
   const res = await api.post(`/api/picture/like/${id}`);
+  return res.data;
+};
+
+export const getPictureById = async (
+  id: string,
+): Promise<{ data: PictureType }> => {
+  const res = await api.get(`/api/picture/${id}`);
   return res.data;
 };

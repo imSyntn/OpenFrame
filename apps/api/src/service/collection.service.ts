@@ -1,11 +1,14 @@
-import { cache } from "@workspace/lib";
+import { PIC_PER_PAGE } from "@workspace/constants";
+import { cache, Collection, logger } from "@workspace/lib";
 import { prisma } from "@workspace/lib/prisma";
 
-export const getCollections = async () => {
-  const cacheKey = "collections";
+export const getCollections = async (nextCursor: string) => {
+  const cacheKey = `collections:${nextCursor || "-1"}`;
   const cachedCollections = await cache.get(cacheKey);
   if (cachedCollections) {
-    return JSON.parse(cachedCollections);
+    const collections = JSON.parse(cachedCollections);
+    const lastId = collections[collections.length - 1].id;
+    return { collections, nextCursor: lastId };
   }
 
   const collections = await prisma.collection.findMany({
@@ -15,6 +18,9 @@ export const getCollections = async () => {
     orderBy: {
       updated_at: "desc",
     },
+    take: PIC_PER_PAGE,
+    cursor: nextCursor ? { id: nextCursor } : undefined,
+    skip: nextCursor ? 1 : 0,
     include: {
       creator: {
         select: {
@@ -38,37 +44,80 @@ export const getCollections = async () => {
     },
   });
 
+  const lastId = collections[collections.length - 1]?.id || null;
+
   await cache.set(cacheKey, JSON.stringify(collections), "EX", 60 * 60 * 6);
-  return collections;
+  return { collections, nextCursor: lastId };
 };
 
 export const getUserCollections = async (userId: string, isOwner: boolean) => {
   const cacheKey = `collections:user:${userId}`;
-  const cachedCollections = await cache.get(cacheKey);
-  if (cachedCollections && isOwner) {
-    return JSON.parse(cachedCollections);
+  const cacheItemsKey = `${cacheKey}:items`;
+
+  let cachedCollections = await cache.get(cacheKey);
+  let cachedItems = await cache.get(cacheItemsKey);
+
+  if (cachedCollections && cachedItems && isOwner) {
+    cachedCollections = JSON.parse(cachedCollections).map((collection: any) => {
+      return {
+        ...collection,
+        items: JSON.parse(cachedItems).filter(
+          (item: any) => item.collection_id === collection.id,
+        ),
+      };
+    });
+    return cachedCollections;
   }
 
-  if (cachedCollections && !isOwner) {
-    const parsedData = JSON.parse(cachedCollections);
-    return parsedData.filter(
-      (collection: any) => collection.visibility === "PUBLIC",
-    );
+  if (cachedCollections && cachedItems && !isOwner) {
+    cachedCollections = JSON.parse(cachedCollections).map((collection: any) => {
+      return {
+        ...collection,
+        items: JSON.parse(cachedItems).filter(
+          (item: any) =>
+            item.collection_id === collection.id &&
+            collection.visibility === "PUBLIC",
+        ),
+      };
+    });
+    return cachedCollections;
   }
 
-  const collections = await prisma.collection.findMany({
-    where: {
-      creator_id: userId,
-    },
-    include: {
-      creator: {
-        select: {
-          id: true,
-          name: true,
-          avatar: true,
+  let collections = cachedCollections
+    ? JSON.parse(cachedCollections)
+    : await prisma.collection.findMany({
+        where: { creator_id: userId },
+        include: {
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
         },
-      },
-      items: {
+      });
+
+  if (!collections) {
+    return [];
+  }
+
+  await cache.set(cacheKey, JSON.stringify(collections), "EX", 60 * 60 * 6);
+
+  // if (!isOwner) {
+  //   collections = collections.filter(
+  //     (collection: any) => collection.visibility === "PUBLIC",
+  //   );
+  // }
+
+  const items = cachedItems
+    ? JSON.parse(cachedItems)
+    : await prisma.collectionItem.findMany({
+        where: {
+          collection_id: {
+            in: collections.map((collection: any) => collection.id),
+          },
+        },
         include: {
           picture: {
             select: {
@@ -79,15 +128,29 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
             },
           },
         },
-      },
-    },
+      });
+
+  collections = collections.map((collection: any) => {
+    return {
+      ...collection,
+      items: items.filter((item: any) => item.collection_id === collection.id),
+    };
   });
 
-  await cache.set(cacheKey, JSON.stringify(collections), "EX", 60 * 60 * 6);
+  if (!isOwner) {
+    collections = collections.filter(
+      (collection: any) => collection.visibility === "PUBLIC",
+    );
+  }
+
+  await cache.set(cacheItemsKey, JSON.stringify(items), "EX", 60 * 60 * 6);
   return collections;
 };
 
-export const getCollectionById = async (id: string, isOwner: boolean) => {
+export const getCollectionById = async (
+  id: string,
+  isOwner: boolean = true,
+) => {
   const cacheKey = `collections:${id}`;
   const cacheItemKey = cacheKey + ":items";
 
@@ -141,10 +204,6 @@ export const getCollectionById = async (id: string, isOwner: boolean) => {
         },
       },
     },
-    omit: {
-      collection_id: true,
-      pic_id: true,
-    },
   });
 
   await cache.set(cacheKey, JSON.stringify(collection), "EX", 60 * 60 * 6);
@@ -184,28 +243,31 @@ export const updateCollection = async (
 };
 
 export const addCollectionItems = async (
+  user_id: string,
   data: {
     collection_id: string;
     pic_id: string;
   }[],
 ) => {
-  const cacheKey = `collections:${data[0].collection_id}`;
-  const cacheItemKey = cacheKey + ":items";
+  const cacheKey = `collections:user:${user_id}`;
+  const cacheItemsKey = `${cacheKey}:items`;
   const items = await prisma.collectionItem.createMany({
     data,
     skipDuplicates: true,
   });
 
-  await cache.del(cacheItemKey);
+  await cache.del(cacheItemsKey);
   return items;
 };
 
 export const removeCollectionItems = async (
   collection_id: string,
   pic_ids: string[],
+  user_id: string,
 ) => {
-  const cacheKey = `collections:${collection_id}`;
-  const cacheItemKey = cacheKey + ":items";
+  const cacheKey = `collections:user:${user_id}`;
+  const cacheItemsKey = `${cacheKey}:items`;
+
   const items = await prisma.collectionItem.deleteMany({
     where: {
       collection_id,
@@ -215,17 +277,45 @@ export const removeCollectionItems = async (
     },
   });
 
-  await cache.del(cacheItemKey);
+  const cachedItems = await cache.get(cacheItemsKey);
+  if (cachedItems) {
+    const parsedItems = JSON.parse(cachedItems);
+    const updatedItems = parsedItems.filter(
+      (item: any) => !pic_ids.includes(item.pic_id),
+    );
+    await cache.set(cacheItemsKey, JSON.stringify(updatedItems));
+  }
   return items;
 };
 
-export const deleteCollection = async (id: string) => {
+export const deleteCollection = async (id: string, user_id: string) => {
   const cacheKey = `collections:${id}`;
   const cacheItemKey = cacheKey + ":items";
   const deleted = await prisma.collection.delete({ where: { id } });
 
-  await cache.del(cacheKey);
-  await cache.del(cacheItemKey);
+  const userCachedCollectionKey = `collections:user:${user_id}`;
+  let userCachedCollection = await cache.get(userCachedCollectionKey);
+
+  if (userCachedCollection) {
+    userCachedCollection = JSON.parse(userCachedCollection).filter(
+      (collection: Collection) => collection.id != id,
+    );
+  }
+
+  const pipeline = cache.pipeline();
+
+  pipeline.del(cacheKey);
+  pipeline.del(cacheItemKey);
+  if (userCachedCollection) {
+    pipeline.set(
+      userCachedCollectionKey,
+      JSON.stringify(userCachedCollection),
+      "EX",
+      60 * 60 * 6,
+    );
+  }
+
+  await pipeline.exec();
 
   return deleted;
 };

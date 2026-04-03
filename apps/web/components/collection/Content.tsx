@@ -9,8 +9,13 @@ import {
 import { AllCollections } from "./AllCollections";
 import { MyCollections } from "./MyCollections";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
+import { CreateCollection } from "./CreateCollection";
+import { useState } from "react";
+import { Collection } from "@workspace/types";
+import { ViewCollection } from "./ViewCollection";
 
 export function Content() {
+  const [open, setOpen] = useState<boolean | Collection>(false);
   return (
     <div className="w-full h-[calc(100vh-55px)]">
       <Tabs
@@ -38,18 +43,21 @@ export function Content() {
 
         <TabsContent value="all">
           <ScrollArea className="h-[calc(100vh-55px)] pr-3">
-            <AllCollections />
+            <CreateCollection open={open} />
+            <AllCollections setOpen={setOpen} />
             <ScrollBar orientation="vertical" />
           </ScrollArea>
         </TabsContent>
 
         <TabsContent value="my">
           <ScrollArea className="h-[calc(100vh-55px)] pr-3">
-            <MyCollections />
+            <CreateCollection open={open} />
+            <MyCollections setOpen={setOpen} />
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </TabsContent>
       </Tabs>
+      <ViewCollection open={open} setOpen={setOpen} />
     </div>
   );
 }

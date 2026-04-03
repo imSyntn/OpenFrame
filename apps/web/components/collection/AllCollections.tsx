@@ -1,25 +1,54 @@
 import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetCollections } from "@/hooks";
-import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { Collection } from "@workspace/types";
+import { Button } from "@workspace/ui/components/button";
 
-export function AllCollections() {
-  const { data: collections, isLoading, error } = useGetCollections();
+export function AllCollections({
+  setOpen,
+}: {
+  setOpen: (open: Collection) => void;
+}) {
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetCollections();
 
   if (error) {
-    return <div className="text-red-500">Something went wrong</div>;
+    return (
+      <div className="text-destructive text-center">Something went wrong</div>
+    );
   }
+  const collections = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {isLoading &&
-        Array.from({ length: 8 }).map((_, i) => (
-          <CollecTionCardSkeleton key={i} />
-        ))}
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {isLoading &&
+          Array.from({ length: 8 }).map((_, i) => (
+            <CollecTionCardSkeleton key={i} />
+          ))}
 
-      {collections?.data.map((collection) => (
-        <CollectionCard key={collection.id} collection={collection} />
-      ))}
-    </div>
+        {collections.map((collection) => (
+          <CollectionCard
+            key={collection.id}
+            collection={collection}
+            setOpen={setOpen}
+          />
+        ))}
+      </div>
+      <div className="w-full flex justify-center my-4">
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {isFetchingNextPage ? "Loading..." : "Load more"}
+        </Button>
+      </div>
+    </>
   );
 }

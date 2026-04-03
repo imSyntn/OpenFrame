@@ -24,11 +24,8 @@ export interface ProfileType {
         url: string;
       }[]
     | null;
-  pictures: PictureType[] | null;
-  nextCursor: string | null;
 }
 export interface ProfileStore extends ProfileType {
   isLoading: boolean;
   setData: (data: Partial<ProfileStore>) => void;
-  addPictures: (data: PictureType[], nextCursor?: string) => void;
 }

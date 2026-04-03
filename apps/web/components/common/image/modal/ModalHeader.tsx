@@ -7,6 +7,7 @@ import {
   Mail,
   MapPin,
   Plus,
+  Share2,
   ThumbsUp,
 } from "lucide-react";
 import {
@@ -42,39 +43,8 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import Link from "next/link";
-
-function TooltipButton({
-  value,
-  size,
-  content,
-  variant,
-  onClick,
-}: {
-  value: React.ReactNode;
-  size?: "icon" | "icon-sm" | "icon-lg";
-  variant?:
-    | "default"
-    | "outline"
-    | "ghost"
-    | "secondary"
-    | "link"
-    | "destructive";
-  content: string;
-  onClick?: () => void;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button size={size} variant={variant} onClick={onClick}>
-          {value}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>
-        <p>{content}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-}
+import { cn } from "@workspace/ui/lib/utils";
+import { TooltipButton } from "../../layout";
 
 function DownloadButton() {
   const image = useGlobalStateStore((state) => state.image);
@@ -260,6 +230,7 @@ function OwnerInfo({ id }: { id: string }) {
 
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
+  const open = useGlobalStateStore((state) => state.open);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const { mutateAsync: incrementLikeCount } = useIncrementLikeCount();
   if (!image) {
@@ -275,31 +246,60 @@ export function ModalHeader() {
     }
   };
 
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/picture/${image.id}`,
+      );
+      toast.success("Link copied to clipboard.");
+    } catch (error) {
+      toast.error("Failed to copy link.");
+    }
+  };
+
+  const isModal = open == true && !!image?.id;
+
+  const Header = isModal ? DialogHeader : "div";
   return (
-    <DialogHeader className="h-fit! flex flex-row justify-between px-6 pt-6">
-      <DialogTitle className="sr-only">{image.title}</DialogTitle>
-      <DialogDescription className="sr-only">
-        {image.description}
-      </DialogDescription>
+    <Header
+      className={cn(
+        "h-fit! flex flex-row justify-between px-6 pt-6",
+        !isModal && "mb-4",
+      )}
+    >
+      {isModal && (
+        <>
+          <DialogTitle className="sr-only">{image.title}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {image.description}
+          </DialogDescription>
+        </>
+      )}
       <OwnerInfo id={image.user_id} />
       <div className="flex items-center gap-2">
         {isLoggedIn && (
-          <>
-            <TooltipButton
-              value={<ThumbsUp />}
-              size="icon"
-              content="Like"
-              onClick={handleLike}
-            />
-            <TooltipButton
-              value={<Plus />}
-              size="icon"
-              content="Add to collection"
-            />
-          </>
+          <TooltipButton
+            value={<ThumbsUp />}
+            size="icon"
+            content="Like"
+            onClick={handleLike}
+          />
+        )}
+        <TooltipButton
+          value={<Share2 />}
+          size="icon"
+          content="Share"
+          onClick={handleShare}
+        />
+        {isLoggedIn && (
+          <TooltipButton
+            value={<Plus />}
+            size="icon"
+            content="Add to collection"
+          />
         )}
         <DownloadButton />
       </div>
-    </DialogHeader>
+    </Header>
   );
 }

@@ -15,24 +15,21 @@ export function MasonryGrid() {
   const pathname = usePathname();
   const params = useSearchParams();
   const setOpen = useGlobalStateStore((state) => state.setOpen);
-  const nextCursor = useGlobalStateStore((state) => state.nextCursor);
-  const pictures = useGlobalStateStore((state) => state.pictures);
-  const loading = useGlobalStateStore((state) => state.picturesLoading);
-  const { mutateAsync: getExplorePictures, isError } = useGetExplorePictures();
-  const tagDiff = useRef(params.get("tag"));
 
-  const tag = params.get("tag");
+  const tag = params.get("tag") || undefined;
 
-  useEffect(() => {
-    if (tagDiff.current !== tag) {
-      tagDiff.current = tag;
-      getExplorePictures({ tag: tag || "", nextCursor: "" });
-    } else {
-      getExplorePictures({ tag: tag || "", nextCursor });
-    }
-  }, [tag]);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useGetExplorePictures(tag);
 
-  if (!loading && pictures.length == 0) {
+  const pictures = data?.pages.flatMap((page) => page.data) ?? [];
+
+  if (!isLoading && pictures.length == 0) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p>No pictures found</p>
@@ -40,7 +37,7 @@ export function MasonryGrid() {
     );
   }
 
-  if (!loading && isError) {
+  if (!isLoading && isError) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p className="text-destructive">Something went wrong</p>
@@ -54,7 +51,7 @@ export function MasonryGrid() {
         const original = pic.src.find((src) => src.resolution === "ORIGINAL");
         const thumbnail = pic.src.find((src) => src.resolution === "THUMBNAIL");
         return {
-          src: thumbnail?.url! || original?.url!,
+          src: thumbnail?.url || original?.url!,
           width: original?.width!,
           height: original?.height!,
           blurhash: pic.metadata.blurhash,
@@ -70,25 +67,32 @@ export function MasonryGrid() {
 
   const handleLoadMore = () => {
     if (pathname === "/explore") {
-      getExplorePictures({ tag: tag || "", nextCursor });
+      fetchNextPage();
     } else {
       router.push("/explore");
     }
   };
 
   return (
-    <div className={cn("w-full", loading && "opacity-50")}>
-      <Masonry photos={photos} />
-      {loading && (
+    <div className={cn("w-full", isLoading && "opacity-50")}>
+      {isLoading && (
         <div className="flex w-full justify-center my-3">
           <Loader2 className="animate-spin" />
         </div>
       )}
-      <div className="flex w-full justify-center my-3">
-        <Button className="mx-auto" onClick={handleLoadMore} disabled={loading}>
-          More
-        </Button>
-      </div>
+      <Masonry photos={photos} />
+      {isFetchingNextPage && (
+        <div className="flex w-full justify-center my-3">
+          <Loader2 className="animate-spin" />
+        </div>
+      )}
+      {hasNextPage && (
+        <div className="flex w-full justify-center my-3">
+          <Button onClick={handleLoadMore} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? "Loading..." : "More"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

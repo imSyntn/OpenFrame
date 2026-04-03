@@ -1,5 +1,5 @@
 import winston from "winston";
-const { printf, combine, timestamp, colorize } = winston.format;
+const { printf, combine, timestamp, colorize, errors } = winston.format;
 
 const logFormat = printf((info) => {
   const { timestamp, level, message, ...meta } = info;
@@ -19,6 +19,11 @@ const logFormat = printf((info) => {
 
 export const logger = winston.createLogger({
   level: "info",
-  format: combine(colorize({ level: true }), timestamp(), logFormat),
+  format: combine(
+    errors({ stack: true }),
+    colorize({ level: true }),
+    timestamp(),
+    logFormat,
+  ),
   transports: [new winston.transports.Console()],
 });

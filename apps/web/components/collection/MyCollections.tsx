@@ -2,8 +2,13 @@ import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetUserCollections } from "@/hooks";
 import { useUserStore } from "@/store";
+import { Collection } from "@workspace/types";
 
-function ShowUserCollections() {
+function ShowUserCollections({
+  setOpen,
+}: {
+  setOpen: (open: Collection) => void;
+}) {
   const userId = useUserStore((state) => state.id);
   const { data: collections, isLoading, error } = useGetUserCollections(userId);
 
@@ -19,24 +24,32 @@ function ShowUserCollections() {
         ))}
 
       {collections?.data.map((collection) => (
-        <CollectionCard key={collection.id} collection={collection} />
+        <CollectionCard
+          key={collection.id}
+          collection={collection}
+          setOpen={setOpen}
+        />
       ))}
     </div>
   );
 }
 
-export function MyCollections() {
+export function MyCollections({
+  setOpen,
+}: {
+  setOpen: (open: Collection) => void;
+}) {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   if (!isLoggedIn) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
         <h2 className="text-2xl font-semibold">
-          Please login to view your collections
+          Please login to view/create your collections
         </h2>
       </div>
     );
   }
 
-  return <ShowUserCollections />;
+  return <ShowUserCollections setOpen={setOpen} />;
 }

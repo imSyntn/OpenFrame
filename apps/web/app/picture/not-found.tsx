@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
-import { BookX, CameraOff } from "lucide-react";
+import { CameraOff } from "lucide-react";
 
 export default function NotFound() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-6">
       <div className="flex max-w-md flex-col items-center text-center gap-6">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-          <BookX className="h-8 w-8 text-muted-foreground" />
+          <CameraOff className="h-8 w-8 text-muted-foreground" />
         </div>
 
         <h1 className="text-2xl font-semibold tracking-tight">
-          Profile not found
+          Picture not found
         </h1>
 
         <p className="text-sm text-muted-foreground">
-          The photographer you're looking for doesn't exist or the link may be
+          The picture you're looking for doesn't exist or the link may be
           incorrect.
         </p>
 
