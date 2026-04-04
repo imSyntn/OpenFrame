@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import React from "react";
 
 export function Footer() {
@@ -12,7 +13,9 @@ export function Footer() {
         </div>
         <p className="text-muted-foreground mt-3 flex items-center gap-1.5">
           built with
-          <span className="text-red-500">♥</span>
+          <span>
+            <Heart className="text-red-500" size={20} />
+          </span>
           by
           <a
             href="https://sayantan.online"
