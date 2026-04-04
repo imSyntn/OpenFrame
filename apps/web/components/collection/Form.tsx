@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -15,12 +17,20 @@ import { Switch } from "@workspace/ui/components/switch";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
-import { Badge } from "@workspace/ui/components/badge";
 import { Lock } from "lucide-react";
 import { useCreateCollection, useUpdateCollection } from "@/hooks";
-import { Collection } from "@workspace/types";
+// import { Collection } from "@workspace/types";
+import { VisibilityBadge } from "../common";
+import { useGlobalStateStore } from "@/store";
 
-export function Form({ collection }: { collection?: Collection }) {
+export function Form({
+  // collection,
+  onCreated,
+}: {
+  // collection?: Collection;
+  onCreated?: (id: string) => void;
+}) {
+  const collection = useGlobalStateStore((state) => state.openCollectionModal);
   const {
     register,
     handleSubmit,
@@ -37,11 +47,12 @@ export function Form({ collection }: { collection?: Collection }) {
   const { mutateAsync: createCollection } = useCreateCollection();
   const { mutateAsync: updateCollection } = useUpdateCollection();
 
-  const onSubmit = (data: z.infer<typeof collectionSchema>) => {
+  const onSubmit = async (data: z.infer<typeof collectionSchema>) => {
     if (collection) {
-      updateCollection({ id: collection.id, data });
+      await updateCollection({ id: collection.id, data });
     } else {
-      createCollection(data);
+      const { data: createdCollection } = await createCollection(data);
+      onCreated?.(createdCollection.id);
     }
   };
 
@@ -83,15 +94,7 @@ export function Form({ collection }: { collection?: Collection }) {
                 control={control}
                 render={({ field }) => (
                   <div className="flex items-center gap-3">
-                    {field.value === "PRIVATE" ? (
-                      <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
-                        Private
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                        Public
-                      </Badge>
-                    )}
+                    <VisibilityBadge visibility={field.value} />
 
                     <Switch
                       checked={field.value === "PRIVATE"}

@@ -12,6 +12,7 @@ export function TooltipButton({
   variant,
   onClick,
   disabled,
+  as,
 }: {
   value: React.ReactNode;
   size?: "icon" | "icon-sm" | "icon-lg";
@@ -25,18 +26,22 @@ export function TooltipButton({
   content: string;
   onClick?: () => void;
   disabled?: boolean;
+  as?: string;
 }) {
+  const Comp = as ?? Button;
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          size={size}
-          variant={variant}
+        <Comp
           onClick={onClick}
           disabled={disabled}
+          {...(!as && {
+            size,
+            variant,
+          })}
         >
           {value}
-        </Button>
+        </Comp>
       </TooltipTrigger>
       <TooltipContent>
         <p>{content}</p>

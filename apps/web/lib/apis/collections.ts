@@ -37,7 +37,9 @@ export const createCollection = async (data: {
   title: string;
   description?: string;
   visibility: string;
-}) => {
+}): Promise<{
+  data: Collection;
+}> => {
   const res = await api.post(`/api/collection`, data);
   return res.data;
 };
@@ -60,7 +62,9 @@ export const deleteCollection = async (id: string) => {
 };
 
 export const addCollectionItems = async (id: string, items: string[]) => {
-  const res = await api.post(`/api/collection/${id}/items`, { items });
+  const res = await api.post(`/api/collection/${id}/items`, {
+    items,
+  });
   return res.data;
 };
 

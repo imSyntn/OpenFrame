@@ -1,4 +1,4 @@
-import { useDeleteCollection, useDeleteCollectionItems } from "@/hooks";
+import { useDeleteCollectionItems } from "@/hooks";
 import { CollectionItem } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Loader2, Trash2 } from "lucide-react";
@@ -34,26 +34,30 @@ export function CollectionImageCard({
     }
   };
   return (
-    <div className="group relative overflow-hidden rounded-lg border bg-muted cursor-pointer">
+    <div className="group relative rounded-xl overflow-hidden border bg-muted shadow-sm hover:shadow-lg transition-all duration-300">
       <Link href={`/picture/${item.pic_id}`}>
-        <img
-          src={img?.url}
-          alt={item.picture.title}
-          className="h-full w-full object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
-        />
+        <div className="relative aspect-square overflow-hidden">
+          <img
+            src={img?.url}
+            alt={item.picture.title}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
+        </div>
       </Link>
 
-      <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition" />
-
       {isOwner && (
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 translate-y-[-6px] group-hover:translate-y-0 transition-all duration-300">
           <Button
             size="icon"
+            variant="secondary"
+            className="bg-white/80 hover:bg-white shadow-md"
             onClick={removeCollectionItem}
             disabled={isPending}
           >
             {isPending ? (
-              <Loader2 className="text-destructive animate-spin" />
+              <Loader2 className="animate-spin text-destructive" />
             ) : (
               <Trash2 className="text-destructive" />
             )}
@@ -61,7 +65,7 @@ export function CollectionImageCard({
         </div>
       )}
 
-      <div className="absolute bottom-0 left-0 right-0 text-center opacity-0 group-hover:opacity-100 bg-primary text-primary-foreground transition">
+      <div className="absolute bottom-0 left-0 right-0 px-3 py-2 text-sm font-medium text-black bg-white/80 opacity-0 group-hover:opacity-100 transition duration-300">
         View full picture
       </div>
     </div>

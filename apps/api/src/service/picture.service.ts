@@ -237,22 +237,27 @@ export const getPictureStatus = async (userId: string, pictureID: string) => {
   return JSON.parse(data || "{}");
 };
 
-export const incrementViewCount = async (pictureID: string) => {
+export const incrementViewCount = async (pictureID: string, userID: string) => {
   await kafkaProduceMessage(
     "engagement-events",
     JSON.stringify({
       type: "view",
       pictureID,
+      userID,
     }),
   );
 };
 
-export const incrementDownloadCount = async (pictureID: string) => {
+export const incrementDownloadCount = async (
+  pictureID: string,
+  userID: string,
+) => {
   await kafkaProduceMessage(
     "engagement-events",
     JSON.stringify({
       type: "download",
       pictureID,
+      userID,
     }),
   );
 };

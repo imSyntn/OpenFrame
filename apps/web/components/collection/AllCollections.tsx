@@ -1,14 +1,9 @@
 import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetCollections } from "@/hooks";
-import { Collection } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 
-export function AllCollections({
-  setOpen,
-}: {
-  setOpen: (open: Collection) => void;
-}) {
+export function AllCollections() {
   const {
     data,
     isLoading,
@@ -34,11 +29,7 @@ export function AllCollections({
           ))}
 
         {collections.map((collection) => (
-          <CollectionCard
-            key={collection.id}
-            collection={collection}
-            setOpen={setOpen}
-          />
+          <CollectionCard key={collection.id} collection={collection} />
         ))}
       </div>
       <div className="w-full flex justify-center my-4">

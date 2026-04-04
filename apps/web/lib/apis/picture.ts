@@ -62,17 +62,29 @@ export const getPictureStatus = async (pictureID: string) => {
   return res.data.data;
 };
 
-export const incrementViewCount = async (
-  id: string,
-): Promise<{ message: string }> => {
-  const res = await api.post(`/api/picture/view/${id}`);
+export const incrementViewCount = async ({
+  id,
+  ownerId,
+}: {
+  id: string;
+  ownerId: string;
+}): Promise<{ message: string }> => {
+  const res = await api.post(`/api/picture/view/${id}`, {
+    ownerId,
+  });
   return res.data;
 };
 
-export const incrementDownloadCount = async (
-  id: string,
-): Promise<{ message: string }> => {
-  const res = await api.post(`/api/picture/download/${id}`);
+export const incrementDownloadCount = async ({
+  id,
+  ownerId,
+}: {
+  id: string;
+  ownerId: string;
+}): Promise<{ message: string }> => {
+  const res = await api.post(`/api/picture/download/${id}`, {
+    ownerId,
+  });
   return res.data;
 };
 

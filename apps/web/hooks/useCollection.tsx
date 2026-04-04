@@ -1,4 +1,5 @@
 import {
+  addCollectionItems,
   createCollection,
   deleteCollection,
   getCollections,
@@ -113,6 +114,28 @@ export const useDeleteCollectionItems = () => {
       toast.dismiss();
       queryClient.invalidateQueries({ queryKey: ["user-collections"] });
       toast.success("Items deleted successfully");
+    },
+  });
+};
+
+export const useAddCollectionItems = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, pic_ids }: { id: string; pic_ids: string[] }) =>
+      addCollectionItems(id, pic_ids),
+    onError: (error: any) => {
+      toast.dismiss();
+      console.log(error);
+
+      toast.error(error.response.data.message || "Failed to add item.");
+    },
+    onMutate: () => {
+      toast.loading("Adding items...");
+    },
+    onSuccess: () => {
+      toast.dismiss();
+      queryClient.invalidateQueries({ queryKey: ["user-collections"] });
+      toast.success("Items added successfully");
     },
   });
 };

@@ -70,7 +70,11 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
   }
 
   if (cachedCollections && cachedItems && !isOwner) {
-    cachedCollections = JSON.parse(cachedCollections).map((collection: any) => {
+    const publicCollections = JSON.parse(cachedCollections).filter(
+      (collection: Collection) => collection.visibility === "PUBLIC",
+    );
+
+    const collections = publicCollections.map((collection: any) => {
       return {
         ...collection,
         items: JSON.parse(cachedItems).filter(
@@ -80,7 +84,7 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
         ),
       };
     });
-    return cachedCollections;
+    return collections;
   }
 
   let collections = cachedCollections
@@ -130,12 +134,10 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
         },
       });
 
-  collections = collections.map((collection: any) => {
-    return {
-      ...collection,
-      items: items.filter((item: any) => item.collection_id === collection.id),
-    };
-  });
+  collections = collections.map((collection: any) => ({
+    ...collection,
+    items: items.filter((item: any) => item.collection_id === collection.id),
+  }));
 
   if (!isOwner) {
     collections = collections.filter(
@@ -218,9 +220,28 @@ export const createCollection = async (data: {
   creator_id: string;
 }) => {
   const update = await prisma.collection.create({ data });
+  const cacheKeyUser = `collections:user:${data.creator_id}`;
+  const cacheKeyCollection = `collections:${update.id}`;
 
-  const cacheKey = `collections:${update.id}`;
-  await cache.set(cacheKey, JSON.stringify(update));
+  const cachedCollections = await cache.get(cacheKeyUser);
+
+  const parsedCollections = cachedCollections
+    ? JSON.parse(cachedCollections)
+    : [];
+  parsedCollections.push(update);
+  await cache.set(
+    cacheKeyUser,
+    JSON.stringify(parsedCollections),
+    "EX",
+    60 * 60 * 6,
+  );
+
+  await cache.set(
+    cacheKeyCollection,
+    JSON.stringify(update),
+    "EX",
+    60 * 60 * 6,
+  );
 
   return update;
 };
@@ -234,10 +255,35 @@ export const updateCollection = async (
     cover_image?: string;
   },
 ) => {
-  const cacheKey = `collections:${id}`;
   const updated = await prisma.collection.update({ where: { id }, data });
 
-  await cache.set(cacheKey, JSON.stringify(updated));
+  const cacheKeyCollection = `collections:${id}`;
+  const cacheKeyUser = `collections:user:${updated.creator_id}`;
+
+  await cache.set(
+    cacheKeyCollection,
+    JSON.stringify(updated),
+    "EX",
+    60 * 60 * 6,
+  );
+
+  const cachedCollections = await cache.get(cacheKeyUser);
+
+  if (cachedCollections) {
+    const parsedCollections = JSON.parse(cachedCollections);
+    const updatedCollections = parsedCollections.map((collection: any) => {
+      if (collection.id === id) {
+        return updated;
+      }
+      return collection;
+    });
+    await cache.set(
+      cacheKeyUser,
+      JSON.stringify(updatedCollections),
+      "EX",
+      60 * 60 * 6,
+    );
+  }
 
   return updated;
 };
@@ -249,14 +295,13 @@ export const addCollectionItems = async (
     pic_id: string;
   }[],
 ) => {
-  const cacheKey = `collections:user:${user_id}`;
-  const cacheItemsKey = `${cacheKey}:items`;
+  const cacheKey = `collections:user:${user_id}:items`;
   const items = await prisma.collectionItem.createMany({
     data,
     skipDuplicates: true,
   });
 
-  await cache.del(cacheItemsKey);
+  await cache.del(cacheKey);
   return items;
 };
 
@@ -265,8 +310,7 @@ export const removeCollectionItems = async (
   pic_ids: string[],
   user_id: string,
 ) => {
-  const cacheKey = `collections:user:${user_id}`;
-  const cacheItemsKey = `${cacheKey}:items`;
+  const cacheKey = `collections:user:${user_id}:items`;
 
   const items = await prisma.collectionItem.deleteMany({
     where: {
@@ -277,13 +321,13 @@ export const removeCollectionItems = async (
     },
   });
 
-  const cachedItems = await cache.get(cacheItemsKey);
+  const cachedItems = await cache.get(cacheKey);
   if (cachedItems) {
     const parsedItems = JSON.parse(cachedItems);
     const updatedItems = parsedItems.filter(
       (item: any) => !pic_ids.includes(item.pic_id),
     );
-    await cache.set(cacheItemsKey, JSON.stringify(updatedItems));
+    await cache.set(cacheKey, JSON.stringify(updatedItems), "EX", 60 * 60 * 6);
   }
   return items;
 };

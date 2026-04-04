@@ -13,6 +13,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import { useUserStore } from "@/store";
 import { Processing } from "./processing/Processing";
+import { ShowUserCollections } from "../collection";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);
@@ -73,7 +74,7 @@ export function Content() {
         </TabsContent>
 
         <TabsContent value="Collections" className="flex-1">
-          Updated soon
+          <ShowUserCollections id={id} />
         </TabsContent>
         {isOwner && (
           <TabsContent value="processing" className="flex-1">

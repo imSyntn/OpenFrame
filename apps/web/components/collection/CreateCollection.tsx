@@ -11,13 +11,27 @@ import {
 import Link from "next/link";
 import { Form } from "./Form";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { Collection } from "@workspace/types";
+// import { Collection } from "@workspace/types";
+import { cn } from "@workspace/ui/lib/utils";
 
-export function CreateCollection({ open }: { open: boolean | Collection }) {
+export function CreateCollection({
+  // open,
+  className,
+  onCreated,
+}: {
+  // open: boolean | Collection;
+  className?: string;
+  onCreated?: (id: string) => void;
+}) {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   return (
     <Dialog>
-      <div className="w-full flex justify-center items-center p-2 mb-4">
+      <div
+        className={cn(
+          "w-full flex justify-center items-center p-2 mb-4",
+          className,
+        )}
+      >
         <DialogTrigger asChild>
           <Button>Create collection</Button>
         </DialogTrigger>
@@ -39,7 +53,7 @@ export function CreateCollection({ open }: { open: boolean | Collection }) {
           </div>
         ) : (
           <ScrollArea className="max-h-[70vh] pr-4">
-            <Form {...(typeof open == "boolean" ? {} : { collection: open })} />
+            <Form onCreated={onCreated} />
           </ScrollArea>
         )}
       </DialogContent>

@@ -14,7 +14,7 @@ import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { Collection } from "@workspace/types";
 import { Settings } from "lucide-react";
 
-export function UpdateCollection({ open }: { open: boolean | Collection }) {
+export function UpdateCollection() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   return (
     <Dialog>
@@ -40,7 +40,7 @@ export function UpdateCollection({ open }: { open: boolean | Collection }) {
           </div>
         ) : (
           <ScrollArea className="max-h-[70vh] pr-4">
-            <Form {...(typeof open == "boolean" ? {} : { collection: open })} />
+            <Form />
           </ScrollArea>
         )}
       </DialogContent>

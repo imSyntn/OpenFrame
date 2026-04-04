@@ -187,12 +187,16 @@ export const viewPictureController = async (
 ) => {
   try {
     const { id } = req.params as { id: string };
+    const { ownerId } = req.body as { ownerId: string };
 
     if (!id) {
-      return next(new ErrorWithStatus(400, "Invalid picture id"));
+      return next(new ErrorWithStatus(404, "Invalid picture id"));
+    }
+    if (!ownerId) {
+      return next(new ErrorWithStatus(404, "Invalid owner id"));
     }
 
-    await incrementViewCount(id);
+    await incrementViewCount(id, ownerId);
 
     return res.status(200).json({ message: "Viewed" });
   } catch (error) {
@@ -207,12 +211,16 @@ export const downloadPictureController = async (
 ) => {
   try {
     const { id } = req.params as { id: string };
+    const { ownerId } = req.body as { ownerId: string };
 
     if (!id) {
-      return next(new ErrorWithStatus(400, "Invalid picture id"));
+      return next(new ErrorWithStatus(404, "Invalid picture id"));
+    }
+    if (!ownerId) {
+      return next(new ErrorWithStatus(404, "Invalid owner id"));
     }
 
-    await incrementDownloadCount(id);
+    await incrementDownloadCount(id, ownerId);
 
     return res.status(200).json({ message: "Downloaded" });
   } catch (error) {

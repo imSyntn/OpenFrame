@@ -85,13 +85,15 @@ export const useGetPictureStatus = (pictureID: string, enabled: boolean) => {
 
 export const useIncrementViewCount = () => {
   return useMutation({
-    mutationFn: (id: string) => incrementViewCount(id),
+    mutationFn: (data: { id: string; ownerId: string }) =>
+      incrementViewCount(data),
   });
 };
 
 export const useIncrementDownloadCount = () => {
   return useMutation({
-    mutationFn: (id: string) => incrementDownloadCount(id),
+    mutationFn: (data: { id: string; ownerId: string }) =>
+      incrementDownloadCount(data),
   });
 };
 

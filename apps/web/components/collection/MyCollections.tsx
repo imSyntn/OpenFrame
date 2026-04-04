@@ -2,18 +2,21 @@ import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetUserCollections } from "@/hooks";
 import { useUserStore } from "@/store";
-import { Collection } from "@workspace/types";
 
-function ShowUserCollections({
-  setOpen,
-}: {
-  setOpen: (open: Collection) => void;
-}) {
+export function ShowUserCollections({ id }: { id?: string }) {
   const userId = useUserStore((state) => state.id);
-  const { data: collections, isLoading, error } = useGetUserCollections(userId);
+  const {
+    data: collections,
+    isLoading,
+    error,
+  } = useGetUserCollections(id || userId);
 
   if (error) {
-    return <div className="text-red-500">Something went wrong</div>;
+    return (
+      <div className="text-destructive text-center">
+        {(error as any).response?.data?.message || "Something went wrong"}
+      </div>
+    );
   }
 
   return (
@@ -24,21 +27,13 @@ function ShowUserCollections({
         ))}
 
       {collections?.data.map((collection) => (
-        <CollectionCard
-          key={collection.id}
-          collection={collection}
-          setOpen={setOpen}
-        />
+        <CollectionCard key={collection.id} collection={collection} />
       ))}
     </div>
   );
 }
 
-export function MyCollections({
-  setOpen,
-}: {
-  setOpen: (open: Collection) => void;
-}) {
+export function MyCollections() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   if (!isLoggedIn) {
@@ -51,5 +46,5 @@ export function MyCollections({
     );
   }
 
-  return <ShowUserCollections setOpen={setOpen} />;
+  return <ShowUserCollections />;
 }

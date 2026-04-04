@@ -72,7 +72,7 @@ export function Content() {
     if (image) {
       const incrementViewCount = async () => {
         try {
-          await viewPicture(image.id);
+          await viewPicture({ id: image.id, ownerId: image.user_id });
         } catch (error) {
           console.log(error);
         }

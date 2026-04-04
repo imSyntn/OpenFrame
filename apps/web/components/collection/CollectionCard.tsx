@@ -10,6 +10,8 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { VisibilityBadge } from "../common";
+import { useGlobalStateStore } from "@/store";
 
 export function CollecTionCardSkeleton() {
   return (
@@ -29,11 +31,14 @@ export function CollecTionCardSkeleton() {
 
 export function CollectionCard({
   collection,
-  setOpen,
+  // setOpen,
 }: {
   collection: Collection;
-  setOpen: (open: Collection) => void;
+  // setOpen: (open: Collection) => void;
 }) {
+  const setOpenCollectionModal = useGlobalStateStore(
+    (state) => state.setOpenCollectionModal,
+  );
   const previewImages = collection.items
     ?.map(
       (item) =>
@@ -46,7 +51,7 @@ export function CollectionCard({
     <Card
       key={collection.id}
       className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted h-fit"
-      onClick={() => setOpen(collection)}
+      onClick={() => setOpenCollectionModal(collection)}
     >
       <div className="relative h-40 w-full overflow-hidden">
         <img
@@ -75,15 +80,7 @@ export function CollectionCard({
           <h3 className="font-semibold text-lg line-clamp-1">
             {collection.title}
           </h3>
-          {collection.visibility == "PUBLIC" ? (
-            <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-              Public
-            </Badge>
-          ) : (
-            <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
-              Private
-            </Badge>
-          )}
+          <VisibilityBadge visibility={collection.visibility} />
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2">

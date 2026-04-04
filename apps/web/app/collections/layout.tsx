@@ -2,7 +2,7 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Collections",
+  title: "Collections | OpenFrame",
   description: "Collections",
 };
 

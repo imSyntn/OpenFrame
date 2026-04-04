@@ -2,8 +2,8 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Picture",
-  description: "Picture",
+  title: "Pictures | OpenFrame",
+  description: "Pictures",
 };
 
 export default function PictureLayout({

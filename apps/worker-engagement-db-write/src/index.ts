@@ -1,7 +1,6 @@
 import "@workspace/lib/env";
 import { kafka } from "@workspace/lib/kafka";
 import { logger } from "@workspace/lib/logger";
-import { cache } from "@workspace/lib";
 import { bulkWrite } from "./bulkWrite";
 import type { EngagementEventType } from "@workspace/types";
 
