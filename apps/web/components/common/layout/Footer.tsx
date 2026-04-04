@@ -10,27 +10,22 @@ export function Footer() {
             Free high-resolution photos for creators.
           </p>
         </div>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <a href="/explore" className="hover:text-foreground transition">
-            Explore
-          </a>
-          <a href="/collections" className="hover:text-foreground transition">
-            Collections
-          </a>
-          <a href="/about" className="hover:text-foreground transition">
-            About
-          </a>
+        <p className="text-muted-foreground mt-3 flex items-center gap-1.5">
+          built with
+          <span className="text-red-500">♥</span>
+          by
           <a
-            href="https://www.sayantan.online/#contact"
+            href="https://sayantan.online"
             target="_blank"
-            className="hover:text-foreground transition"
+            className="relative font-semibold text-foreground group ml-1"
           >
-            Contact
+            @imsyntn
+            <span className="absolute left-0 -bottom-0.5 h-[1.5px] w-full bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
           </a>
-        </div>
+        </p>
       </div>
       <div className="text-center text-sm text-muted-foreground mt-6">
-        © {new Date().getFullYear()} OpenFrame. All rights reserved.
+        &copy; {new Date().getFullYear()} OpenFrame. All rights reserved.
       </div>
     </footer>
   );

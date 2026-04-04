@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Logo } from "../Logo";
 import { cn } from "@workspace/ui/lib/utils";
 import { HeaderRight } from "./HeaderRight";
+import { LinkWithActiveState } from "./LinkWithActiveState";
 
 export function Header({ className }: { className?: string }) {
   return (
@@ -14,19 +15,11 @@ export function Header({ className }: { className?: string }) {
           <Logo />
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/explore"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Explore
-            </Link>
+            <LinkWithActiveState href="/explore">Explore</LinkWithActiveState>
 
-            <Link
-              href="/collections"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <LinkWithActiveState href="/collections">
               Collections
-            </Link>
+            </LinkWithActiveState>
           </nav>
         </div>
 

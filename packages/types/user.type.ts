@@ -1,4 +1,4 @@
-export interface GoogleUserType {
+export type GoogleUserType = UserType & {
   _json: {
     sub: string;
     name: string;
@@ -8,7 +8,7 @@ export interface GoogleUserType {
     email: string;
     email_verified: boolean;
   };
-}
+};
 
 export interface UserTypeUnregistered {
   name: string;
