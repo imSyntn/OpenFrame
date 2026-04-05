@@ -8,23 +8,27 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  name        String       @db.VarChar(80)
-  email       String       @unique
-  joined_at   DateTime     @default(now())
-  avatar      String       @default("https://cdn-icons-png.flaticon.com/512/3177/3177440.png")
-  bio         String?      @db.VarChar(160)
-  is_verified Boolean      @default(false)
-  location    String?      @db.VarChar(100)
-  google_id   String?
-  password    String?
-  collection  Collection[]
-  followers   Follow[]     @relation("UserFollowing")
-  following   Follow[]     @relation("UserFollowers")
-  likes       Like[]
-  links       Links[]
-  metrics     Metrics?
-  pictures    Picture[]
+  id            String                   @id @default(cuid())
+  name          String                   @db.VarChar(80)
+  email         String                   @unique
+  joined_at     DateTime                 @default(now())
+  avatar        String                   @default("https://cdn-icons-png.flaticon.com/512/3177/3177440.png")
+  bio           String?                  @db.VarChar(160)
+  is_verified   Boolean                  @default(false)
+  location      String?                  @db.VarChar(100)
+  google_id     String?
+  password      String?
+  search_vector Unsupported("tsvector")?
+  collection    Collection[]
+  followers     Follow[]                 @relation("UserFollowing")
+  following     Follow[]                 @relation("UserFollowers")
+  likes         Like[]
+  links         Links[]
+  metrics       Metrics?
+  pictures      Picture[]
+
+  @@index([search_vector], map: "user_search_idx", type: Gin)
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "user_trgm_idx", type: Gin)
 }
 
 model Links {
@@ -69,21 +73,24 @@ model Like {
 }
 
 model Picture {
-  id               String           @id @default(cuid())
+  id               String                   @id @default(cuid())
   user_id          String
-  description      String?          @db.VarChar(4000)
-  alt              String           @db.VarChar(150)
-  title            String           @db.VarChar(60)
-  created_at       DateTime         @default(now())
+  description      String?                  @db.VarChar(4000)
+  alt              String                   @db.VarChar(150)
+  title            String                   @db.VarChar(60)
+  created_at       DateTime                 @default(now())
+  search_vector    Unsupported("tsvector")?
   collection_items CollectionItem[]
   engagement       Engagement?
   likes            Like[]
   metadata         Metadata?
   tags             PicTag[]
-  user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user             User                     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   src              Src[]
 
   @@index([user_id, id])
+  @@index([search_vector], map: "picture_search_idx", type: Gin)
+  @@index([title(ops: raw("gin_trgm_ops"))], map: "picture_trgm_idx", type: Gin)
 }
 
 model Src {
@@ -91,26 +98,31 @@ model Src {
   pic_id     String
   resolution Resolution
   url        String
-  width      Int
-  height     Int
   size       Int
+  height     Int
+  width      Int
   picture    Picture    @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 
   @@index([pic_id])
+  @@index([pic_id, resolution], map: "src_pic_res_idx")
 }
 
 model Metadata {
   pic_id         String  @id
-  others         Json?
   dominant_color String
   blurhash       String
+  others         Json?
   picture        Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 }
 
 model Tag {
-  id       Int      @id @default(autoincrement())
-  name     String   @unique @db.VarChar(30)
-  pictures PicTag[]
+  id            Int                      @id @default(autoincrement())
+  name          String                   @unique @db.VarChar(30)
+  search_vector Unsupported("tsvector")?
+  pictures      PicTag[]
+
+  @@index([search_vector], map: "tag_search_idx", type: Gin)
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "tag_trgm_idx", type: Gin)
 }
 
 model PicTag {

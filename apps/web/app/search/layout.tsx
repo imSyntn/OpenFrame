@@ -2,19 +2,19 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pictures | OpenFrame",
-  description: "Pictures",
+  title: "Search | OpenFrame",
+  description: "Search for high-resolution photos",
 };
 
-export default function PictureLayout({
+export default function SearchLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <>
+    <div>
       <Header />
       {children}
-    </>
+    </div>
   );
 }

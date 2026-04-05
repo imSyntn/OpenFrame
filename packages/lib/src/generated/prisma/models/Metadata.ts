@@ -38,9 +38,9 @@ export type MetadataMaxAggregateOutputType = {
 
 export type MetadataCountAggregateOutputType = {
   pic_id: number
-  others: number
   dominant_color: number
   blurhash: number
+  others: number
   _all: number
 }
 
@@ -59,9 +59,9 @@ export type MetadataMaxAggregateInputType = {
 
 export type MetadataCountAggregateInputType = {
   pic_id?: true
-  others?: true
   dominant_color?: true
   blurhash?: true
+  others?: true
   _all?: true
 }
 
@@ -139,9 +139,9 @@ export type MetadataGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type MetadataGroupByOutputType = {
   pic_id: string
-  others: runtime.JsonValue | null
   dominant_color: string
   blurhash: string
+  others: runtime.JsonValue | null
   _count: MetadataCountAggregateOutputType | null
   _min: MetadataMinAggregateOutputType | null
   _max: MetadataMaxAggregateOutputType | null
@@ -167,17 +167,17 @@ export type MetadataWhereInput = {
   OR?: Prisma.MetadataWhereInput[]
   NOT?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
   pic_id?: Prisma.StringFilter<"Metadata"> | string
-  others?: Prisma.JsonNullableFilter<"Metadata">
   dominant_color?: Prisma.StringFilter<"Metadata"> | string
   blurhash?: Prisma.StringFilter<"Metadata"> | string
+  others?: Prisma.JsonNullableFilter<"Metadata">
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
 }
 
 export type MetadataOrderByWithRelationInput = {
   pic_id?: Prisma.SortOrder
-  others?: Prisma.SortOrderInput | Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
+  others?: Prisma.SortOrderInput | Prisma.SortOrder
   picture?: Prisma.PictureOrderByWithRelationInput
 }
 
@@ -186,17 +186,17 @@ export type MetadataWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
   OR?: Prisma.MetadataWhereInput[]
   NOT?: Prisma.MetadataWhereInput | Prisma.MetadataWhereInput[]
-  others?: Prisma.JsonNullableFilter<"Metadata">
   dominant_color?: Prisma.StringFilter<"Metadata"> | string
   blurhash?: Prisma.StringFilter<"Metadata"> | string
+  others?: Prisma.JsonNullableFilter<"Metadata">
   picture?: Prisma.XOR<Prisma.PictureScalarRelationFilter, Prisma.PictureWhereInput>
 }, "pic_id">
 
 export type MetadataOrderByWithAggregationInput = {
   pic_id?: Prisma.SortOrder
-  others?: Prisma.SortOrderInput | Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
+  others?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MetadataCountOrderByAggregateInput
   _max?: Prisma.MetadataMaxOrderByAggregateInput
   _min?: Prisma.MetadataMinOrderByAggregateInput
@@ -207,57 +207,57 @@ export type MetadataScalarWhereWithAggregatesInput = {
   OR?: Prisma.MetadataScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MetadataScalarWhereWithAggregatesInput | Prisma.MetadataScalarWhereWithAggregatesInput[]
   pic_id?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
-  others?: Prisma.JsonNullableWithAggregatesFilter<"Metadata">
   dominant_color?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
   blurhash?: Prisma.StringWithAggregatesFilter<"Metadata"> | string
+  others?: Prisma.JsonNullableWithAggregatesFilter<"Metadata">
 }
 
 export type MetadataCreateInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   picture: Prisma.PictureCreateNestedOneWithoutMetadataInput
 }
 
 export type MetadataUncheckedCreateInput = {
   pic_id: string
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataUpdateInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   picture?: Prisma.PictureUpdateOneRequiredWithoutMetadataNestedInput
 }
 
 export type MetadataUncheckedUpdateInput = {
   pic_id?: Prisma.StringFieldUpdateOperationsInput | string
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataCreateManyInput = {
   pic_id: string
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataUpdateManyMutationInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataUncheckedUpdateManyInput = {
   pic_id?: Prisma.StringFieldUpdateOperationsInput | string
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataNullableScalarRelationFilter = {
@@ -267,9 +267,9 @@ export type MetadataNullableScalarRelationFilter = {
 
 export type MetadataCountOrderByAggregateInput = {
   pic_id?: Prisma.SortOrder
-  others?: Prisma.SortOrder
   dominant_color?: Prisma.SortOrder
   blurhash?: Prisma.SortOrder
+  others?: Prisma.SortOrder
 }
 
 export type MetadataMaxOrderByAggregateInput = {
@@ -317,15 +317,15 @@ export type MetadataUncheckedUpdateOneWithoutPictureNestedInput = {
 }
 
 export type MetadataCreateWithoutPictureInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataUncheckedCreateWithoutPictureInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color: string
   blurhash: string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataCreateOrConnectWithoutPictureInput = {
@@ -345,51 +345,51 @@ export type MetadataUpdateToOneWithWhereWithoutPictureInput = {
 }
 
 export type MetadataUpdateWithoutPictureInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type MetadataUncheckedUpdateWithoutPictureInput = {
-  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dominant_color?: Prisma.StringFieldUpdateOperationsInput | string
   blurhash?: Prisma.StringFieldUpdateOperationsInput | string
+  others?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
 
 export type MetadataSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  others?: boolean
   dominant_color?: boolean
   blurhash?: boolean
+  others?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["metadata"]>
 
 export type MetadataSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  others?: boolean
   dominant_color?: boolean
   blurhash?: boolean
+  others?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["metadata"]>
 
 export type MetadataSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   pic_id?: boolean
-  others?: boolean
   dominant_color?: boolean
   blurhash?: boolean
+  others?: boolean
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["metadata"]>
 
 export type MetadataSelectScalar = {
   pic_id?: boolean
-  others?: boolean
   dominant_color?: boolean
   blurhash?: boolean
+  others?: boolean
 }
 
-export type MetadataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"pic_id" | "others" | "dominant_color" | "blurhash", ExtArgs["result"]["metadata"]>
+export type MetadataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"pic_id" | "dominant_color" | "blurhash" | "others", ExtArgs["result"]["metadata"]>
 export type MetadataInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   picture?: boolean | Prisma.PictureDefaultArgs<ExtArgs>
 }
@@ -407,9 +407,9 @@ export type $MetadataPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     pic_id: string
-    others: runtime.JsonValue | null
     dominant_color: string
     blurhash: string
+    others: runtime.JsonValue | null
   }, ExtArgs["result"]["metadata"]>
   composites: {}
 }
@@ -835,9 +835,9 @@ export interface Prisma__MetadataClient<T, Null = never, ExtArgs extends runtime
  */
 export interface MetadataFieldRefs {
   readonly pic_id: Prisma.FieldRef<"Metadata", 'String'>
-  readonly others: Prisma.FieldRef<"Metadata", 'Json'>
   readonly dominant_color: Prisma.FieldRef<"Metadata", 'String'>
   readonly blurhash: Prisma.FieldRef<"Metadata", 'String'>
+  readonly others: Prisma.FieldRef<"Metadata", 'Json'>
 }
     
 

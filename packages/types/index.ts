@@ -3,3 +3,4 @@ export * from "./template.types";
 export * from "./picture.type";
 export * from "./engagement.type";
 export * from "./collection.type";
+export * from "./search.type";

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 import { Input } from "@workspace/ui/components/input";
 import { Search } from "lucide-react";
@@ -9,32 +8,37 @@ import { LinkWithActiveState } from "./LinkWithActiveState";
 
 export function Header({ className }: { className?: string }) {
   return (
-    <header className={cn("h-14 w-full border-b", className)}>
+    <header
+      className={cn(
+        "h-14 w-full border-b sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
+        className,
+      )}
+    >
       <div className="max-w-8xl mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 md:gap-6">
           <Logo />
 
           <nav className="hidden md:flex items-center gap-6">
             <LinkWithActiveState href="/explore">Explore</LinkWithActiveState>
-
             <LinkWithActiveState href="/collections">
               Collections
             </LinkWithActiveState>
+            <LinkWithActiveState href="/search">Search</LinkWithActiveState>
           </nav>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="relative w-[160px] sm:w-[220px] md:w-[300px]">
+        {/* <div className="flex items-center gap-2 md:gap-4"> */}
+        {/* <div className="relative w-[160px] sm:w-[220px] md:w-[300px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
             <Input
               placeholder="Search..."
               className="pl-9 rounded-xl bg-muted/40 focus-visible:ring-2 focus-visible:ring-primary"
             />
-          </div>
+          </div> */}
 
-          <HeaderRight />
-        </div>
+        <HeaderRight />
+        {/* </div> */}
       </div>
     </header>
   );
