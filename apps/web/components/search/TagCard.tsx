@@ -29,7 +29,7 @@ export function TagCardSkeleton() {
 export function TagCardMore({ query }: { query: string }) {
   return (
     <Link
-      href={`/search?q=${query}&type=tag`}
+      href={`/search?q=${query}&type=tags`}
       className="px-3 py-1 text-sm rounded-full border border-muted cursor-pointer text-background"
     >
       more

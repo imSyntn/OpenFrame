@@ -45,7 +45,7 @@ export function UserCardSkeleton() {
 export function UserCardMore({ query }: { query: string }) {
   return (
     <div className="flex items-center justify-center gap-3 px-3 py-2 cursor-pointer border-muted border rounded-xl w-32">
-      <Link href={`/search?q=${query}&type=user`} className="text-background ">
+      <Link href={`/search?q=${query}&type=users`} className="text-background ">
         more
       </Link>
     </div>

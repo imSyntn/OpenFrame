@@ -34,8 +34,8 @@ function HorizontalScrollWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Content({ query }: { query: string }) {
-  const { data: result, isLoading, error, isError } = useSearch(query);
+export function Content({ query, type }: { query: string; type?: string }) {
+  const { data: result, isLoading, error, isError } = useSearch(query, type);
 
   if (query.length < 3) {
     return (

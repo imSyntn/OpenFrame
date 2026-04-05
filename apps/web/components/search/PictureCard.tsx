@@ -44,7 +44,7 @@ export function PictureCardMore({ query }: { query: string }) {
   return (
     <div className="flex items-center justify-center gap-3 px-3 py-2 cursor-pointer border-muted border rounded-xl w-full">
       <Link
-        href={`/search?q=${query}&type=picture`}
+        href={`/search?q=${query}&type=pictures`}
         className="text-background "
       >
         more

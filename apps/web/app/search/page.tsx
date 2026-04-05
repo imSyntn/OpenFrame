@@ -7,12 +7,13 @@ import { useState } from "react";
 export default function SearchPage() {
   const params = useSearchParams();
   const query = params.get("q");
+  const type = params.get("type") as string;
   const [searchText, setSearchText] = useState(query || "");
 
   return (
     <>
       <HeroSection searchText={searchText} setSearchText={setSearchText} />
-      <Content query={searchText} />
+      <Content query={searchText} type={type} />
     </>
   );
 }
