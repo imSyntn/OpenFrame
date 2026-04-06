@@ -104,7 +104,17 @@ export function Content() {
 
       <ScrollArea className="flex-1 min-h-0 px-6 pb-6">
         <div className="space-y-6">
-          <div className="w-full flex justify-center rounded-xl overflow-hidden min-h-[60vh]">
+          <div
+            className="relative w-full flex items-center justify-center min-h-[60vh] rounded-2xl overflow-hidden p-4 sm:p-6"
+            style={{
+              background: `linear-gradient(135deg, ${image.metadata.dominant_color}08, ${image.metadata.dominant_color}20)`,
+            }}
+          >
+            <div
+              className="absolute inset-0 scale-110 blur-3xl opacity-40"
+              style={{ backgroundColor: image.metadata.dominant_color }}
+            />
+
             <PhotoWithBlurHash
               photo={photo}
               showUser={false}

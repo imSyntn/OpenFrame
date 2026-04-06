@@ -4,14 +4,19 @@ import { useGlobalStateStore } from "@/store";
 import { useGetPictureById } from "@/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Content } from "@/components/common";
+import { Content, NotFound } from "@/components/common";
 import { ContentSkeleton } from "./ContentSkeleton";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CameraOff } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 
 export function ShowContent({ pictureId }: { pictureId: string }) {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
-  const { data: picture, isLoading, isError } = useGetPictureById(pictureId);
+  const {
+    data: picture,
+    isLoading,
+    isError,
+    error,
+  } = useGetPictureById(pictureId);
 
   useEffect(() => {
     if (!isLoading && isError) {
@@ -31,19 +36,14 @@ export function ShowContent({ pictureId }: { pictureId: string }) {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] text-center px-6">
-        <div className="mb-4 rounded-full bg-red-50 p-3 dark:bg-red-950">
-          <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
-        </div>
-        <h2 className="text-lg font-semibold mb-1">Something went wrong</h2>
-
-        <p className="text-sm text-muted-foreground mb-4 max-w-sm">
-          We couldn’t load this content. Please try again or check your
-          connection.
-        </p>
-
-        <Button onClick={() => window.location.reload()}>Try again</Button>
-      </div>
+      <NotFound
+        Icon={CameraOff}
+        title="Picture not found"
+        description={
+          (error as any)?.response?.data?.message ||
+          "The picture you're looking for doesn't exist or the link may be incorrect."
+        }
+      />
     );
   }
 

@@ -48,7 +48,8 @@ export function ModalHeader() {
   return (
     <Header
       className={cn(
-        "h-fit! flex flex-row justify-between px-6 pt-6",
+        "flex flex-col gap-4 px-4 sm:px-6 pt-4 sm:pt-6",
+        "sm:flex-row sm:items-start sm:justify-between",
         !isModal && "mb-4",
       )}
     >
@@ -61,7 +62,7 @@ export function ModalHeader() {
         </>
       )}
       <OwnerInfo id={image.user_id} />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 justify-end">
         <TooltipButton
           value={<Share2 />}
           size="icon"

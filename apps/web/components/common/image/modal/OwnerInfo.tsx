@@ -13,11 +13,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function OwnerInfo({ id }: { id: string }) {
   const { data, isLoading, isError } = useUserDetails(id);
   const setOpen = useGlobalStateStore((state) => state.setOpen);
+  const router = useRouter();
 
   if (isError || (!data && !isLoading)) return null;
 
@@ -105,11 +106,13 @@ export function OwnerInfo({ id }: { id: string }) {
                 </div>
               </div>
               <Button
-                asChild
-                onClick={() => setOpen(false)}
                 variant="secondary"
+                onClick={() => {
+                  setOpen(false);
+                  router.push(`/profile/${data?.id}`);
+                }}
               >
-                <Link href={`/profile/${data?.id}`}>View Profile</Link>
+                View Profile
               </Button>
             </div>
           </TooltipContent>
