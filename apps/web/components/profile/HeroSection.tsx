@@ -165,7 +165,7 @@ export function HeroSection({ id }: { id: string }) {
               </>
             ) : (
               <>
-                <span>
+                {/* <span>
                   <strong className="text-foreground">
                     {metrics?.follower ?? 0}
                   </strong>{" "}
@@ -177,7 +177,7 @@ export function HeroSection({ id }: { id: string }) {
                     {metrics?.following ?? 0}
                   </strong>{" "}
                   Following
-                </span>
+                </span> */}
 
                 <span>
                   <strong className="text-foreground">
@@ -204,12 +204,12 @@ export function HeroSection({ id }: { id: string }) {
             </>
           ) : (
             <>
-              <Button
+              {/* <Button
                 className="w-full md:w-auto px-6"
                 disabled={isOwner || !isLoggedIn}
               >
                 Follow
-              </Button>
+              </Button> */}
 
               <ul className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Tooltip>

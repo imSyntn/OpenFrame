@@ -14,6 +14,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { useUserStore } from "@/store";
 import { Processing } from "./processing/Processing";
 import { ShowUserCollections } from "../collection";
+import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);
@@ -29,41 +30,44 @@ export function Content() {
         orientation="horizontal"
         className="gap-4 md:gap-8"
       >
-        <TabsList variant="line" className="flex flex-wrap gap-10">
-          <TabsTrigger
-            value="Gallery"
-            className={cn(
-              "pl-3 data-[state=active]:text-primary! data-[state=active]:border-b-primary rounded-none px-0 cursor-pointer",
-              isLoading && "border-none",
-            )}
-            disabled={isLoading}
-          >
-            {isLoading ? <Skeleton className="w-16 h-4" /> : "Gallery"}
-          </TabsTrigger>
-          <TabsTrigger
-            value="Statistics"
-            className="pl-3 data-[state=active]:text-primary! data-[state=active]:border-b-primary rounded-none px-0 cursor-pointer"
-            disabled={isLoading}
-          >
-            {isLoading ? <Skeleton className="w-16 h-4" /> : "Statistics"}
-          </TabsTrigger>
-          <TabsTrigger
-            value="Collections"
-            className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer"
-            disabled={isLoading}
-          >
-            {isLoading ? <Skeleton className="w-16 h-4" /> : "Collections"}
-          </TabsTrigger>
-          {isOwner && (
+        <ScrollArea className="pb-2 sm:pb-0">
+          <TabsList variant="line" className="flex gap-10 overflow-y-hidden">
             <TabsTrigger
-              value="processing"
-              className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
+              value="Gallery"
+              className={cn(
+                "pl-3 data-[state=active]:text-primary! data-[state=active]:border-b-primary rounded-none px-0 cursor-pointer",
+                isLoading && "border-none",
+              )}
               disabled={isLoading}
             >
-              Processing
+              {isLoading ? <Skeleton className="w-16 h-4" /> : "Gallery"}
             </TabsTrigger>
-          )}
-        </TabsList>
+            <TabsTrigger
+              value="Statistics"
+              className="pl-3 data-[state=active]:text-primary! data-[state=active]:border-b-primary rounded-none px-0 cursor-pointer"
+              disabled={isLoading}
+            >
+              {isLoading ? <Skeleton className="w-16 h-4" /> : "Statistics"}
+            </TabsTrigger>
+            <TabsTrigger
+              value="Collections"
+              className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer"
+              disabled={isLoading}
+            >
+              {isLoading ? <Skeleton className="w-16 h-4" /> : "Collections"}
+            </TabsTrigger>
+            {isOwner && (
+              <TabsTrigger
+                value="processing"
+                className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
+                disabled={isLoading}
+              >
+                Processing
+              </TabsTrigger>
+            )}
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         <TabsContent value="Gallery" className="flex-1">
           <Gallery />

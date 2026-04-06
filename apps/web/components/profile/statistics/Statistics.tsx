@@ -16,8 +16,8 @@ export function Statistics() {
         showGradient
       />
       <StatCard value={metrics?.total_likes} label="Likes" showGradient />
-      <StatCard value={metrics?.follower} label="Followers" showGradient />
-      <StatCard value={metrics?.following} label="Following" showGradient />
+      {/* <StatCard value={metrics?.follower} label="Followers" showGradient />
+      <StatCard value={metrics?.following} label="Following" showGradient /> */}
     </div>
   );
 }
