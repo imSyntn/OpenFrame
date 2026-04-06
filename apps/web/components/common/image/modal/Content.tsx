@@ -179,25 +179,28 @@ export function Content() {
             </div>
           </div>
 
-          <div>
-            <h3 className="font-semibold text-base mb-4">EXIF</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Object.entries(image.metadata?.others || {}).map(
-                ([key, value]) =>
-                  (typeof value === "string" || typeof value === "number") && (
-                    <div
-                      key={key}
-                      className="border rounded-lg p-3 bg-muted/30 text-sm"
-                    >
-                      <p className="text-xs text-muted-foreground">
-                        {formatKey(key)}
-                      </p>
-                      <p className="font-medium mt-1">{String(value)}</p>
-                    </div>
-                  ),
-              )}
-            </div>
-          </div>
+          {image?.metadata.others && (
+            <>
+              <h3 className="font-semibold text-base mb-4">EXIF</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {Object.entries(image.metadata?.others || {}).map(
+                  ([key, value]) =>
+                    (typeof value === "string" ||
+                      typeof value === "number") && (
+                      <div
+                        key={key}
+                        className="border rounded-lg p-3 bg-muted/30 text-sm"
+                      >
+                        <p className="text-xs text-muted-foreground">
+                          {formatKey(key)}
+                        </p>
+                        <p className="font-medium mt-1">{String(value)}</p>
+                      </div>
+                    ),
+                )}
+              </div>
+            </>
+          )}
         </div>
       </ScrollArea>
     </>

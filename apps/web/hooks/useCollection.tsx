@@ -2,6 +2,7 @@ import {
   addCollectionItems,
   createCollection,
   deleteCollection,
+  getCollectionById,
   getCollections,
   getUserCollections,
   removeCollectionItems,
@@ -32,6 +33,7 @@ export const useGetUserCollections = (userId: string) => {
 };
 
 export const useCreateCollection = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: {
       title: string;
@@ -48,11 +50,13 @@ export const useCreateCollection = () => {
     onSuccess: () => {
       toast.dismiss();
       toast.success("Collection created successfully");
+      queryClient.invalidateQueries({ queryKey: ["user-collections"] });
     },
   });
 };
 
 export const useUpdateCollection = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       id,
@@ -71,6 +75,7 @@ export const useUpdateCollection = () => {
     onSuccess: () => {
       toast.dismiss();
       toast.success("Collection updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["user-collections"] });
     },
   });
 };
@@ -137,5 +142,13 @@ export const useAddCollectionItems = () => {
       queryClient.invalidateQueries({ queryKey: ["user-collections"] });
       toast.success("Items added successfully");
     },
+  });
+};
+
+export const useGetCollectionById = (id: string) => {
+  return useQuery({
+    queryKey: ["collection", id],
+    queryFn: () => getCollectionById(id),
+    enabled: !!id,
   });
 };

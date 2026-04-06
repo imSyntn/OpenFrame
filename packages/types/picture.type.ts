@@ -32,4 +32,19 @@ export interface UnderProcessingPictureType {
   stepsCompleted: string[];
   metadata?: Record<string, string>;
   userId?: string;
+  error?: string;
+}
+
+export interface MetadataCacheType {
+  metadata: Record<string, string>;
+  stepsCompleted: string[];
+  retry?: number;
+  status: "done" | "failed";
+}
+
+export interface VariantsCacheType {
+  src: SrcType[];
+  stepsCompleted: string[];
+  retry?: number;
+  status: "done" | "failed";
 }

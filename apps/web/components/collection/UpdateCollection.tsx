@@ -1,4 +1,6 @@
-import { useUserStore } from "@/store";
+"use client";
+
+import { useGlobalStateStore, useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -11,13 +13,23 @@ import {
 import Link from "next/link";
 import { Form } from "./Form";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { Collection } from "@workspace/types";
 import { Settings } from "lucide-react";
+import { useState } from "react";
 
 export function UpdateCollection() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const [open, setOpen] = useState(false);
+  const setOpenCollectionModal = useGlobalStateStore(
+    (state) => state.setOpenCollectionModal,
+  );
+
+  const handleOnUpdateModalClose = () => {
+    setOpen(false);
+    setOpenCollectionModal(null);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="icon">
           <Settings />
@@ -40,7 +52,7 @@ export function UpdateCollection() {
           </div>
         ) : (
           <ScrollArea className="max-h-[70vh] pr-4">
-            <Form />
+            <Form onUpdated={handleOnUpdateModalClose} />
           </ScrollArea>
         )}
       </DialogContent>

@@ -17,19 +17,6 @@ export function Gallery() {
           label="Photos"
           isLoading={isLoading}
         />
-        <StatCard
-          value={metrics?.total_downloads}
-          label="Downloads"
-          headingClass="w-30"
-          textClass="w-[100px]"
-          isLoading={isLoading}
-        />
-        <StatCard
-          value={metrics?.total_likes}
-          label="Likes"
-          headingClass="w-20"
-          isLoading={isLoading}
-        />
       </div>
 
       {isLoading ? (

@@ -7,7 +7,10 @@ import {
   getDominantColor,
 } from "./metadataExtractor";
 import { cache } from "@workspace/lib";
-import { type UnderProcessingPictureType } from "@workspace/types";
+import {
+  type MetadataCacheType,
+  type UnderProcessingPictureType,
+} from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-metadata" });
 
@@ -31,25 +34,36 @@ const run = async () => {
         return;
       }
 
+      const cacheKey = `picture:upload:metadata:${data.userId}:${data.id}`;
+
       try {
-        const availableInCache = await cache.hget(
-          `picture:upload:${data.userId}`,
-          data.id,
+        const metadataCache = await cache.get(cacheKey);
+        const parsedMetadataCache: MetadataCacheType = JSON.parse(
+          metadataCache || "{}",
         );
-        logger.info("cache data", availableInCache);
-        if (!availableInCache) return;
 
-        const parsed: UnderProcessingPictureType = JSON.parse(availableInCache);
-        logger.info("parsed data", parsed);
+        // const availableInCache = await cache.hget(
+        //   `picture:upload:${data.userId}`,
+        //   data.id,
+        // );
+        // if (!availableInCache) return;
 
-        if (
-          parsed.stepsCompleted.includes("metadata") &&
-          parsed.stepsCompleted.includes("blurhash") &&
-          parsed.stepsCompleted.includes("dominant_color")
-        ) {
+        // const parsed: UnderProcessingPictureType = JSON.parse(availableInCache);
+
+        if (parsedMetadataCache.status === "done") {
           logger.info("Already processed metadata, skipping", data.id);
           return;
         }
+
+        if (parsedMetadataCache.retry && parsedMetadataCache.retry > 3) {
+          logger.error("Max retries reached", data.id);
+          return;
+        }
+
+        // const metadataCache = await cache.get(
+        //   `picture:upload:metadata:${data.userId}:${data.id}`,
+        // );
+        // const parsedMetadataCache = JSON.parse(metadataCache || "{}");
 
         const img = await fetch(data.url);
         if (!img.ok) throw new Error("Image fetch failed");
@@ -62,23 +76,20 @@ const run = async () => {
           getDominantColor(buffer),
         ]);
 
-        const updatedCache = {
-          // ...parsed,
+        const updatedCache: MetadataCacheType = {
           metadata: {
             others: metadata,
             blurhash,
-            dominant_color,
+            dominant_color: dominant_color as string,
           },
-          stepsCompleted: [
-            // ...parsed.stepsCompleted,
-            "metadata",
-            "blurhash",
-            "dominant_color",
-          ],
+          stepsCompleted: ["metadata", "blurhash", "dominant_color"],
+          status: "done",
         };
         await cache.set(
-          `picture:upload:metadata:${data.userId}:${data.id}`,
+          cacheKey,
           JSON.stringify(updatedCache),
+          "EX",
+          60 * 60 * 24,
         );
 
         // await cache.hset(
@@ -100,6 +111,26 @@ const run = async () => {
           id: data?.id,
           error: err.message,
         });
+        try {
+          const metadataCache = await cache.get(cacheKey);
+          const parsed: MetadataCacheType = JSON.parse(metadataCache || "{}");
+          const failedCache: MetadataCacheType = {
+            ...parsed,
+            status: "failed",
+            retry: (parsed.retry || 0) + 1,
+          };
+          await cache.set(
+            cacheKey,
+            JSON.stringify(failedCache),
+            "EX",
+            60 * 60 * 24,
+          );
+        } catch (cacheErr) {
+          logger.error("Failed to update metadata failure in cache", {
+            id: data?.id,
+            error: (cacheErr as any).message,
+          });
+        }
 
         throw err;
       }

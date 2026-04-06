@@ -19,8 +19,16 @@ export function ShowUserCollections({ id }: { id?: string }) {
     );
   }
 
+  if (!isLoading && collections?.data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <p className="text-muted-foreground">No collections found</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
       {isLoading &&
         Array.from({ length: 8 }).map((_, i) => (
           <CollecTionCardSkeleton key={i} />

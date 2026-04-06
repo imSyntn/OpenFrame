@@ -26,9 +26,11 @@ import { useGlobalStateStore } from "@/store";
 export function Form({
   // collection,
   onCreated,
+  onUpdated,
 }: {
   // collection?: Collection;
   onCreated?: (id: string) => void;
+  onUpdated?: () => void;
 }) {
   const collection = useGlobalStateStore((state) => state.openCollectionModal);
   const {
@@ -50,6 +52,7 @@ export function Form({
   const onSubmit = async (data: z.infer<typeof collectionSchema>) => {
     if (collection) {
       await updateCollection({ id: collection.id, data });
+      onUpdated?.();
     } else {
       const { data: createdCollection } = await createCollection(data);
       onCreated?.(createdCollection.id);

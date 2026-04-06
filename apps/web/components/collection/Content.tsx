@@ -39,7 +39,7 @@ export function Content() {
 
         <TabsContent value="all">
           <ScrollArea className="h-[calc(100vh-55px)] pr-3">
-            <CreateCollection />
+            {/* <CreateCollection /> */}
             <AllCollections />
             <ScrollBar orientation="vertical" />
           </ScrollArea>

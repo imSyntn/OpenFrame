@@ -1,3 +1,5 @@
+"use client";
+
 import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -13,6 +15,7 @@ import { Form } from "./Form";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 // import { Collection } from "@workspace/types";
 import { cn } from "@workspace/ui/lib/utils";
+import { useState } from "react";
 
 export function CreateCollection({
   // open,
@@ -21,11 +24,18 @@ export function CreateCollection({
 }: {
   // open: boolean | Collection;
   className?: string;
-  onCreated?: (id: string) => void;
+  onCreated?: (id?: string) => void;
 }) {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const [open, setOpen] = useState(false);
+
+  const handleModalClose = () => {
+    setOpen(false);
+    onCreated?.();
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <div
         className={cn(
           "w-full flex justify-center items-center p-2 mb-4",
@@ -53,7 +63,7 @@ export function CreateCollection({
           </div>
         ) : (
           <ScrollArea className="max-h-[70vh] pr-4">
-            <Form onCreated={onCreated} />
+            <Form onCreated={handleModalClose} />
           </ScrollArea>
         )}
       </DialogContent>

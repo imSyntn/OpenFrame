@@ -219,7 +219,18 @@ export const createCollection = async (data: {
   visibility: "PUBLIC" | "PRIVATE";
   creator_id: string;
 }) => {
-  const update = await prisma.collection.create({ data });
+  const update = await prisma.collection.create({
+    data,
+    include: {
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+  });
   const cacheKeyUser = `collections:user:${data.creator_id}`;
   const cacheKeyCollection = `collections:${update.id}`;
 
@@ -255,7 +266,19 @@ export const updateCollection = async (
     cover_image?: string;
   },
 ) => {
-  const updated = await prisma.collection.update({ where: { id }, data });
+  const updated = await prisma.collection.update({
+    where: { id },
+    data,
+    include: {
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+  });
 
   const cacheKeyCollection = `collections:${id}`;
   const cacheKeyUser = `collections:user:${updated.creator_id}`;

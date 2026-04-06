@@ -222,6 +222,7 @@ export const createPicture = async (
     pictureId,
     JSON.stringify(newPicture),
   );
+  await cache.expire(`picture:upload:${userId}`, 60 * 60 * 24);
   await kafkaProduceMessage("picture-upload", JSON.stringify(newPicture));
 };
 

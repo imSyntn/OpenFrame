@@ -2,7 +2,11 @@ import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
 import { cache } from "@workspace/lib";
 import { logger } from "@workspace/lib/logger";
-import type { UnderProcessingPictureType } from "@workspace/types";
+import type {
+  MetadataCacheType,
+  UnderProcessingPictureType,
+  VariantsCacheType,
+} from "@workspace/types";
 
 const REQUIRED_STEPS = ["metadata", "blurhash", "dominant_color", "variants"];
 
@@ -30,6 +34,9 @@ const run = async () => {
         return;
       }
 
+      const metadataCacheKey = `picture:upload:metadata:${data.userId}:${data.id}`;
+      const variantsCacheKey = `picture:upload:variants:${data.userId}:${data.id}`;
+
       const availableInCache = await cache.hget(
         `picture:upload:${data.userId}`,
         data.id,
@@ -44,12 +51,15 @@ const run = async () => {
         return;
       }
 
-      const getMeta = cache.get(
-        `picture:upload:metadata:${data.userId}:${data.id}`,
-      );
-      const getVariants = cache.get(
-        `picture:upload:variants:${data.userId}:${data.id}`,
-      );
+      if (
+        parsed.processing === "ready" ||
+        parsed.processing == "failed" ||
+        parsed.processing == "done"
+      )
+        return;
+
+      const getMeta: Promise<string | null> = cache.get(metadataCacheKey);
+      const getVariants: Promise<string | null> = cache.get(variantsCacheKey);
 
       const [meta, variants] = await Promise.allSettled([getMeta, getVariants]);
 
@@ -63,9 +73,32 @@ const run = async () => {
         meta.status === "fulfilled" &&
         variants.status === "fulfilled"
       ) {
-        const metaData = JSON.parse(meta.value as string);
-        const variantsData = JSON.parse(variants.value as string);
+        const metaData: MetadataCacheType = JSON.parse(meta.value as string);
+        const variantsData: VariantsCacheType = JSON.parse(
+          variants.value as string,
+        );
+
         if (!metaData || !variantsData) return;
+
+        if (metaData.status === "failed" && variantsData.status === "failed") {
+          const pipeline = cache.pipeline();
+          pipeline.hset(
+            `picture:upload:${data.userId}`,
+            data.id,
+            JSON.stringify({
+              ...parsed,
+              processing: "failed",
+            }),
+          );
+          pipeline.del(metadataCacheKey);
+          pipeline.del(variantsCacheKey);
+          await pipeline.exec();
+          return;
+        }
+
+        if (metaData.status === "failed" || variantsData.status === "failed")
+          return;
+
         parsed = {
           ...parsed,
           metadata: metaData.metadata,
@@ -77,13 +110,6 @@ const run = async () => {
           ],
         };
       }
-
-      const steps = parsed.stepsCompleted || [];
-      const isComplete = REQUIRED_STEPS.every((step) => steps.includes(step));
-
-      if (!isComplete) return;
-
-      if (steps.includes("finalized")) return;
 
       const updatedCache: UnderProcessingPictureType = {
         ...parsed,
@@ -97,8 +123,8 @@ const run = async () => {
         data.id,
         JSON.stringify(updatedCache),
       );
-      pipeline.del(`picture:upload:metadata:${data.userId}:${data.id}`);
-      pipeline.del(`picture:upload:variants:${data.userId}:${data.id}`);
+      pipeline.del(metadataCacheKey);
+      pipeline.del(variantsCacheKey);
       await pipeline.exec();
 
       await kafkaProduceMessage(

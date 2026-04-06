@@ -6,6 +6,7 @@ import { bulkWrite } from "./bulkWrite";
 import type { UnderProcessingPictureType } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-db-write" });
+class WriteError extends Error {}
 
 const run = async () => {
   await consumer.connect();
@@ -49,37 +50,52 @@ const run = async () => {
 
           await heartbeat();
 
-          await bulkWrite(parsedMessages);
+          try {
+            await bulkWrite(parsedMessages);
 
-          logger.info("Batch processed successfully");
+            for (const message of batch.messages) {
+              resolveOffset(message.offset);
+            }
+
+            const pipeline = cache.pipeline();
+
+            for (const message of parsedMessages) {
+              pipeline.hset(
+                `picture:upload:${message.userId}`,
+                message.id,
+                JSON.stringify({ ...message, processing: "done" }),
+              );
+              pipeline.del(`user:${message.userId}:profile`);
+            }
+
+            await pipeline.exec();
+            await commitOffsetsIfNecessary();
+
+            logger.info("Batch processed successfully");
+          } catch (err: any) {
+            logger.error("write-failed", err);
+            throw new WriteError(err.message);
+          }
         }
-
-        for (const message of batch.messages) {
-          resolveOffset(message.offset);
-        }
-
-        const pipeline = cache.pipeline();
-
-        for (const message of parsedMessages) {
-          pipeline.hset(
-            `picture:upload:${message.userId}`,
-            message.id,
-            JSON.stringify({ ...message, processing: "done" }),
-          );
-          pipeline.del(`user:${message.userId}:profile`);
-          pipeline.expire(`picture:upload:${message.userId}`, 60 * 60 * 2);
-        }
-
-        await pipeline.exec();
-
-        await commitOffsetsIfNecessary();
-      } catch (err) {
+      } catch (err: any) {
         logger.error("Batch failed", err);
-
-        return;
+        const pipeline = cache.pipeline();
+        if (err instanceof WriteError) {
+          for (const message of parsedMessages) {
+            pipeline.hset(
+              `picture:upload:${message.userId}`,
+              message.id,
+              JSON.stringify({
+                ...message,
+                processing: "failed",
+                error: "Failed to update DB.",
+              }),
+            );
+          }
+        }
+        await pipeline.exec();
+        throw err;
       }
-
-      await heartbeat();
     },
   });
 };

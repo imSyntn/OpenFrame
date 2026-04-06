@@ -84,35 +84,39 @@ export function Modal({
             )}
 
             <div className="flex items-center justify-center">
-              <span className="text-xs text-muted-foreground">
-                {data.processing === "done"
-                  ? "Processing completed, picture will be available in your profile"
-                  : "Processing in progress"}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">
-                Temp ID: {data.id}
-              </span>
-
-              <Badge
+              <span
                 className={cn(
-                  data.processing === "ongoing"
-                    ? "bg-processing"
-                    : ["ready", "done"].includes(data.processing)
-                      ? "bg-success"
-                      : "bg-destructive",
-                  "text-black",
+                  "text-xs text-muted-foreground",
+                  data.processing == "failed" && "text-destructive",
                 )}
               >
-                {data.processing}
-              </Badge>
+                {data.processing === "done" &&
+                  "Processing completed, picture will be available in your profile"}
+                {data.processing === "ongoing" && "Processing in progress"}
+                {data.processing === "failed" &&
+                  `Processing failed (${data.error})`}
+              </span>
             </div>
           </div>
 
           <ScrollBar orientation="vertical" className="opacity-100" />
         </ScrollArea>
+        <div className="flex items-center justify-between pr-4">
+          <span className="text-xs text-muted-foreground">ID: {data.id}</span>
+
+          <Badge
+            className={cn(
+              data.processing === "ongoing"
+                ? "bg-processing"
+                : ["ready", "done"].includes(data.processing)
+                  ? "bg-success"
+                  : "bg-destructive",
+              "text-black",
+            )}
+          >
+            {data.processing}
+          </Badge>
+        </div>
       </DialogContent>
     </Dialog>
   );

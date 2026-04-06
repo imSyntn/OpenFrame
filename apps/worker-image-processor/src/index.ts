@@ -4,7 +4,10 @@ import { cache } from "@workspace/lib";
 import { logger } from "@workspace/lib/logger";
 import { resizeImage } from "./processImage";
 import { uploadVariants } from "./lib/upload";
-import { type UnderProcessingPictureType } from "@workspace/types";
+import {
+  type UnderProcessingPictureType,
+  type VariantsCacheType,
+} from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-processor" });
 
@@ -14,7 +17,7 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ message, topic, partition }) => {
-      let data: any;
+      let data: UnderProcessingPictureType;
       try {
         data = JSON.parse(message.value?.toString() || "{}");
       } catch (err) {
@@ -26,41 +29,35 @@ const run = async () => {
         return;
       }
 
+      const cacheKey = `picture:upload:variants:${data.userId}:${data.id}`;
+
       try {
-        const availableInCache = await cache.hget(
-          `picture:upload:${data.userId}`,
-          data.id,
+        const variantsCache = await cache.get(cacheKey);
+        const parsedVariantsCache: VariantsCacheType = JSON.parse(
+          variantsCache || "{}",
         );
-        if (!availableInCache) return;
 
-        const parsed: UnderProcessingPictureType = JSON.parse(availableInCache);
-
-        if (parsed.stepsCompleted?.includes("variants")) {
+        if (parsedVariantsCache.status === "done") {
           logger.info("Already processed, skipping", data.id);
           return;
         }
+
+        if (parsedVariantsCache.retry && parsedVariantsCache.retry > 3) {
+          logger.error("Max retries reached", data.id);
+          return;
+        }
+
         const { original, variants } = await resizeImage(data.url);
 
         const variantsUploaded = await uploadVariants(data.id, variants);
 
-        const updatedCache = {
-          // ...parsed,
-          stepsCompleted: [
-            // ...parsed.stepsCompleted,
-            "variants",
-          ],
+        const updatedCache: VariantsCacheType = {
+          stepsCompleted: ["variants"],
           src: [original, ...variantsUploaded],
+          status: "done",
         };
 
-        await cache.set(
-          `picture:upload:variants:${data.userId}:${data.id}`,
-          JSON.stringify(updatedCache),
-        );
-        // await cache.hset(
-        //   `picture:upload:${data.userId}`,
-        //   data.id,
-        //   JSON.stringify(updatedCache),
-        // );
+        await cache.set(cacheKey, JSON.stringify(updatedCache));
 
         await kafkaProduceMessage(
           "processing-complete",
@@ -71,6 +68,23 @@ const run = async () => {
           id: data?.id,
           error: err.message,
         });
+
+        try {
+          const variantsCache = await cache.get(cacheKey);
+          const parsed: VariantsCacheType = JSON.parse(variantsCache || "{}");
+
+          const failedCache: VariantsCacheType = {
+            ...parsed,
+            status: "failed",
+            retry: (parsed.retry || 0) + 1,
+          };
+          await cache.set(cacheKey, JSON.stringify(failedCache));
+        } catch (cacheErr) {
+          logger.error("Failed to update metadata failure in cache", {
+            id: data?.id,
+            error: (cacheErr as any).message,
+          });
+        }
         throw err;
       }
     },

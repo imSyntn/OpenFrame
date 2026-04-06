@@ -14,7 +14,7 @@ export default function CollectionsLayout({
   return (
     <>
       <Header />
-      <div className="pl-10 pr-7 min-h-screen max-w-8xl mx-auto pt-4">
+      <div className="pl-10 pr-7 h-screen max-w-8xl mx-auto pt-4 mb-10 md:mb-0">
         {children}
       </div>
     </>

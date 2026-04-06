@@ -1,6 +1,8 @@
 import { UnderProcessingPictureType } from "@workspace/types";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
+import { formatDistanceToNow } from "date-fns";
+import { error } from "node:console";
 import React from "react";
 
 export function CardSkeleton() {
@@ -27,7 +29,12 @@ export function Card({
 }) {
   return (
     <div
-      className="h-[100px] w-[200px] flex items-center gap-4 border rounded-xl p-4 hover:bg-muted/40 transition cursor-pointer"
+      className={cn(
+        "h-[100px] w-[200px] flex items-center gap-4 border rounded-xl p-4 hover:bg-muted/40 transition cursor-pointer",
+        data.processing === "done" && " border-2 border-success/40",
+        data.processing === "ongoing" && " border-2 border-processing/40",
+        data.processing === "failed" && " border-2 border-destructive/40",
+      )}
       onClick={onClick}
     >
       <div className="relative">
@@ -53,8 +60,10 @@ export function Card({
         <span className="text-sm font-semibold leading-tight line-clamp-1">
           {data.title}
         </span>
-        <span className="text-xs text-muted-foreground">
-          {new Date(data.created_at).toLocaleDateString()}
+        <span className="text-xs text-muted-foreground line-clamp-1">
+          {formatDistanceToNow(new Date(data.created_at), {
+            addSuffix: true,
+          })}
         </span>
       </div>
     </div>

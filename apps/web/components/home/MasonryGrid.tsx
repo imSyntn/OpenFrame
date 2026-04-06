@@ -9,6 +9,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Loader2 } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
+import { ImageSkeleton } from "./ImageSkeleton";
 
 export function MasonryGrid() {
   const router = useRouter();
@@ -75,11 +76,7 @@ export function MasonryGrid() {
 
   return (
     <div className={cn("w-full", isLoading && "opacity-50")}>
-      {isLoading && (
-        <div className="flex w-full justify-center my-3">
-          <Loader2 className="animate-spin" />
-        </div>
-      )}
+      {isLoading && <ImageSkeleton />}
       <Masonry photos={photos} />
       {isFetchingNextPage && (
         <div className="flex w-full justify-center my-3">
