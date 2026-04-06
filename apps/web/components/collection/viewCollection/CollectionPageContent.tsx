@@ -12,7 +12,9 @@ import {
   HeaderTitle,
 } from "./ContentWrapperComponents";
 import { CollectionImageCard } from "../CollectionImageCard";
-import { useGlobalStateStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
+import { NotFound } from "@/components/common";
+import { FileX } from "lucide-react";
 
 export const CollectionPageContent = ({
   collectionId,
@@ -20,64 +22,72 @@ export const CollectionPageContent = ({
   collectionId: string;
 }) => {
   const {
-    data: collection,
-    isLoading,
+    data: collectionData,
+    isFetching,
     error,
     isError,
   } = useGetCollectionById(collectionId);
   const loggedInUserId = useUserStore((state) => state.id);
-  //   const setOpenCollectionModal = useGlobalStateStore(
-  //     (state) => state.setOpenCollectionModal,
-  //   );
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <>
-        <CollectionHeader>
+        <CollectionHeader className="mb-4">
           <HeaderLeft>
             <>
-              <HeaderTitle isLoading={isLoading} />
-              <HeaderDescription isLoading={isLoading} />
+              <HeaderTitle isLoading={isFetching} />
+              <HeaderDescription isLoading={isFetching} />
             </>
           </HeaderLeft>
-          <HeaderRight isLoading={isLoading} />
+          <HeaderRight isLoading={isFetching} />
         </CollectionHeader>
         <ContentBody>
-          <CollectionCardWrapper isLoading={isLoading} />
+          <CollectionCardWrapper isLoading={isFetching} />
         </ContentBody>
       </>
     );
   }
 
-  if (!isLoading && isError) return <div>Error: {error.message}</div>;
+  if (isError)
+    return (
+      <NotFound
+        Icon={FileX}
+        title={(error as any)?.response?.data?.message || "Unknown error"}
+        description="The collection you're looking for doesn't exist or the link may be incorrect."
+      />
+    );
 
-  if (!collection?.data) return <div>Collection not found</div>;
+  const collection = collectionData?.data;
 
-  const collectionData = collection.data;
-  const isOwner = collectionData.creator_id === loggedInUserId;
+  if (!collection) return <div>Collection not found</div>;
+
+  const isOwner = collection.creator_id === loggedInUserId;
 
   return (
     <>
-      <CollectionHeader>
+      <CollectionHeader className="mb-4 pr-0">
         <HeaderLeft>
           <>
-            <HeaderTitle collection={collectionData} />
+            <HeaderTitle collection={collection} isLoading={isFetching} />
 
-            {collectionData?.description && (
-              <HeaderDescription collection={collectionData} />
+            {collection?.description && (
+              <HeaderDescription
+                collection={collection}
+                isLoading={isFetching}
+              />
             )}
           </>
         </HeaderLeft>
 
-        <HeaderRight collection={collectionData} isOwner={isOwner} />
+        <HeaderRight collection={collection} showUpdationButton={false} />
       </CollectionHeader>
 
       <ContentBody>
         <>
-          {collectionData.items.length > 0 && (
+          {collection.items.length > 0 && (
             <CollectionCardWrapper>
               <>
-                {collectionData.items.map((item) => (
+                {collection.items.map((item) => (
                   <CollectionImageCard
                     key={item.pic_id}
                     item={item}
@@ -87,7 +97,7 @@ export const CollectionPageContent = ({
               </>
             </CollectionCardWrapper>
           )}
-          {collectionData.items.length === 0 && (
+          {collection.items.length === 0 && (
             <div className="text-center py-20 text-muted-foreground">
               No items in this collection yet.
             </div>

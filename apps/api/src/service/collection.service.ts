@@ -1,5 +1,6 @@
 import { PIC_PER_PAGE } from "@workspace/constants";
-import { cache, Collection, logger } from "@workspace/lib";
+import { cache, CollectionItem, logger } from "@workspace/lib";
+import type { Collection } from "@workspace/types";
 import { prisma } from "@workspace/lib/prisma";
 
 export const getCollections = async (nextCursor: string) => {
@@ -149,24 +150,25 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
   return collections;
 };
 
-export const getCollectionById = async (
-  id: string,
-  isOwner: boolean = true,
-) => {
+export const getCollectionById = async (id: string, isOwner: boolean) => {
   const cacheKey = `collections:${id}`;
   const cacheItemKey = cacheKey + ":items";
 
   const cachedCollections = await cache.get(cacheKey);
-  if (cachedCollections) {
-    const parsedCollection = JSON.parse(cachedCollections);
+  const cachedItems = await cache.get(cacheItemKey);
+
+  if (cachedCollections && cachedItems) {
+    const parsedCollection = JSON.parse(cachedCollections) as Collection;
+    const parsedItems = JSON.parse(cachedItems) as CollectionItem[];
+
     if (!isOwner && parsedCollection.visibility === "PRIVATE") {
       return null;
     }
-    const cachedItems = await cache.get(cacheItemKey);
-    if (cachedItems) {
-      const parsedItem = JSON.parse(cachedItems);
-      return { ...parsedCollection, items: parsedItem };
-    }
+
+    return {
+      ...parsedCollection,
+      items: parsedItems,
+    };
   }
 
   const collection = cachedCollections

@@ -2,6 +2,8 @@ import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetUserCollections } from "@/hooks";
 import { useUserStore } from "@/store";
+import { NotFound } from "../common";
+import { FileX } from "lucide-react";
 
 export function ShowUserCollections({ id }: { id?: string }) {
   const userId = useUserStore((state) => state.id);
@@ -9,13 +11,18 @@ export function ShowUserCollections({ id }: { id?: string }) {
     data: collections,
     isLoading,
     error,
+    isError,
   } = useGetUserCollections(id || userId);
 
-  if (error) {
+  if (isError) {
     return (
-      <div className="text-destructive text-center">
-        {(error as any).response?.data?.message || "Something went wrong"}
-      </div>
+      <NotFound
+        Icon={FileX}
+        title="Error"
+        description={
+          (error as any).response?.data?.message || "Something went wrong"
+        }
+      />
     );
   }
 

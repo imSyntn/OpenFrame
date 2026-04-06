@@ -13,17 +13,20 @@ import { Collection } from "@workspace/types";
 import { useGlobalStateStore, useUserStore } from "@/store";
 import { useDeleteCollection } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { cn } from "@workspace/ui/lib/utils";
 
 export function CollectionHeader({
   as,
   children,
+  className,
 }: {
   as?: React.ElementType;
   children: React.ReactNode;
+  className?: string;
 }) {
   const Header = as || "div";
   return (
-    <Header className="pr-8">
+    <Header className={cn("pr-8", className)}>
       <div className="flex items-start justify-between gap-4">{children}</div>
     </Header>
   );
@@ -94,10 +97,12 @@ export function HeaderRight({
   collection,
   isOwner,
   isLoading,
+  showUpdationButton = true,
 }: {
   collection?: Collection;
   isOwner?: boolean;
   isLoading?: boolean;
+  showUpdationButton?: boolean;
 }) {
   const { mutateAsync: deleteCollection, isPending } = useDeleteCollection();
   const setOpenCollectionModal = useGlobalStateStore(
@@ -136,15 +141,17 @@ export function HeaderRight({
 
   return (
     <div className="flex items-center gap-2">
-      <TooltipButton
-        value={<Share2 className="h-4 w-4" />}
-        size="icon"
-        variant="ghost"
-        onClick={handleShare}
-        content="Share"
-      />
+      {collection?.visibility === "PUBLIC" && (
+        <TooltipButton
+          value={<Share2 className="h-4 w-4" />}
+          size="icon"
+          variant="ghost"
+          onClick={handleShare}
+          content="Share"
+        />
+      )}
 
-      {isOwner && (
+      {isOwner && showUpdationButton && (
         <Tooltip>
           <TooltipTrigger asChild>
             <div>
@@ -155,7 +162,7 @@ export function HeaderRight({
         </Tooltip>
       )}
 
-      {isOwner && (
+      {isOwner && showUpdationButton && (
         <TooltipButton
           value={
             isPending ? (

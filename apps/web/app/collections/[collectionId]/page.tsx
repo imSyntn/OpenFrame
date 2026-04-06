@@ -1,3 +1,4 @@
+import { CollectionPageContent } from "@/components/collection/viewCollection/CollectionPageContent";
 import React from "react";
 
 export default async function CollectionPage({
@@ -6,5 +7,5 @@ export default async function CollectionPage({
   params: Promise<{ collectionId: string }>;
 }) {
   const { collectionId } = await params;
-  return <div>{collectionId}</div>;
+  return <CollectionPageContent collectionId={collectionId} />;
 }
