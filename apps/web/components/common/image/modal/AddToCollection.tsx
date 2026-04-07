@@ -98,7 +98,7 @@ function DropdownContent() {
 
   const { id: imageId } = image || {};
 
-  const onCreated = (id: string) => {
+  const onCreated = (id?: string) => {
     if (!imageId) {
       toast.error("Failed to get image id.");
       return;

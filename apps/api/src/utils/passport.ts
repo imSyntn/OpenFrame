@@ -20,16 +20,23 @@ passport.use(
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
+      const googleUser: GoogleUserType = {
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails?.[0]?.value || "",
+        _json: profile._json as GoogleUserType["_json"],
+      };
+
       let userExists = await getUser(
         {
-          email: profile["emails"]?.[0].value as string,
+          email: googleUser.email,
         },
         "auth",
       );
       if (!userExists) {
-        userExists = await createUser(profile as GoogleUserType);
+        userExists = await createUser(googleUser);
       }
-      return done(null, { ...profile, userExists });
+      return done(null, userExists);
     },
   ),
 );

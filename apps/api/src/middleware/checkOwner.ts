@@ -11,7 +11,7 @@ export const checkOwner = async (
     const { id: collection_id } = req.params;
     const { id: user_id } = req.user as { id: string };
 
-    const collection = await getCollectionById(collection_id as string);
+    const collection = await getCollectionById(collection_id as string, true);
     if (!collection) {
       return next(new ErrorWithStatus(404, "Collection not found"));
     }
