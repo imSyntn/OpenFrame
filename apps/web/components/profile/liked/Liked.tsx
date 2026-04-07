@@ -1,26 +1,26 @@
-import { GalleryPhoto, PictureType } from "@/@types";
-import { useGlobalStateStore, useProfileStore } from "@/store";
-import React, { useEffect, useMemo, useState } from "react";
-import { Button } from "@workspace/ui/components/button";
+import { GalleryPhoto } from "@/@types";
 import { Masonry, NotFound } from "@/components/common";
-import { useGetPictures } from "@/hooks";
-import { ImageOff, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useGetUserLikedPictures } from "@/hooks";
+import { useGlobalStateStore, useUserStore } from "@/store";
+import { Button } from "@workspace/ui/components/button";
+import { CircleX, ImageOff, Loader2 } from "lucide-react";
+import React, { useMemo } from "react";
 
-export function GalleryPhotosContainer() {
+export function Liked() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
-  const id = useProfileStore((state) => state.id);
+  const userId = useUserStore((state) => state.id);
+  const name = useUserStore((state) => state.name);
   const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
+    data: picturesData,
     isLoading,
-    isError,
     error,
-  } = useGetPictures(id);
+    isError,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetUserLikedPictures(userId || "");
 
-  const pictures = data?.pages.flatMap((page) => page.data) || [];
+  const pictures = picturesData?.pages.flatMap((page) => page.data) || [];
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -46,7 +46,7 @@ export function GalleryPhotosContainer() {
 
   if (isLoading) {
     return (
-      <div className="flex w-full justify-center my-3">
+      <div className="flex w-full min-h-30 justify-center my-3">
         <Loader2 className="animate-spin" />
       </div>
     );
@@ -54,15 +54,18 @@ export function GalleryPhotosContainer() {
 
   if (!isLoading && isError) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-destructive">
-          {(error as any).response?.data?.message || "Something went wrong"}
-        </p>
-      </div>
+      <NotFound
+        Icon={CircleX}
+        title="Error occured"
+        className="min-h-fit"
+        description={
+          (error as any).response?.data?.message || "Something went wrong"
+        }
+      />
     );
   }
 
-  if (!isLoading && pictures.length == 0) {
+  if (!isLoading && pictures.length === 0) {
     return (
       <NotFound
         Icon={ImageOff}
@@ -75,7 +78,7 @@ export function GalleryPhotosContainer() {
 
   return (
     <>
-      <Masonry photos={photos} showUser={false} />
+      <Masonry photos={photos} />
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

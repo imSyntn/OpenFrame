@@ -12,6 +12,16 @@ export const getUserPictures = async (
   return res.data;
 };
 
+export const getUserLikedPictures = async (
+  userId: string,
+  nextCursor?: string,
+): Promise<{ data: PictureType[]; nextCursor?: string }> => {
+  const res = await api.get(`/api/picture/user/liked/${userId}`, {
+    params: { nextCursor },
+  });
+  return res.data;
+};
+
 export const getPictureUploadUrl = async (
   type: string,
   size: number,

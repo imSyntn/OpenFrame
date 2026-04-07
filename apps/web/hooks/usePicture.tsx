@@ -6,6 +6,7 @@ import {
   getPictureStatus,
   getPictureTags,
   getPictureUploadUrl,
+  getUserLikedPictures,
   getUserPictures,
   incrementDownloadCount,
   incrementLikeCount,
@@ -19,6 +20,16 @@ export const useGetPictures = (id: string) => {
     queryFn: ({ pageParam }) => getUserPictures(id, pageParam),
     initialPageParam: "",
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+  });
+};
+
+export const useGetUserLikedPictures = (userId: string) => {
+  return useInfiniteQuery({
+    queryKey: ["user-liked-pictures", userId],
+    queryFn: ({ pageParam }) => getUserLikedPictures(userId, pageParam),
+    initialPageParam: "",
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+    enabled: !!userId,
   });
 };
 

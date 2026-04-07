@@ -48,6 +48,57 @@ export const getUserPictures = async (id: string, lastId: string | null) => {
   return { pictures, nextCursor };
 };
 
+export const getUserLikedPictures = async (
+  id: string,
+  lastId: string | null,
+) => {
+  const cacheKey = `user:liked-pictures:${id}:${lastId || "-1"}`;
+
+  const cached = await cache.get(cacheKey);
+  if (cached) {
+    const pictures = JSON.parse(cached);
+    const nextCursor = pictures[pictures.length - 1]?.id || null;
+    return { pictures, nextCursor };
+  }
+
+  const pictures = await prisma.like.findMany({
+    where: { user_id: id },
+    take: PIC_PER_PAGE,
+    cursor: lastId
+      ? { user_id_pic_id: { user_id: id, pic_id: lastId } }
+      : undefined,
+    skip: lastId ? 1 : 0,
+    orderBy: { pic_id: "desc" },
+    include: {
+      picture: {
+        include: {
+          src: true,
+          metadata: true,
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+          engagement: true,
+        },
+      },
+    },
+  });
+
+  const nextCursor = pictures[pictures.length - 1]?.pic_id || null;
+
+  const flattenData = pictures.map((pic) => pic.picture);
+
+  await cache.set(cacheKey, JSON.stringify(flattenData), "EX", 60 * 60 * 2);
+
+  return { pictures: flattenData, nextCursor };
+};
+
 export const getPictureById = async (id: string) => {
   const cached = await cache.get(`picture:${id}`);
   if (cached) {

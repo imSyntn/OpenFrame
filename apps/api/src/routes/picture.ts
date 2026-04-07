@@ -8,6 +8,7 @@ import {
   getPictureStatusController,
   getPictureTagsController,
   getPictureUploadUrlController,
+  getUserLikedPicturesController,
   getUserPicturesController,
   likePictureController,
   viewPictureController,
@@ -27,6 +28,7 @@ pictureRouter.get(
   getPictureStatusController,
 );
 
+pictureRouter.get("/user/liked/:userId", getUserLikedPicturesController);
 pictureRouter.get("/user/:id", getUserPicturesController);
 
 pictureRouter.post(
@@ -37,7 +39,6 @@ pictureRouter.post(
 
 pictureRouter.post("/view/:id", viewPictureController);
 pictureRouter.post("/download/:id", downloadPictureController);
-
 pictureRouter.post("/like/:id", authMiddleware, likePictureController);
 
 pictureRouter.get("/:id", getPictureByIdController);

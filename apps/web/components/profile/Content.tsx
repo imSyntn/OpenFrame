@@ -15,6 +15,7 @@ import { useUserStore } from "@/store";
 import { Processing } from "./processing/Processing";
 import { ShowUserCollections } from "../collection";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
+import { Liked } from "./liked/Liked";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);
@@ -56,7 +57,16 @@ export function Content() {
             >
               {isLoading ? <Skeleton className="w-16 h-4" /> : "Collections"}
             </TabsTrigger>
-            {isOwner && (
+            {!isLoading && isOwner && (
+              <TabsTrigger
+                value="liked"
+                className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
+                disabled={isLoading}
+              >
+                Liked
+              </TabsTrigger>
+            )}
+            {!isLoading && isOwner && (
               <TabsTrigger
                 value="processing"
                 className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
@@ -83,6 +93,11 @@ export function Content() {
         {isOwner && (
           <TabsContent value="processing" className="flex-1">
             <Processing />
+          </TabsContent>
+        )}
+        {isOwner && (
+          <TabsContent value="liked" className="flex-1">
+            <Liked />
           </TabsContent>
         )}
       </Tabs>

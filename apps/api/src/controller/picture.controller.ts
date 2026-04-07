@@ -8,6 +8,7 @@ import {
   getPictureStatus,
   getPictureTags,
   getPictureUploadUrl,
+  getUserLikedPictures,
   getUserPictures,
   incrementDownloadCount,
   incrementLikeCount,
@@ -33,6 +34,27 @@ export const getUserPicturesController = async (
       id as string,
       lastId,
     );
+
+    return res.status(200).json({ data: pictures, nextCursor });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserLikedPicturesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = req.params as { userId: string };
+    const lastId = req.query.nextCursor as string;
+
+    if (!userId) {
+      return next(new ErrorWithStatus(400, "Invalid user id"));
+    }
+
+    const { pictures, nextCursor } = await getUserLikedPictures(userId, lastId);
 
     return res.status(200).json({ data: pictures, nextCursor });
   } catch (error) {
