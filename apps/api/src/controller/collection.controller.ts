@@ -13,7 +13,7 @@ import {
   collectionItemSchema,
   collectionSchema,
   collectionUpdateSchema,
-} from "@/schema";
+} from "@workspace/schema/collection";
 import { ErrorWithStatus } from "@/middleware";
 import { logger } from "@workspace/lib";
 

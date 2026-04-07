@@ -15,7 +15,7 @@ import { Input } from "@workspace/ui/components/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/schema";
+import { signupSchema } from "@workspace/schema/auth";
 import { googleLoginHandler } from "@/utils";
 import { useSignUp } from "@/hooks";
 import { UserTypeUnregistered } from "@workspace/types";
@@ -43,9 +43,14 @@ export function SignupForm({
 
   const onSubmit = async (payload: UserTypeUnregistered) => {
     const toastId = toast.loading("Creating your account...");
-    const { name, email, password } = payload;
+    const { name, email, password, confirmPassword } = payload;
     try {
-      const response = await mutateAsync({ name, email, password });
+      const response = await mutateAsync({
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
       if (response.status === 201) {
         toast.success("Account created successfully", {
           id: toastId,

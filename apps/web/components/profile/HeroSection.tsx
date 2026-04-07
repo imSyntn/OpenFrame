@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@workspace/ui/components/button";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import React, { useEffect } from "react";
 import {
@@ -71,7 +70,6 @@ export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
 
 export function HeroSection({ id }: { id: string }) {
   const loggedInUserID = useUserStore((state) => state.id);
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const {
     // isLoading,
     setData,
@@ -127,8 +125,10 @@ export function HeroSection({ id }: { id: string }) {
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-center md:justify-start gap-2">
-                <h1 className="text-2xl md:text-3xl font-bold">{name}</h1>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words max-w-full">
+                  {name}
+                </h1>
 
                 {is_verified && (
                   <BadgeCheck className="h-6 w-6 text-emerald-500 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]" />

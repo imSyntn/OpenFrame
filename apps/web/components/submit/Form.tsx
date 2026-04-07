@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { pictureSchema } from "@/schema";
+import { pictureSchema } from "@workspace/schema/picture";
 import { Input } from "@workspace/ui/components/input";
 import {
   Field,
@@ -185,7 +185,10 @@ export function Form({
           </Field>
         </FieldGroup>
 
-        <Button className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]">
+        <Button
+          className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]"
+          disabled={!isValid || isPending}
+        >
           {isPending ? "Uploading..." : "Upload Image"}
         </Button>
       </FieldSet>

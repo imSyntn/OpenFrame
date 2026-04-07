@@ -14,9 +14,9 @@ import {
 import { Input } from "@workspace/ui/components/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "@/schema";
+import { signinSchema } from "@workspace/schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import ForgotPassword from "./ForgotPassword";
+import { ForgotPassword } from "./ForgotPassword";
 import { googleLoginHandler } from "@/utils";
 import { useLogin } from "@/hooks";
 import { UserLoginType } from "@workspace/types";
@@ -34,7 +34,7 @@ export function LoginForm({
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signinSchema),
   });
   const router = useRouter();
   const setUser = useUserStore((state) => state.setUser);
@@ -46,22 +46,16 @@ export function LoginForm({
     const toastId = toast.loading("Logging you in...");
     try {
       const response = await mutateAsync(payload);
-      if (response.status === 200) {
-        toast.success("Logged in successfully", {
-          id: toastId,
-          description: "You are being redirected.",
-        });
-        setUser({
-          isLoggedIn: true,
-          email: response.data.data.email,
-          id: response.data.data.id,
-          name: response.data.data.name,
-          avatar: response.data.data.avatar,
-        });
-        setTimeout(() => {
-          router.push("/");
-        }, 2000);
-      }
+      setUser({
+        isLoggedIn: true,
+        email: response.data.data.email,
+        id: response.data.data.id,
+        name: response.data.data.name,
+        avatar: response.data.data.avatar,
+      });
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch (error: any) {
       toast.dismiss(toastId);
 

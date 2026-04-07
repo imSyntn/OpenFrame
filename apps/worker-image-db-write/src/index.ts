@@ -65,7 +65,7 @@ const run = async () => {
                 message.id,
                 JSON.stringify({ ...message, processing: "done" }),
               );
-              pipeline.del(`user:${message.userId}:profile`);
+              pipeline.del(`user:profile:${message.userId}`);
             }
 
             await pipeline.exec();

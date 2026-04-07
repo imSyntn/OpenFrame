@@ -1,7 +1,7 @@
 "use client";
 
 import { useChangePassword, useOTPGenerate, useOTPVerify } from "@/hooks";
-import { forgotPasswordSchema } from "@/schema";
+import { forgotPasswordSchema } from "@workspace/schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -35,7 +35,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const ForgotPassword = () => {
+export function ForgotPassword() {
   const [step, setStep] = useState(0);
   const {
     register,
@@ -245,6 +245,4 @@ const ForgotPassword = () => {
       </DialogContent>
     </Dialog>
   );
-};
-
-export default ForgotPassword;
+}

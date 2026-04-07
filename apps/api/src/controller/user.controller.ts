@@ -12,7 +12,11 @@ import {
   refreshTokenVerify,
   verifyVerificationToken,
 } from "../utils";
-import { userSigninSchema, userSignupSchema } from "@/schema";
+import {
+  emailSchema,
+  signinSchema,
+  signupSchema,
+} from "@workspace/schema/auth";
 import { ErrorWithStatus } from "@/middleware";
 import {
   createUser,
@@ -80,7 +84,7 @@ export const signinController = async (
   try {
     const { email, password } = req.body;
 
-    const user = userSigninSchema.parse({ email, password });
+    const user = signinSchema.parse({ email, password });
 
     const userExists = await getUser({ email: user.email }, "auth");
     if (!userExists) {
@@ -134,9 +138,14 @@ export const signupController = async (
   next: NextFunction,
 ) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
 
-    const user = userSignupSchema.parse({ name, email, password });
+    const user = signupSchema.parse({
+      name,
+      email,
+      password,
+      confirmPassword,
+    });
 
     const userExists = await getUser({ email: user.email }, "auth");
     if (userExists) {
@@ -183,18 +192,16 @@ export const otpGenerateController = async (
   try {
     const { email } = req.body;
 
-    if (!email || email.length > EMAIL_MAX_CHAR_LIMIT) {
-      return next(new ErrorWithStatus(400, "Invalid email"));
-    }
+    const emailData = emailSchema.parse(email);
 
-    const userExist = await getUser({ email }, "auth");
+    const userExist = await getUser({ email: emailData }, "auth");
     if (!userExist) {
       return next(new ErrorWithStatus(404, "User not found"));
     }
 
     const otp = generateOtp();
 
-    await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT);
+    await otpStore.set(emailData, otp, "EX", OTP_VALIDATION_TIME_LIMIT);
 
     const template = generateEmailTemplate({
       type: "otp",
@@ -227,11 +234,9 @@ export const otpVerifyController = async (
   try {
     const { email, otp } = req.body;
 
-    if (!email || email.length > EMAIL_MAX_CHAR_LIMIT) {
-      return next(new ErrorWithStatus(400, "Invalid email"));
-    }
+    const emailData = emailSchema.parse(email);
 
-    const generatedOtp = await otpStore.get(email);
+    const generatedOtp = await otpStore.get(emailData);
 
     if (!generatedOtp || generatedOtp !== otp) {
       return next(new ErrorWithStatus(400, "Invalid OTP"));
@@ -255,7 +260,7 @@ export const resetPasswordController = async (
   try {
     const { email, password } = req.body;
 
-    const user = userSigninSchema.parse({ email, password });
+    const user = signinSchema.parse({ email, password });
 
     const emailOtpVerified = await otpStore.get(email);
 
@@ -469,6 +474,7 @@ export const verifyEmailTokenController = async (
 };
 
 export const logoutController = async (req: Request, res: Response) => {
+  console.log("Controller called");
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
 

@@ -1,13 +1,13 @@
+import { z } from "zod";
 import {
-  EMAIL_MIN_CHAR_LIMIT,
-  EMAIL_MAX_CHAR_LIMIT,
-  PASSWORD_MIN_CHAR_LIMIT,
-  PASSWORD_MAX_CHAR_LIMIT,
-  NAME_MIN_CHAR_LIMIT,
   NAME_MAX_CHAR_LIMIT,
+  EMAIL_MAX_CHAR_LIMIT,
+  PASSWORD_MAX_CHAR_LIMIT,
+  EMAIL_MIN_CHAR_LIMIT,
+  PASSWORD_MIN_CHAR_LIMIT,
+  NAME_MIN_CHAR_LIMIT,
   OTP_CHAR_LIMIT,
 } from "@workspace/constants";
-import { z } from "zod";
 
 export const emailSchema = z
   .string()
@@ -21,7 +21,7 @@ export const emailSchema = z
   )
   .email("Invalid email address");
 
-const passwordSchema = z
+export const passwordSchema = z
   .string()
   .min(
     PASSWORD_MIN_CHAR_LIMIT,
@@ -61,12 +61,12 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
-export const loginSchema = z.object({
+export const signinSchema = z.object({
   email: emailSchema,
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  password: passwordSchema,
 });
 
-const otpSchema = z
+export const otpSchema = z
   .string()
   .length(OTP_CHAR_LIMIT, `OTP must be ${OTP_CHAR_LIMIT} digits long`);
 

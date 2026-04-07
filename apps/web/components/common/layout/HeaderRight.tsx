@@ -17,15 +17,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { toast } from "sonner";
-import { userLogout } from "@/lib/apis";
 import { LogIn, Upload, UserPlus } from "lucide-react";
-import { useRefreshToken } from "@/hooks";
+import { useLogout, useRefreshToken } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export function HeaderRight() {
   const { data, isLoading, isError } = useRefreshToken();
+  const { mutate: logoutHandler, isPending: isLogoutPending } = useLogout();
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const id = useUserStore((state) => state.id);
   const avatar = useUserStore((state) => state.avatar);
@@ -68,26 +67,6 @@ export function HeaderRight() {
       });
     }
   }, [data, isLoading, isError, isLoggedIn]);
-
-  const logoutHandler = async () => {
-    try {
-      const response = await userLogout();
-      if (response.status == 200) {
-        setUser({
-          id: "",
-          name: "",
-          email: "",
-          avatar: "",
-          accessToken: "",
-          isLoggedIn: false,
-        });
-        toast.success("Logged out successfully");
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error("Logout failed");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -139,7 +118,11 @@ export function HeaderRight() {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem variant="destructive" onClick={logoutHandler}>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => logoutHandler()}
+                disabled={isLogoutPending}
+              >
                 Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -152,7 +135,6 @@ export function HeaderRight() {
   return (
     <div className="flex items-center gap-2 md:gap-3">
       <Button
-        variant="ghost"
         size="icon"
         className="md:hidden"
         onClick={() => router.push("/login")}
@@ -161,7 +143,6 @@ export function HeaderRight() {
       </Button>
 
       <Button
-        variant="ghost"
         size="icon"
         className="md:hidden"
         onClick={() => router.push("/signup")}

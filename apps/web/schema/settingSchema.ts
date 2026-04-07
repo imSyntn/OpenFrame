@@ -1,5 +1,5 @@
 import z from "zod";
-import { nameSchema } from "./authSchema";
+import { nameSchema } from "@workspace/schema/auth";
 import {
   BIO_MAX_CHAR_LIMIT,
   LOCATION_MAX_CHAR_LIMIT,

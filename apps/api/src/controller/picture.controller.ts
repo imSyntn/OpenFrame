@@ -1,5 +1,5 @@
 import { ErrorWithStatus } from "@/middleware";
-import { pictureSchema } from "@/schema";
+import { pictureSchema } from "@workspace/schema/picture";
 import {
   createPicture,
   getAllPictureStatus,

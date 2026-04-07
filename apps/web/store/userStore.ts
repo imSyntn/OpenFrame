@@ -7,7 +7,7 @@ interface UserStore {
   name: string;
   avatar: string;
   accessToken: string;
-  setUser: (data: any) => void;
+  setUser: (data: Partial<UserStore>) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -18,5 +18,9 @@ export const useUserStore = create<UserStore>((set) => ({
   accessToken: "",
   avatar: "https://cdn-icons-png.flaticon.com/512/3177/3177440.png",
 
-  setUser: (data: any) => set({ ...data }),
+  setUser: (data) =>
+    set((state) => ({
+      ...state,
+      ...data,
+    })),
 }));

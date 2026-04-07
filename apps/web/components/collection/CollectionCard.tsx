@@ -88,7 +88,7 @@ export function CollectionCard({
         </p>
 
         <div className="text-xs text-muted-foreground space-y-2">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5 opacity-70" />
               <span>Created</span>
@@ -101,7 +101,7 @@ export function CollectionCard({
             </Badge>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-1.5">
               <RefreshCcw className="h-3.5 w-3.5 opacity-70" />
               <span>Updated</span>
@@ -129,7 +129,9 @@ export function CollectionCard({
           </AvatarFallback>
         </Avatar>
 
-        <span className="text-sm font-medium">{collection.creator.name}</span>
+        <span className="text-sm font-medium break-words line-clamp-1">
+          {collection.creator.name}
+        </span>
       </CardFooter>
     </Card>
   );

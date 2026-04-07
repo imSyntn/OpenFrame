@@ -50,9 +50,8 @@ authRouter.post(
 authRouter.get("/verify-email-token/:token", verifyEmailTokenController);
 
 authRouter.get("/refresh-token", refreshTokenController);
+authRouter.get("/logout", logoutController);
 authRouter.get("/:id", getUserController);
 authRouter.patch("/:id", authMiddleware, updateUserController);
-
-authRouter.get("/logout", logoutController);
 
 export { authRouter };

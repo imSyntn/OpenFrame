@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { collectionSchema } from "@/schema";
+import { collectionSchema } from "@workspace/schema/collection";
 import z from "zod";
 import {
   Field,
