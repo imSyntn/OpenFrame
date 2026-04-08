@@ -1,4 +1,4 @@
-import { logger } from "@workspace/lib";
+import { logger } from "@workspace/lib/logger";
 import { prisma } from "@workspace/lib/prisma";
 import type { EngagementEventType } from "@workspace/types";
 

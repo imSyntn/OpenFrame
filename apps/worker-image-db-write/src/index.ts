@@ -1,7 +1,7 @@
 import "@workspace/lib/env";
 import { kafka } from "@workspace/lib/kafka";
 import { logger } from "@workspace/lib/logger";
-import { cache } from "@workspace/lib";
+import { cache } from "@workspace/lib/redis";
 import { bulkWrite } from "./bulkWrite";
 import type { UnderProcessingPictureType } from "@workspace/types";
 

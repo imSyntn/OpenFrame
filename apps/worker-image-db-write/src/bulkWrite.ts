@@ -1,8 +1,5 @@
 import { prisma } from "@workspace/lib/prisma";
-import {
-  type SrcType,
-  type UnderProcessingPictureType,
-} from "@workspace/types";
+import type { SrcType, UnderProcessingPictureType } from "@workspace/types";
 
 export const bulkWrite = async (items: UnderProcessingPictureType[]) => {
   await prisma.$transaction(async (tx) => {

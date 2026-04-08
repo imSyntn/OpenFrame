@@ -4,16 +4,17 @@
   "description": "",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./logger": "./src/logger/index.js",
-    "./kafka": "./src/kafka/index.ts",
-    "./redis": "./src/redis/index.ts",
-    "./env": "./src/env/index.ts",
-    "./prisma": "./src/prisma/index.ts"
+    ".": "./dist/index.js",
+    "./logger": "./dist/logger/index.js",
+    "./kafka": "./dist/kafka/index.js",
+    "./redis": "./dist/redis/index.js",
+    "./env": "./dist/env/index.js",
+    "./prisma": "./dist/prisma/index.js"
   },
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsup",
     "start": "node dist/server.js"
   },
   "author": "",
@@ -23,7 +23,6 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
     "@workspace/types": "workspace:*",
-    "ioredis": "^5.10.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
@@ -39,6 +38,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "ioredis": "^5.10.0",
     "jsonwebtoken": "^9.0.3",
     "nanoid": "^5.1.6",
     "nodemailer": "^8.0.1",

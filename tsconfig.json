@@ -12,9 +12,10 @@
     "baseUrl": ".",
     "paths": {
       "@workspace/constants": ["packages/constants/src"],
-      "@workspace/ui": ["packages/ui/src"],
+      "@workspace/constants/*": ["packages/constants/src/*"],
       "@workspace/lib": ["packages/lib/src"],
-      "@workspace/lib/*": ["packages/lib/src/*"]
+      "@workspace/lib/*": ["packages/lib/src/*"],
+      "@workspace/ui": ["packages/ui/src"]
     }
   }
 }

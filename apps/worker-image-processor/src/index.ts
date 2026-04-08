@@ -1,12 +1,12 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
-import { cache } from "@workspace/lib";
+import { cache } from "@workspace/lib/redis";
 import { logger } from "@workspace/lib/logger";
 import { resizeImage } from "./processImage";
 import { uploadVariants } from "./lib/upload";
-import {
-  type UnderProcessingPictureType,
-  type VariantsCacheType,
+import type {
+  UnderProcessingPictureType,
+  VariantsCacheType,
 } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-processor" });

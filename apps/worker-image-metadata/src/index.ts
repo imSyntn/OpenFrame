@@ -6,10 +6,10 @@ import {
   getBlurHash,
   getDominantColor,
 } from "./metadataExtractor";
-import { cache } from "@workspace/lib";
-import {
-  type MetadataCacheType,
-  type UnderProcessingPictureType,
+import { cache } from "@workspace/lib/redis";
+import type {
+  MetadataCacheType,
+  UnderProcessingPictureType,
 } from "@workspace/types";
 
 const consumer = kafka.consumer({ groupId: "worker-metadata" });

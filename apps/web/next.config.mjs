@@ -8,7 +8,13 @@ dotenv.config({
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  transpilePackages: ["@workspace/ui"],
+  transpilePackages: [
+    "@workspace/ui",
+    "@workspace/types",
+    "@workspace/lib",
+    "@workspace/constants",
+    "@workspace/schema"
+  ],
   images: {
     remotePatterns: [
       {
@@ -18,6 +24,11 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  experimental: {
+    turbopack: {
+      root: path.resolve(process.cwd(), "../../"),
+    },
   },
 }
 

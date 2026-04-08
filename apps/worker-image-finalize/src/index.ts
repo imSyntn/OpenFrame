@@ -1,6 +1,6 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
-import { cache } from "@workspace/lib";
+import { cache } from "@workspace/lib/redis";
 import { logger } from "@workspace/lib/logger";
 import type {
   MetadataCacheType,
