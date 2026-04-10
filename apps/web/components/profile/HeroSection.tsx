@@ -26,7 +26,6 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { useProfileStore, useUserStore } from "@/store";
-import { ProfileType } from "@/@types";
 import {
   Tooltip,
   TooltipContent,
@@ -43,6 +42,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/components/avatar";
+import { ErrorOccured } from "../common";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -71,7 +71,6 @@ export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
 export function HeroSection({ id }: { id: string }) {
   const loggedInUserID = useUserStore((state) => state.id);
   const {
-    // isLoading,
     setData,
     avatar,
     name,
@@ -82,7 +81,7 @@ export function HeroSection({ id }: { id: string }) {
     is_verified,
     metrics,
   } = useProfileStore();
-  const { data, isLoading, error, isError } = useUserDetails(id);
+  const { data, isLoading, error, isError, refetch } = useUserDetails(id);
 
   const isOwner = loggedInUserID === id;
 
@@ -95,11 +94,16 @@ export function HeroSection({ id }: { id: string }) {
     }
   }, [isLoading, isError]);
 
-  if (error) {
+  if (isError) {
     if ((error as any)?.response?.status === 404) {
-      notFound();
+      return notFound();
     }
-    toast.error("Unexpected error occurred");
+    return (
+      <ErrorOccured
+        title={(error as any)?.response?.data?.message}
+        onClick={() => refetch()}
+      />
+    );
   }
 
   return (

@@ -25,7 +25,7 @@ app.use(passport.initialize());
 
 // app.use((req, res, next) => {
 //   console.log(req.path);
-//   if (req.path == "/api/search") {
+//   if (req.path == "/api/user/cmmho0rve0000twobb6htytky") {
 //     return next(new ErrorWithStatus(500, "Intentionally omething went wrong"));
 //   }
 //   next();

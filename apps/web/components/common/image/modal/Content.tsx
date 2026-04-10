@@ -9,6 +9,7 @@ import { useGlobalStateStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import { ImageTags } from "./ImageTags";
 import { useIncrementViewCount } from "@/hooks";
+import { notFound } from "next/navigation";
 
 const TitleDesc = ({
   title,
@@ -70,14 +71,9 @@ export function Content() {
 
   useEffect(() => {
     if (image) {
-      const incrementViewCount = async () => {
-        try {
-          await viewPicture({ id: image.id, ownerId: image.user_id });
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      incrementViewCount();
+      viewPicture({ id: image.id, ownerId: image.user_id }).catch(
+        console.error,
+      );
     }
   }, [image]);
 
@@ -98,6 +94,7 @@ export function Content() {
     blurhash: image?.metadata?.blurhash,
     user: image?.user,
   };
+
   return (
     <>
       <ModalHeader />

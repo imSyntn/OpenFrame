@@ -122,6 +122,9 @@ function DropdownContent() {
               <CollectionItem />
               <CollectionItem />
               <CollectionItem />
+              <CollectionItem />
+              <CollectionItem />
+              <CollectionItem />
             </>
           )}
           {isError && <CollectionItem error />}
