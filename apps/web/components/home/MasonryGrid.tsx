@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
-import { Masonry } from "../common";
+import React, { useMemo } from "react";
+import { ErrorOccured, Masonry, NotFound } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore } from "@/store";
 import { useGetExplorePictures } from "@/hooks";
 import { Button } from "@workspace/ui/components/button";
-import { Loader2 } from "lucide-react";
+import { CameraOff, Loader2 } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { ImageSkeleton } from "./ImageSkeleton";
@@ -26,25 +26,11 @@ export function MasonryGrid() {
     isFetchingNextPage,
     isLoading,
     isError,
+    error,
+    refetch,
   } = useGetExplorePictures(tag);
 
   const pictures = data?.pages.flatMap((page) => page.data) ?? [];
-
-  if (!isLoading && pictures.length == 0) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p>No pictures found</p>
-      </div>
-    );
-  }
-
-  if (!isLoading && isError) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-destructive">Something went wrong</p>
-      </div>
-    );
-  }
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -65,6 +51,29 @@ export function MasonryGrid() {
       }),
     [pictures],
   );
+
+  if (!isLoading && pictures.length == 0) {
+    return (
+      <NotFound
+        Icon={CameraOff}
+        title="No pictures found"
+        description={
+          (error as any)?.response?.data?.message ||
+          "No pictures found matching your criteria."
+        }
+      />
+    );
+  }
+
+  if (isError) {
+    return (
+      <ErrorOccured
+        title={(error as any)?.response?.data?.message}
+        description="Failed to load pictures. Please try again."
+        onClick={() => refetch()}
+      />
+    );
+  }
 
   const handleLoadMore = () => {
     if (pathname === "/explore") {

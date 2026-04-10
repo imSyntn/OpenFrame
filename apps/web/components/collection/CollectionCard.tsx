@@ -39,6 +39,7 @@ export function CollectionCard({
   const setOpenCollectionModal = useGlobalStateStore(
     (state) => state.setOpenCollectionModal,
   );
+
   const previewImages = collection.items
     ?.map(
       (item) =>

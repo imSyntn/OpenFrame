@@ -3,6 +3,7 @@ import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { TagCard, TagCardSkeleton } from "./TagCard";
 import { UserCard, UserCardSkeleton } from "./UserCard";
 import { PictureCard, PictureCardSkeleton } from "./PictureCard";
+import { ErrorOccured } from "../common";
 
 function Container({ children }: { children: React.ReactNode }) {
   return <div className="min-h-[30vh] w-full px-10 mb-10">{children}</div>;
@@ -35,7 +36,13 @@ function HorizontalScrollWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export function Content({ query, type }: { query: string; type?: string }) {
-  const { data: result, isLoading, error, isError } = useSearch(query, type);
+  const {
+    data: result,
+    isLoading,
+    error,
+    isError,
+    refetch,
+  } = useSearch(query, type);
 
   if (query.length < 3) {
     return (
@@ -78,9 +85,11 @@ export function Content({ query, type }: { query: string; type?: string }) {
   if (isError) {
     return (
       <Container>
-        <p className="text-center text-destructive">
-          {(error as any)?.response?.data?.message || "Error fetching results"}
-        </p>
+        <ErrorOccured
+          title={(error as any)?.response?.data?.message}
+          className="min-h-[calc(100vh-200px)]"
+          onClick={() => refetch()}
+        />
       </Container>
     );
   }

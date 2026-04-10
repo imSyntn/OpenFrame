@@ -2,7 +2,7 @@ import React from "react";
 import { CollectionCard, CollecTionCardSkeleton } from "./CollectionCard";
 import { useGetUserCollections } from "@/hooks";
 import { useUserStore } from "@/store";
-import { NotFound } from "../common";
+import { ErrorOccured, NotFound } from "../common";
 import { FileX } from "lucide-react";
 
 export function ShowUserCollections({ id }: { id?: string }) {
@@ -12,25 +12,27 @@ export function ShowUserCollections({ id }: { id?: string }) {
     isLoading,
     error,
     isError,
+    refetch,
   } = useGetUserCollections(id || userId);
 
   if (isError) {
     return (
-      <NotFound
-        Icon={FileX}
-        title="Error"
-        description={
-          (error as any).response?.data?.message || "Something went wrong"
-        }
+      <ErrorOccured
+        title={(error as any)?.response?.data?.message}
+        className="min-h-[calc(100vh-200px)]"
+        onClick={() => refetch()}
       />
     );
   }
 
-  if (!isLoading && collections?.data.length === 0) {
+  if (!isLoading && collections?.data.length == 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <p className="text-muted-foreground">No collections found</p>
-      </div>
+      <NotFound
+        Icon={FileX}
+        className="min-h-[calc(100vh-200px)]"
+        title="No collections found"
+        description="You haven't created any collections yet."
+      />
     );
   }
 

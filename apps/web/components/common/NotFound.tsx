@@ -25,9 +25,13 @@ export function NotFound({
           <Icon className="h-8 w-8 text-muted-foreground" />
         </div>
 
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-center">
+          {title}
+        </h1>
 
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-sm text-muted-foreground text-center">
+          {description}
+        </p>
 
         <div className="flex gap-3">
           <Button asChild>

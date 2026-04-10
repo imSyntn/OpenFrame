@@ -1,5 +1,5 @@
 import { Button } from "@workspace/ui/components/button";
-import { BadgeCheck, Mail, MapPin } from "lucide-react";
+import { BadgeCheck, CircleAlert, Mail, MapPin } from "lucide-react";
 import { useGlobalStateStore } from "@/store";
 import { useUserDetails } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
@@ -16,11 +16,26 @@ import {
 import { useRouter } from "next/navigation";
 
 export function OwnerInfo({ id }: { id: string }) {
-  const { data, isLoading, isError } = useUserDetails(id);
+  const { data, isLoading, isError, error } = useUserDetails(id);
   const setOpen = useGlobalStateStore((state) => state.setOpen);
   const router = useRouter();
 
-  if (isError || (!data && !isLoading)) return null;
+  if (isError || (!data && !isLoading)) {
+    return (
+      <div className="flex items-center gap-3 min-w-[192px]">
+        <CircleAlert className="h-8 w-8 text-destructive" />
+        <div>
+          <p className="font-semibold flex items-center gap-1 line-clamp-1">
+            {(error as any)?.response?.data?.message ||
+              "Failed to load owner info"}
+          </p>
+          <p className="text-sm text-muted-foreground flex items-center gap-1">
+            Please try again.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-3 min-w-[192px]">

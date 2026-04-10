@@ -1,8 +1,12 @@
+"use client";
+
 import { useDeleteCollectionItems } from "@/hooks";
+import { useGlobalStateStore } from "@/store";
 import { CollectionItem } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export function CollectionImageCard({
@@ -14,6 +18,11 @@ export function CollectionImageCard({
 }) {
   const { mutateAsync: deleteCollectionItems, isPending } =
     useDeleteCollectionItems();
+  const setOpenCollectionModal = useGlobalStateStore(
+    (state) => state.setOpenCollectionModal,
+  );
+  const router = useRouter();
+
   const img =
     item.picture.src.find((s) => s.resolution === "THUMBNAIL") ||
     item.picture.src.find((s) => s.resolution === "SMALL") ||
@@ -33,9 +42,14 @@ export function CollectionImageCard({
       console.log(error);
     }
   };
+
+  const handleViewPicture = () => {
+    setOpenCollectionModal(null);
+  };
+
   return (
     <div className="group relative rounded-xl overflow-hidden border bg-muted shadow-sm hover:shadow-lg transition-all duration-300">
-      <Link href={`/picture/${item.pic_id}`}>
+      <Link href={`/picture/${item.pic_id}`} onClick={handleViewPicture}>
         <div className="relative aspect-square overflow-hidden">
           <img
             src={img?.url}
