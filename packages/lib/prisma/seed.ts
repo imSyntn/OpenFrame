@@ -1,184 +1,163 @@
 import { prisma } from "../src/prisma";
 
-const USER_COUNT = 15;
-const PHOTO_COUNT = 100;
-
-function randomInt(max: number) {
-  return Math.floor(Math.random() * max);
-}
-
-const userIds = ["cmmhm77it0000joobbidcelig", "cmmho0rve0000twobb6htytky"];
-const picIds = [
-  "AFpoFNwLGRIhzcKMA9JHo",
-  "SMKF3FwWrV5J8uysRWKPt",
-  "h12egyXppq_DEjIfEwau7",
-  "dJTrh9WD30svxz0qY91AW",
-  "qVYacZ88kR8WTnnHV0M1r",
-  "Non67HeXqZoLrPgA-MBKu",
-  "3iw0TJ2IPbqGu2F8bDBaw",
-];
-
-function getRandomPics(arr: string[], count: number) {
-  return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
-}
-
 async function main() {
-  console.log("🌱 Seeding database (fast mode)");
+  console.log("Seeding database...");
 
-  // const users = Array.from({ length: USER_COUNT }).map((_, i) => ({
-  //   id: `user_${i}`,
-  //   name: `User ${i}`,
-  //   email: `user${i}@example.com`,
-  //   bio: "Photography enthusiast",
-  //   location: "Earth",
-  //   is_verified: i % 3 === 0,
-  // }));
-
-  // await prisma.user.createMany({
-  //   data: users,
-  // });
-
-  // await prisma.metrics.createMany({
-  //   data: users.map((u) => ({
-  //     user_id: u.id,
-  //     follower: randomInt(500),
-  //     following: randomInt(200),
-  //     total_downloads: randomInt(10000),
-  //     total_likes: randomInt(5000),
-  //   })),
-  // });
-
-  // const links = users.flatMap((u) => [
-  //   {
-  //     user_id: u.id,
-  //     name: "github",
-  //     url: `https://github.com/${u.name.toLowerCase().replace(" ", "")}`,
-  //   },
-  //   {
-  //     user_id: u.id,
-  //     name: "portfolio",
-  //     url: `https://${u.name.toLowerCase().replace(" ", "")}.dev`,
-  //   },
-  // ]);
-
-  // await prisma.links.createMany({ data: links });
-
-  // const tagNames = [
-  //   "nature",
-  //   "mountain",
-  //   "city",
-  //   "portrait",
-  //   "travel",
-  //   "sunset",
-  //   "beach",
-  //   "architecture",
-  // ];
-
-  // await prisma.tag.createMany({
-  //   data: tagNames.map((name) => ({ name })),
-  //   skipDuplicates: true,
-  // });
-
-  // const tags = await prisma.tag.findMany();
-
-  // const pictures = Array.from({ length: PHOTO_COUNT }).map((_, i) => {
-  //   const user = users[randomInt(users.length)];
-
-  //   return {
-  //     id: `pic_${i}`,
-  //     user_id: user?.id,
-  //     title: `Photo ${i}`,
-  //     alt: `Photo ${i}`,
-  //     description: "Generated seed photo",
-  //   };
-  // });
-
-  // await prisma.picture.createMany({
-  //   data: pictures,
-  // });
-
-  // await prisma.metadata.createMany({
-  //   data: pictures.map((p) => ({
-  //     pic_id: p.id,
-  //     camera: "Sony A7III",
-  //     lens: "24-70mm",
-  //     shutter: "1/200",
-  //     iso: "100",
-  //     focal_length: "35mm",
-  //     aperture: "f/2.8",
-  //     dominant_color: "#888888",
-  //     blurhash: "LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
-  //   })),
-  // });
-
-  // await prisma.engagement.createMany({
-  //   data: pictures.map((p) => ({
-  //     pic_id: p.id,
-  //     views: randomInt(5000),
-  //     downloads: randomInt(1000),
-  //     likes: randomInt(800),
-  //   })),
-  // });
-
-  // const srcRows = pictures.flatMap((p) => [
-  //   {
-  //     pic_id: p.id,
-  //     resolution: "ORIGINAL",
-  //     url: `https://picsum.photos/id/${randomInt(200)}/2000/1500`,
-  //     width: 2000,
-  //     height: 1500,
-  //     type: "JPG",
-  //     size: 4000000,
-  //   },
-  //   {
-  //     pic_id: p.id,
-  //     resolution: "MEDIUM",
-  //     url: `https://picsum.photos/id/${randomInt(200)}/800/600`,
-  //     width: 800,
-  //     height: 600,
-  //     type: "JPG",
-  //     size: 400000,
-  //   },
-  // ]);
-
-  // await prisma.src.createMany({
-  //   data: srcRows,
-  // });
-
-  // const picTags = pictures.map((p) => ({
-  //   pic_id: p.id,
-  //   tag_id: tags[randomInt(tags.length)].id,
-  // }));
-
-  // await prisma.picTag.createMany({
-  //   data: picTags,
-  // });
-
-  const collectionsData = Array.from({ length: 20 }).map((_, i) => ({
-    creator_id: userIds[i % userIds.length],
-    title: `Collection ${i + 1}`,
-    description: `This is collection ${i + 1}`,
-    visibility: i % 2 === 0 ? "PUBLIC" : "PRIVATE",
-  }));
-
-  await prisma.collection.createMany({
-    data: collectionsData,
+  const user = await prisma.user.create({
+    data: {
+      name: "Sayantan Sarkar",
+      email: "imsyntn@gmail.com",
+      avatar:
+        "https://open-frame.t3.tigrisfiles.io/avatars/hhaL4MGvccsp0_jzCPK22.jpeg",
+      bio: "Photography enthusiast without access token",
+      is_verified: true,
+      location: "Earth, Milky way, univese",
+      password: "123",
+      metrics: {
+        create: {
+          total_likes: 789,
+          total_downloads: 456,
+        },
+      },
+      links: {
+        create: [
+          {
+            name: "instagram",
+            url: "https://instagram.com/arjun_sen",
+          },
+          {
+            name: "github",
+            url: "https://github.com/imSyntn",
+          },
+          {
+            name: "portfolio",
+            url: "https://sayantan.online",
+          },
+        ],
+      },
+    },
   });
 
-  const collections = await prisma.collection.findMany();
+  const tagNames = [
+    "nature",
+    "mountain",
+    "city",
+    "portrait",
+    "travel",
+    "sunset",
+    "beach",
+    "architecture",
+  ];
 
-  const items = collections.flatMap((col) =>
-    getRandomPics(picIds, 3).map((picId) => ({
-      collection_id: col.id,
-      pic_id: picId,
-    })),
-  );
-
-  await prisma.collectionItem.createMany({
-    data: items,
+  await prisma.tag.createMany({
+    data: tagNames.map((name) => ({ name })),
     skipDuplicates: true,
   });
-  console.log("✅ Fast seed completed");
+
+  const picture = await prisma.picture.create({
+    data: {
+      user_id: user.id,
+      description: "No desctiption",
+      alt: "mountain",
+      title: "mountain",
+      src: {
+        create: [
+          {
+            resolution: "ORIGINAL",
+            url: "https://open-frame.t3.tigrisfiles.io/pictures/AFpoFNwLGRIhzcKMA9JHo.jpeg",
+            size: 1798032,
+            height: 2688,
+            width: 4032,
+          },
+          {
+            resolution: "LARGE",
+            url: "https://open-frame.t3.tigrisfiles.io/pictures/AFpoFNwLGRIhzcKMA9JHo_large.jpg",
+            size: 231999,
+            height: 1280,
+            width: 1920,
+          },
+          {
+            resolution: "MEDIUM",
+            url: "https://open-frame.t3.tigrisfiles.io/pictures/AFpoFNwLGRIhzcKMA9JHo_medium.jpg",
+            size: 127781,
+            height: 853,
+            width: 1280,
+          },
+          {
+            resolution: "SMALL",
+            url: "https://open-frame.t3.tigrisfiles.io/pictures/AFpoFNwLGRIhzcKMA9JHo_small.jpg",
+            size: 45171,
+            height: 427,
+            width: 640,
+          },
+          {
+            resolution: "THUMBNAIL",
+            url: "https://open-frame.t3.tigrisfiles.io/pictures/AFpoFNwLGRIhzcKMA9JHo_thumbnail.jpg",
+            size: 10690,
+            height: 171,
+            width: 256,
+          },
+        ],
+      },
+      tags: {
+        create: [
+          {
+            tag: {
+              connect: {
+                name: "nature",
+              },
+            },
+          },
+          {
+            tag: {
+              connect: {
+                name: "sunset",
+              },
+            },
+          },
+          {
+            tag: {
+              connect: {
+                name: "travel",
+              },
+            },
+          },
+        ],
+      },
+      metadata: {
+        create: {
+          dominant_color: "#bc533c",
+          blurhash: "UVI;ba=_RkNL_Nt6NHNI0gI@NHsmV_Rnj[xY",
+          others: {
+            XResolution: 72,
+            YResolution: 72,
+          },
+        },
+      },
+      engagement: {
+        create: {
+          views: 123,
+          downloads: 456,
+          likes: 789,
+        },
+      },
+    },
+  });
+
+  await prisma.collection.create({
+    data: {
+      creator_id: user.id,
+      title: "Collection 1",
+      description: "This is collection 1",
+      visibility: "PUBLIC",
+      items: {
+        create: {
+          pic_id: picture.id,
+        },
+      },
+    },
+  });
+  console.log("✅ Seeding completed");
 }
 
 main()

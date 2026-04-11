@@ -7,7 +7,10 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "setup": "tsx -r dotenv/config setup/script.ts"
+    "db:migrate": "pnpm --filter @workspace/lib run db:migrate",
+    "db:generate": "pnpm --filter @workspace/lib run db:generate",
+    "db:seed": "pnpm --filter @workspace/lib run db:seed",
+    "setup": "pnpm db:migrate && pnpm db:generate && pnpm db:seed && tsx -r dotenv/config setup/script.ts"
   },
   "devDependencies": {
     "@types/ioredis": "^5.0.0",

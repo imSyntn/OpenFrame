@@ -14,7 +14,10 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup"
+    "build": "tsup",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "prisma db seed"
   },
   "keywords": [],
   "author": "",
