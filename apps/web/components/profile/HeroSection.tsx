@@ -237,7 +237,7 @@ export function HeroSection({ id }: { id: string }) {
                     <Tooltip key={item.name}>
                       <TooltipTrigger>
                         <li>
-                          <a href={item.url} target="_blank">
+                          <a href={item.url} target="_blank" rel="noreferrer">
                             <Icon className={cn(obj?.color)} />
                           </a>
                         </li>

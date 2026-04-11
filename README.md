@@ -1,31 +1,100 @@
-# shadcn/ui monorepo template
+<img src="./docs/images/logo.png" width="200" />
 
-This template is for creating a monorepo with shadcn/ui.
+---
 
-## Usage
+An image-sharing platform built with a modern full-stack architecture:
 
-```bash
-pnpm dlx shadcn@latest init
+- Next.js frontend
+- Node.js API
+- Kafka-based background workers
+- Prisma + PostgreSQL
+- Turborepo monorepo architecture
+
+## Folder Structure
+
+```text
+apps/
+  web/ # Next.js frontend
+  api/ # REST API
+  worker-image-processor/ # Kafka consumers (background jobs)
+  worker-image-metadata/ # Kafka consumers (background jobs)
+  worker-image-finalize/ # Kafka consumers (background jobs)
+  worker-image-db-write/ # Kafka consumers (background jobs)
+  worker-engagement-db-write/ # Kafka consumers (background jobs)
+
+packages/
+  lib/ # shared utilities (Prisma, Redis etc.)
+  ui/ # shared UI components
+  constants/ # shared constants
+  types/ # shared types
+  schema/ # shared schemas
+
+setup/ # setup scripts
 ```
 
-## Adding components
+## Prerequisites
 
-To add components to your app, run the following command at the root of your `web` app:
+- Node.js 20+
+- pnpm
+- PostgreSQL
+- Kafka
+- Redis
+- S3 compatible storage
+- Google OAuth
+- SMTP server
+
+## Running the Project
+
+### 1. Setup Environment Variables
+
+Rename `.env.example` to `.env` and update values.
+
+### 2. Run the Application
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+# install dependencies
+pnpm install
+
+# setup everything (DB migration, Prisma client generation, DB seeding, Kafka topics creation)
+pnpm setup
+
+# build all apps
+pnpm build
+
+# start services
+pnpm start
 ```
 
-This will place the ui components in the `packages/ui/src/components` directory.
+### 3. Access the Application
 
-## Tailwind
+Once all services are running:
 
-Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
+- Frontend: http://localhost:3000
+- Backend: http://localhost:4000/api/health
 
-## Using components
+## Database ER Diagram
 
-To use the components in your app, import them from the `ui` package.
+![ER Diagram](./docs/images/er-diagram.png)
 
-```tsx
-import { Button } from "@workspace/ui/components/button"
+## Kafka (Worker Flow)
+
+![Architecture](./docs/images/architecture.png)
+
+- API or workers produce events (image uploads, metadata extraction completed, image processing completed, image engagement events etc.)
+- Workers consume events asynchronously
+
+Workers handles:
+
+- Image processing
+- Metadata extraction
+- Image finalization
+- Uploading images to S3 and updating the database
+- Updating image engagement (views, likes, downloads)
+
+## Scripts
+
+```bash
+pnpm dev        # run all apps in dev mode
+pnpm build      # build all apps
+pnpm start      # start production build
 ```

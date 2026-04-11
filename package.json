@@ -10,7 +10,8 @@
     "db:migrate": "pnpm --filter @workspace/lib run db:migrate",
     "db:generate": "pnpm --filter @workspace/lib run db:generate",
     "db:seed": "pnpm --filter @workspace/lib run db:seed",
-    "setup": "pnpm db:migrate && pnpm db:generate && pnpm db:seed && tsx -r dotenv/config setup/script.ts"
+    "setup": "pnpm db:migrate && pnpm db:generate && pnpm db:seed && tsx -r dotenv/config setup/script.ts",
+    "start": "turbo run start --parallel"
   },
   "devDependencies": {
     "@types/ioredis": "^5.0.0",

@@ -20,7 +20,7 @@ export function Footer() {
           <a
             href="https://sayantan.online"
             target="_blank"
-            className="relative font-semibold text-foreground group ml-1"
+            className="relative font-semibold text-foreground group ml-1" rel="noreferrer"
           >
             @imsyntn
             <span className="absolute left-0 -bottom-0.5 h-[1.5px] w-full bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
