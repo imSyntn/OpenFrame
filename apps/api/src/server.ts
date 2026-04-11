@@ -23,14 +23,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// app.use((req, res, next) => {
-//   console.log(req.path);
-//   if (req.path == "/api/user/cmmho0rve0000twobb6htytky") {
-//     return next(new ErrorWithStatus(500, "Intentionally omething went wrong"));
-//   }
-//   next();
-// });
-
 app.get("/api/health", (req: Request, res: Response) => {
   return res.status(200).json({ message: "OK" });
 });
