@@ -26,13 +26,9 @@ import {
   updateUser,
 } from "@/service";
 import bcrypt from "bcryptjs";
-import {
-  EMAIL_MAX_CHAR_LIMIT,
-  OTP_VALIDATION_TIME_LIMIT,
-  PIC_PER_PAGE,
-} from "@workspace/constants";
+import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
-import { Prisma } from "@workspace/lib";
+import { Prisma } from "@workspace/lib/prisma";
 
 export const googleAuthController = async (
   req: Request,

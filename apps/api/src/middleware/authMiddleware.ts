@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorWithStatus } from "./error";
 import { accessTokenVerify } from "@/utils";
-import { logger } from "@workspace/lib";
+import { logger } from "@workspace/lib/logger";
 
 export const getIfUserIsLoggedIn = (
   req: Request,

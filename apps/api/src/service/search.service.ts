@@ -1,4 +1,4 @@
-import { prisma } from "@workspace/lib";
+import { prisma } from "@workspace/lib/prisma";
 
 export const searchPictures = async (q: string) => {
   return prisma.$queryRawUnsafe(

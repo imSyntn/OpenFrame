@@ -15,6 +15,14 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "baseUrl": ".",
+    "paths": {
+      "@workspace/constants": ["../constants/src"],
+      "@workspace/constants/*": ["../constants/src/*"],
+      "@workspace/lib": ["../lib/src"],
+      "@workspace/lib/*": ["../lib/src/*"],
+      "@workspace/ui": ["../ui/src"]
+    }
   }
 }

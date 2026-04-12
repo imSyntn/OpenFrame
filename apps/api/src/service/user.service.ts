@@ -1,6 +1,8 @@
-import { prisma, cache, Prisma } from "@workspace/lib";
-import { logger } from "@workspace/lib/logger";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
+import { prisma } from "@workspace/lib/prisma";
+import { cache } from "@workspace/lib/redis";
+import { logger } from "@workspace/lib/logger";
+import type { Prisma } from "@workspace/lib/prisma";
 
 type GetUserPayload =
   | {

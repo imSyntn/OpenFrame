@@ -1,6 +1,7 @@
 import { ErrorWithStatus } from "@/middleware";
 import { searchPictures, searchTags, searchUsers } from "@/service";
-import { cache, logger } from "@workspace/lib";
+import { cache } from "@workspace/lib/redis";
+import { logger } from "@workspace/lib/logger";
 import { NextFunction, Request, Response } from "express";
 
 const setCache = async (key: string, prefixKey: string, value: any) => {

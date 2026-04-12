@@ -75,6 +75,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      ioredis:
+        specifier: ^5.10.0
+        version: 5.10.0
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -127,9 +130,6 @@ importers:
       '@workspace/types':
         specifier: workspace:*
         version: link:../../packages/types
-      ioredis:
-        specifier: ^5.10.0
-        version: 5.10.0
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -166,9 +166,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -332,7 +329,11 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0
 
-  packages/constants: {}
+  packages/constants:
+    dependencies:
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/eslint-config:
     devDependencies:
@@ -390,6 +391,9 @@ importers:
       '@types/kafkajs':
         specifier: ^1.9.0
         version: 1.9.0
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -418,6 +422,9 @@ importers:
       '@workspace/constants':
         specifier: workspace:*
         version: link:../constants
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       zod:
         specifier: ^3.25.76
         version: 3.25.76

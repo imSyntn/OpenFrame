@@ -1,0 +1,39 @@
+# ---------- dependencies ----------
+node_modules
+**/node_modules
+
+# ---------- next ----------
+.next
+**/.next
+
+# ---------- turbo ----------
+.turbo
+**/.turbo
+
+# ---------- pnpm ----------
+.pnpm-store
+
+# ---------- build ----------
+dist
+build
+out
+coverage
+
+# ---------- logs ----------
+*.log
+
+# ---------- env ----------
+.env*
+!.env.example
+
+# ---------- git ----------
+.git
+.gitignore
+
+# ---------- OS ----------
+.DS_Store
+
+# ---------- misc ----------
+uploads
+tmp
+.cache

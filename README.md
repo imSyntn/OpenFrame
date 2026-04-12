@@ -89,6 +89,13 @@ Workers handles:
 
 Rename `.env.example` to `.env` and update values.
 
+```text
+.env.example
+apps/
+  web/
+    .env.example
+```
+
 ### 2. Run the Application
 
 ```bash

@@ -1,7 +1,8 @@
 import { PIC_PER_PAGE } from "@workspace/constants";
-import { cache, CollectionItem, logger } from "@workspace/lib";
+import { CollectionItem } from "@workspace/lib/prisma";
 import type { Collection } from "@workspace/types";
 import { prisma } from "@workspace/lib/prisma";
+import { cache } from "@workspace/lib/redis";
 
 export const getCollections = async (nextCursor: string) => {
   const cacheKey = `collections:${nextCursor || "-1"}`;
