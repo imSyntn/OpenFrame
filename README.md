@@ -17,6 +17,8 @@
   <a href="https://redis.io/"><img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" /></a>
   <a href="https://kafka.apache.org/"><img src="https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apachekafka&logoColor=white" /></a>
   <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" /></a>
+  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" /></a>
+  <a href="https://upstash.com/"><img src="https://img.shields.io/badge/Upstash%20Search-000000?style=flat-square&logo=upstash&logoColor=white" /></a>
 </p>
 
 ---
@@ -80,10 +82,18 @@ Workers handles:
 - Kafka
 - Redis
 - S3 compatible storage
-- Google OAuth (for google login)
-- SMTP server (for password reset and verification badge)
+- Upstash Search keys (for search functionality)
+- Google OAuth keys (for google login)
+- SMTP server (for password reset and verification badge emails)
 
 ## Running the Project
+
+This project can be run using **two approaches**:
+
+- Manual setup (this branch)
+- Docker setup (available in [`docker-setup`](https://github.com/imSyntn/OpenFrame/tree/docker-setup?tab=readme-ov-file#docker-setup-branch) branch)
+
+---
 
 ### 1. Setup Environment Variables
 
