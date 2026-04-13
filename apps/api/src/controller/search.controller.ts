@@ -1,7 +1,6 @@
 import { ErrorWithStatus } from "@/middleware";
 import { searchPictures, searchTags, searchUsers } from "@/service";
 import { cache } from "@workspace/lib/redis";
-import { logger } from "@workspace/lib/logger";
 import { NextFunction, Request, Response } from "express";
 
 const setCache = async (key: string, prefixKey: string, value: any) => {
@@ -23,7 +22,7 @@ export const searchController = async (
     if (q.length < 3) {
       return next(new ErrorWithStatus(400, "Query is too short"));
     }
-    logger.info(`query ${q} type ${type}`);
+
     const trimmedQuery = q.trim().toLowerCase();
     const cacheKey = `search:${trimmedQuery}`;
     const cachePrefixKey = `search:${trimmedQuery.slice(0, 3)}`;

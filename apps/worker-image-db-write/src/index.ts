@@ -4,6 +4,7 @@ import { logger } from "@workspace/lib/logger";
 import { cache } from "@workspace/lib/redis";
 import { bulkWrite } from "./bulkWrite";
 import type { UnderProcessingPictureType } from "@workspace/types";
+import { updatePicturesSearchData, updateTagsSearchData } from "./updateSearch";
 
 const consumer = kafka.consumer({ groupId: "worker-db-write" });
 class WriteError extends Error {}
@@ -70,6 +71,10 @@ const run = async () => {
             }
 
             await pipeline.exec();
+
+            await updatePicturesSearchData(parsedMessages);
+            await updateTagsSearchData(parsedMessages);
+
             await commitOffsetsIfNecessary();
 
             logger.info("Batch processed successfully");

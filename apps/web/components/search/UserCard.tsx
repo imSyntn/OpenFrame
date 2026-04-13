@@ -24,10 +24,14 @@ export function UserCard({
         )}
       >
         <Avatar>
-          <AvatarImage src={user.avatar} />
-          <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={user.content.avatar} />
+          <AvatarFallback>
+            {user.content.name?.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium line-clamp-1">{user.name}</span>
+        <span className="text-sm font-medium line-clamp-1">
+          {user.content.name}
+        </span>
       </div>
     </Link>
   );

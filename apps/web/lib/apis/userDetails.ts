@@ -13,3 +13,8 @@ export const updateUserDetails = async (
   const res = await api.patch(`/api/user/${id}`, payload);
   return res.data.data;
 };
+
+export const deleteUser = async (): Promise<{ message: string }> => {
+  const res = await api.delete(`/api/user/delete`);
+  return res.data;
+};

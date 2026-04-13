@@ -14,7 +14,7 @@ import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { errorMiddleware, ErrorWithStatus } from "./middleware";
+import { errorMiddleware } from "./middleware";
 
 const app: Application = express();
 

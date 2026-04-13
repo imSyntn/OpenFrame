@@ -1,21 +1,26 @@
 interface Match {
   id: string | number;
-  rank: number | null;
-  sim: number;
+  score: number;
+  metadata?: Record<string, string | number | boolean | null>;
 }
 
 export type PictureMatch = {
-  title: string;
-  src: string;
+  content: {
+    title: string;
+    description: string;
+    src: string;
+  };
 } & Match;
 
+export type PictureSearch = { id: string } & Omit<PictureMatch, "score">;
+export type TagSearch = { id: string } & Omit<TagMatch, "score">;
+
 export type UserMatch = {
-  name: string;
-  avatar: string;
+  content: { name: string; avatar: string };
 } & Match;
 
 export type TagMatch = {
-  name: string;
+  content: { name: string };
 } & Match;
 
 export interface SearchResultType {

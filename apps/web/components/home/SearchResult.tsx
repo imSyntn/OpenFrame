@@ -119,7 +119,7 @@ export function SearchResults({ query }: { query: string }) {
 
       {tags.length > 0 && (
         <ResultWrapper title="Tags">
-          {tags.map((tag) => (
+          {tags.slice(0, 3).map((tag) => (
             <TagCard key={tag.id} tag={tag} className="w-full" />
           ))}
           <TagCardMore query={query} />

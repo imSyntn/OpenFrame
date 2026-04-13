@@ -137,6 +137,7 @@ export function HeaderRight() {
       <Button
         size="icon"
         className="md:hidden"
+        variant="secondary"
         onClick={() => router.push("/login")}
       >
         <LogIn size={18} />
@@ -145,6 +146,7 @@ export function HeaderRight() {
       <Button
         size="icon"
         className="md:hidden"
+        variant="secondary"
         onClick={() => router.push("/signup")}
       >
         <UserPlus size={18} />

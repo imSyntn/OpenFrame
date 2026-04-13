@@ -1,7 +1,6 @@
-import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
-import { prisma } from "@workspace/lib/prisma";
-import { cache } from "@workspace/lib/redis";
+import { prisma, cache, usersIndex } from "@workspace/lib";
 import { logger } from "@workspace/lib/logger";
+import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 import type { Prisma } from "@workspace/lib/prisma";
 
 type GetUserPayload =
@@ -98,6 +97,15 @@ export const createUser = async (
     }
 
     const newUser = await prisma.user.create({ data: obj });
+
+    await usersIndex.upsert({
+      id: newUser.id,
+      content: {
+        name: newUser.name,
+        avatar: newUser.avatar,
+      },
+    });
+
     return newUser;
   } catch (error) {
     throw error;
@@ -140,14 +148,43 @@ export const updateUser = async (
     });
 
     const pipeline = cache.pipeline();
-    pipeline.hset("user:profile", updatedUser.id, JSON.stringify(updatedUser));
-    pipeline.hset("user:auth", updatedUser.email, JSON.stringify(updatedUser));
+    pipeline.set("user:profile:" + updatedUser.id, JSON.stringify(updatedUser));
+    pipeline.set("user:auth:" + updatedUser.email, JSON.stringify(updatedUser));
+
+    await usersIndex.upsert({
+      id: updatedUser.id,
+      content: {
+        name: updatedUser.name,
+        avatar: updatedUser.avatar,
+      },
+    });
 
     const res = await pipeline.exec();
     if (!res) {
       logger.error("Failed to update user in cache");
     }
     return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: { id },
+    });
+
+    const pipeline = cache.pipeline();
+    pipeline.del("user:profile:" + deletedUser.id);
+    pipeline.del("user:auth:" + deletedUser.email);
+
+    await pipeline.exec();
+    await usersIndex.delete(deletedUser.id);
+
+    await usersIndex.delete(deletedUser.id);
+
+    return deletedUser;
   } catch (error) {
     throw error;
   }

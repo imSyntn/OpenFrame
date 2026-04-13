@@ -46,7 +46,7 @@ export function Liked() {
 
   if (isLoading) {
     return (
-      <div className="flex w-full min-h-30 justify-center my-3">
+      <div className="flex w-full min-h-[50vh] justify-center my-3">
         <Loader2 className="animate-spin" />
       </div>
     );
@@ -70,7 +70,7 @@ export function Liked() {
       <NotFound
         Icon={ImageOff}
         title="No Liked Images"
-        className="min-h-fit"
+        className="min-h-[50vh]"
         description={`${name} hasn't liked any images yet.`}
       />
     );

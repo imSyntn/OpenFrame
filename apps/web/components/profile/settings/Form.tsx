@@ -11,16 +11,19 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { settingSchema } from "@/schema";
-import { useUpdateUserDetails } from "@/hooks";
+import { useDeleteUser, useUpdateUserDetails } from "@/hooks";
 import { ProfileType } from "@/@types";
 import { toast } from "sonner";
 import { Field, FieldLabel, FieldSet } from "@workspace/ui/components/field";
 import { ChangeAvatar } from "./ChangeAvatar";
+import { useRouter } from "next/navigation";
 
 export function Form({ handleClose }: { handleClose: () => void }) {
   const { name, avatar, bio, location, email, joined_at, links, id, setData } =
     useProfileStore();
   const { mutateAsync, isPending } = useUpdateUserDetails(id);
+  const { mutateAsync: deleteUser, isPending: isDeleting } = useDeleteUser();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -46,9 +49,26 @@ export function Form({ handleClose }: { handleClose: () => void }) {
       toast.success("Profile updated successfully");
       setData(res);
     } catch (error: any) {
-      console.log(error?.response?.data?.message);
+      console.log(error);
       toast.error(
         error?.response?.data?.message || "Failed to update profile.",
+      );
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    let toastId;
+    try {
+      toastId = toast.loading("Deleting profile...");
+      await deleteUser();
+      toast.success("Profile deleted successfully", { id: toastId });
+      router.push("/signup");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.message || "Failed to delete profile.",
+        { id: toastId },
       );
     }
   };
@@ -175,7 +195,11 @@ export function Form({ handleClose }: { handleClose: () => void }) {
         <div className="border-t pt-6 flex items-center justify-between">
           <p className="text-sm font-semibold text-destructive">Danger Zone</p>
 
-          <Button variant="destructive" type="submit">
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
             Delete Account
           </Button>
         </div>

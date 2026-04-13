@@ -113,16 +113,18 @@ export function Content({ query, type }: { query: string; type?: string }) {
     <Container>
       {tags.length > 0 && (
         <ResultWrapper title="Tags">
-          {tags.map((tag) => (
-            <TagCard key={tag.id} tag={tag} className="min-w-24 h-8" />
-          ))}
+          <HorizontalScrollWrapper>
+            {tags.map((tag) => (
+              <TagCard key={tag.id} tag={tag} className="min-w-24 h-8" />
+            ))}
+          </HorizontalScrollWrapper>
         </ResultWrapper>
       )}
 
       {users.length > 0 && (
         <ResultWrapper title="Users">
           <div className="flex flex-wrap gap-4">
-            {users.slice(0, 3).map((user) => (
+            {users.map((user) => (
               <UserCard key={user.id} user={user} />
             ))}
           </div>
