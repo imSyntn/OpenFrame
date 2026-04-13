@@ -8,6 +8,7 @@ export default defineConfig({
     "src/redis/index.ts",
     "src/env/index.ts",
     "src/prisma/index.ts",
+    "src/search/index.ts",
   ],
   format: ["esm"],
   target: "node20",

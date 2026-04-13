@@ -9,7 +9,8 @@
     "./kafka": "./dist/kafka/index.js",
     "./redis": "./dist/redis/index.js",
     "./env": "./dist/env/index.js",
-    "./prisma": "./dist/prisma/index.js"
+    "./prisma": "./dist/prisma/index.js",
+    "./search": "./dist/search/index.js"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -28,6 +29,7 @@
     "@prisma/client": "^7.4.2",
     "@types/ioredis": "^5.0.0",
     "@types/kafkajs": "^1.9.0",
+    "@upstash/search": "^0.1.7",
     "dotenv": "^17.3.1",
     "ioredis": "^5.10.0",
     "kafkajs": "^2.2.4",

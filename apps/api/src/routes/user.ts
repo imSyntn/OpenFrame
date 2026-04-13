@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import {
+  deleteUserController,
   getUserController,
   googleAuthController,
   logoutController,
@@ -23,6 +24,9 @@ authRouter.post("/signin", signinController);
 authRouter.post("/otp", otpGenerateController);
 authRouter.post("/otp/verify", otpVerifyController);
 authRouter.post("/reset-password", resetPasswordController);
+authRouter.get("/refresh-token", refreshTokenController);
+authRouter.get("/logout", logoutController);
+authRouter.delete("/delete", authMiddleware, deleteUserController);
 
 authRouter.get(
   "/google",
@@ -49,8 +53,6 @@ authRouter.post(
 );
 authRouter.get("/verify-email-token/:token", verifyEmailTokenController);
 
-authRouter.get("/refresh-token", refreshTokenController);
-authRouter.get("/logout", logoutController);
 authRouter.get("/:id", getUserController);
 authRouter.patch("/:id", authMiddleware, updateUserController);
 

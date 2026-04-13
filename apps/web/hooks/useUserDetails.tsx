@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserDetails, updateUserDetails } from "@/lib/apis";
+import { deleteUser, getUserDetails, updateUserDetails } from "@/lib/apis";
 import { ProfileType } from "@/@types";
 
 export const useUserDetails = (id: string) => {
@@ -16,6 +16,16 @@ export const useUpdateUserDetails = (id: string) => {
       updateUserDetails(id, payload),
     onSuccess: (res) => {
       queryClient.setQueryData(["user-details", id], res);
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => deleteUser(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-details"] });
     },
   });
 };

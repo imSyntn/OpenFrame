@@ -17,7 +17,7 @@ export function TagCard({
       //   className="px-3 py-1 text-sm bg-muted rounded-full hover:bg-muted/70 cursor-pointer"
     >
       <Badge variant="secondary" className={cn("h-full", className)}>
-        #{tag.name}
+        #{tag.content.name}
       </Badge>
     </Link>
   );

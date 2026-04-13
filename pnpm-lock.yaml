@@ -75,6 +75,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      ioredis:
+        specifier: ^5.10.0
+        version: 5.10.0
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -127,9 +130,6 @@ importers:
       '@workspace/types':
         specifier: workspace:*
         version: link:../../packages/types
-      ioredis:
-        specifier: ^5.10.0
-        version: 5.10.0
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -390,6 +390,9 @@ importers:
       '@types/kafkajs':
         specifier: ^1.9.0
         version: 1.9.0
+      '@upstash/search':
+        specifier: ^0.1.7
+        version: 0.1.7
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -2869,6 +2872,12 @@ packages:
   '@typescript-eslint/visitor-keys@8.56.1':
     resolution: {integrity: sha512-KiROIzYdEV85YygXw6BI/Dx4fnBlFQu6Mq4QE4MOH9fFnhohw6wX/OAvDY2/C+ut0I3RSPKenvZJIVYqJNkhEw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@upstash/search@0.1.7':
+    resolution: {integrity: sha512-rgJ52TP0eUPLFo4K6TZtiC7qICbJnEwkT+TqaDI1vN8/Hk6qidgNC9dpnUUXCiqfwogty1rlSyBhYfk6PRgXjA==}
+
+  '@upstash/vector@1.2.3':
+    resolution: {integrity: sha512-yXsWKeuHNYyH72BcSZd3bV5ZD5MybAoTvKxkMaeV2UzuGfNzbHBVh5eO+ysTWTFAf8I9XcOueF4tZfAGjCa4Iw==}
 
   '@vibrant/color@4.0.4':
     resolution: {integrity: sha512-Fq2tAszz4QOPWfHZ+KuEAchXUD8i594BM2fOJt8dI/fvYbiVoBycBF/BlNH6F4IWBubxXoPqD4JmmAHvFYbNew==}
@@ -8294,6 +8303,12 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.56.1
       eslint-visitor-keys: 5.0.1
+
+  '@upstash/search@0.1.7':
+    dependencies:
+      '@upstash/vector': 1.2.3
+
+  '@upstash/vector@1.2.3': {}
 
   '@vibrant/color@4.0.4': {}
 

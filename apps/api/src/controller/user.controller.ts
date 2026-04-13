@@ -20,17 +20,14 @@ import {
 import { ErrorWithStatus } from "@/middleware";
 import {
   createUser,
+  deleteUser,
   generateEmailTemplate,
   getUser,
   sendEmail,
   updateUser,
 } from "@/service";
 import bcrypt from "bcryptjs";
-import {
-  EMAIL_MAX_CHAR_LIMIT,
-  OTP_VALIDATION_TIME_LIMIT,
-  PIC_PER_PAGE,
-} from "@workspace/constants";
+import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
 import { Prisma } from "@workspace/lib";
 
@@ -44,15 +41,11 @@ export const googleAuthController = async (
       return next(new ErrorWithStatus(400, "Authentication failed"));
     }
 
-    const profile = req.user as GoogleUserType;
-    const { name, email } = profile._json;
+    const profile = req.user as UserTypeDB;
+    const { name, email, id, avatar } = profile;
 
-    type existingUser = typeof req.user & { userExists: UserTypeDB };
-
-    const { userExists } = req.user as existingUser;
-
-    const accessToken = generateAccessToken({ name, email, id: userExists.id });
-    const refreshToken = generateRefreshToken({ email, id: userExists.id });
+    const accessToken = generateAccessToken({ name, email, id });
+    const refreshToken = generateRefreshToken({ email, id });
 
     // res.cookie("access_token", accessToken, {
     //   httpOnly: true,
@@ -69,7 +62,7 @@ export const googleAuthController = async (
     });
 
     res.redirect(
-      `${process.env.FRONTEND_URL}?id=${userExists.id}&name=${userExists.name}&email=${userExists.email}&avatar=${userExists.avatar}&accessToken=${accessToken}`,
+      `${process.env.FRONTEND_URL}?id=${id}&name=${name}&email=${email}&avatar=${avatar}&accessToken=${accessToken}`,
     );
   } catch (error) {
     next(error);
@@ -308,10 +301,6 @@ export const getUserController = async (
           likes: true,
         },
       },
-      collection: true,
-      followers: true,
-      following: true,
-      likes: true,
       links: true,
       metrics: true,
     };
@@ -365,6 +354,34 @@ export const updateUserController = async (
     const user = await updateUser({ id }, req.body, include, exclude);
 
     return res.status(200).json({ data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.user as UserTypeDB;
+
+    if (!id) {
+      return next(
+        new ErrorWithStatus(
+          403,
+          "You are not authorized to perform this action.",
+        ),
+      );
+    }
+
+    await deleteUser(id);
+
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+
+    return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }

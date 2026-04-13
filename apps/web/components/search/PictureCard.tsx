@@ -22,8 +22,8 @@ export function PictureCard({
       )}
     >
       <LazyLoadImage
-        src={pic.src}
-        alt={pic.title}
+        src={pic.content.src}
+        alt={pic.content.title}
         className="w-full object-cover align-middle block group-hover:scale-105 transition-transform"
         effect="blur"
       />

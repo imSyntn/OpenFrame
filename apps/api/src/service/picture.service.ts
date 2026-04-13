@@ -184,12 +184,7 @@ export const getPictureTags = async () => {
       "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
   }));
 
-  await cache.set(
-    "pictures:tags",
-    JSON.stringify(formattedTags),
-    "EX",
-    60 * 60 * 24,
-  );
+  await cache.set("tags", JSON.stringify(formattedTags), "EX", 60 * 60 * 24);
 
   return formattedTags;
 };
