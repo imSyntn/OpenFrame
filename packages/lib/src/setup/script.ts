@@ -1,13 +1,11 @@
 import { SetupIndexing } from "./indexSearch";
 import { setupKafka } from "./kafka";
-// import { setupDatabase } from "./database";
 
 async function main() {
   console.log("🚀 Setting up project...");
 
-  await setupKafka();
-  await SetupIndexing();
-  // await setupDatabase();
+  // await setupKafka();
+  // await SetupIndexing();
 
   console.log("✅ Setup complete");
 }

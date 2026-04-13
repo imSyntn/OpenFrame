@@ -8,9 +8,11 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:migrate": "pnpm --filter @workspace/lib run db:migrate",
+    "db:deploy": "pnpm --filter @workspace/lib run db:deploy",
     "db:generate": "pnpm --filter @workspace/lib run db:generate",
     "db:seed": "pnpm --filter @workspace/lib run db:seed",
-    "setup": "pnpm db:migrate && pnpm db:generate && pnpm db:seed && tsx -r dotenv/config setup/script.ts",
+    "kafka-topic-and-search-setup": "pnpm --filter @workspace/lib run kafka-topic-and-search-setup",
+    "setup:all": "pnpm --filter @workspace/lib run setup:all",
     "start": "turbo run start --parallel"
   },
   "devDependencies": {
