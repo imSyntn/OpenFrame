@@ -13,12 +13,12 @@ const brokerList = brokersEnv.split(",").map((broker) => broker.trim());
 export const kafka = new Kafka({
   clientId: "openframe",
   brokers: brokerList,
-  ssl: {
-    rejectUnauthorized: true,
-    ca: [process.env.KAFKA_CA_CERT!.replace(/\\n/g, "\n")],
-    cert: process.env.KAFKA_SERVICE_CERT!.replace(/\\n/g, "\n"),
-    key: process.env.KAFKA_SERVICE_KEY!.replace(/\\n/g, "\n"),
-  },
+  // ssl: {
+  //   rejectUnauthorized: true,
+  //   ca: [process.env.KAFKA_CA_CERT!.replace(/\\n/g, "\n")],
+  //   cert: process.env.KAFKA_SERVICE_CERT!.replace(/\\n/g, "\n"),
+  //   key: process.env.KAFKA_SERVICE_KEY!.replace(/\\n/g, "\n"),
+  // },
 });
 
 const producer = kafka.producer();

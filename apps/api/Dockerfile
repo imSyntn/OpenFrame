@@ -12,7 +12,7 @@ COPY --from=prepare /app/out/json/ .
 RUN pnpm install
 COPY --from=prepare /app/out/full/ .
 
-RUN pnpm build
+RUN pnpm --filter open-frame-backend build
 
 FROM base AS runner
 RUN addgroup --system --gid 1001 backend
