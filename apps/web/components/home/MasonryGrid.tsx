@@ -42,7 +42,7 @@ export function MasonryGrid() {
           width: original?.width!,
           height: original?.height!,
           blurhash: pic.metadata.blurhash,
-          user: pic.user,
+          // user: pic.user,
           key: pic.id,
           onClick: () => {
             setOpen(true, pic);
@@ -86,7 +86,7 @@ export function MasonryGrid() {
   return (
     <div className={cn("w-full", isLoading && "opacity-50")}>
       {isLoading && <ImageSkeleton />}
-      <Masonry photos={photos} showUser={false} />
+      <Masonry photos={photos} />
       {isFetchingNextPage && (
         <div className="flex w-full justify-center my-3">
           <Loader2 className="animate-spin" />

@@ -44,15 +44,10 @@ export function BlurHashCanvas({ hash }: { hash: string }) {
 
 type Props = {
   photo: any;
-  showUser: boolean;
   hoverEffect?: boolean;
 };
 
-export function PhotoWithBlurHash({
-  photo,
-  showUser,
-  hoverEffect = true,
-}: Props) {
+export function PhotoWithBlurHash({ photo, hoverEffect = true }: Props) {
   const [loaded, setLoaded] = useState(false);
   const user = photo?.user;
 
@@ -77,15 +72,6 @@ export function PhotoWithBlurHash({
           hoverEffect && "group-hover:scale-105",
         )}
       />
-
-      {showUser && user && (
-        <div className="absolute inset-0 flex items-end p-3 bg-black/0 group-hover:bg-black/40 transition">
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition text-white">
-            <img src={user.avatar} className="w-7 h-7 rounded-full" />
-            <span className="text-sm font-medium">{user.name}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

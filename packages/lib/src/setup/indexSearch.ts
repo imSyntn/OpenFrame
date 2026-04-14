@@ -1,5 +1,5 @@
-import { picturesIndex, tagsIndex } from "@workspace/lib";
-import type { UnderProcessingPictureType } from "@workspace/types";
+import { prisma } from "@workspace/lib/prisma";
+import { picturesIndex, tagsIndex, usersIndex } from "@workspace/lib/search";
 
 const returnChunks = <T>(data: T[], chunkSize: number) => {
   const chunks: T[][] = [];
@@ -9,10 +9,31 @@ const returnChunks = <T>(data: T[], chunkSize: number) => {
   return chunks;
 };
 
-export const updatePicturesSearchData = async (
-  parsedMessages: UnderProcessingPictureType[],
-) => {
-  const pictureMap = parsedMessages.map((item) => {
+export async function SetupIndexing() {
+  console.log("Indexing pictures...");
+
+  const pictures = await prisma.picture.findMany({
+    include: {
+      src: true,
+      metadata: {
+        select: {
+          blurhash: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+
+  const pictureMap = pictures.map((item) => {
     const small = item.src?.find((s) => s.resolution === "SMALL");
     const original = item.src?.find((s) => s.resolution === "ORIGINAL");
 
@@ -25,9 +46,6 @@ export const updatePicturesSearchData = async (
         height: original?.height || 0,
         width: original?.width || 0,
         blurhash: item.metadata?.blurhash || "",
-        user: {
-          id: item.userId || "",
-        },
       },
       metadata: {
         createdAt: item.created_at,
@@ -38,21 +56,51 @@ export const updatePicturesSearchData = async (
   const pictureChunks = returnChunks(pictureMap, 100);
 
   await Promise.all(pictureChunks.map((chunk) => picturesIndex.upsert(chunk)));
-};
 
-export const updateTagsSearchData = async (
-  parsedMessages: UnderProcessingPictureType[],
-) => {
-  const tags = parsedMessages.flatMap((message) =>
-    message.tags.map((tag) => ({
-      id: tag.id.toString(),
-      content: {
-        name: tag.name,
-      },
-    })),
-  );
+  console.log("Indexing pictures... Done");
+  console.log("Indexing users...");
 
-  const tagChunks = returnChunks(tags, 100);
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      avatar: true,
+    },
+    orderBy: {
+      joined_at: "desc",
+    },
+  });
+
+  const usersMap = users.map((u) => ({
+    id: u.id,
+    content: {
+      name: u.name,
+      avatar: u.avatar,
+    },
+  }));
+
+  const userChunks = returnChunks(usersMap, 100);
+
+  await Promise.all(userChunks.map((chunk) => usersIndex.upsert(chunk)));
+
+  console.log("Indexing users... Done");
+  console.log("Indexing tags...");
+
+  const tags = await prisma.tag.findMany({
+    orderBy: {
+      id: "desc",
+    },
+  });
+
+  const tagsMap = tags.map((t) => ({
+    id: t.id.toString(),
+    content: { name: t.name },
+  }));
+
+  const tagChunks = returnChunks(tagsMap, 100);
 
   await Promise.all(tagChunks.map((chunk) => tagsIndex.upsert(chunk)));
-};
+
+  console.log("Indexing tags... Done");
+  console.log("Search index setup complete");
+}

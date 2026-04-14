@@ -34,7 +34,7 @@ export function Liked() {
           width: ORIGINAL?.width!,
           height: ORIGINAL?.height!,
           blurhash: pic.metadata?.blurhash,
-          user: pic.user,
+          // user: pic.user,
           key: pic.id,
           onClick: (e: React.MouseEvent<HTMLDivElement>) => {
             setOpen(true, pic);

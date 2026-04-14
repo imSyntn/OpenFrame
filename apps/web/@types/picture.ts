@@ -43,9 +43,4 @@ export interface PictureType {
 
 export type GalleryPhoto = Photo & {
   blurhash: string;
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
 };

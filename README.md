@@ -17,7 +17,6 @@
   <a href="https://redis.io/"><img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" /></a>
   <a href="https://kafka.apache.org/"><img src="https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apachekafka&logoColor=white" /></a>
   <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" /></a>
-  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" /></a>
   <a href="https://upstash.com/"><img src="https://img.shields.io/badge/Upstash%20Search-000000?style=flat-square&logo=upstash&logoColor=white" /></a>
 </p>
 
@@ -82,11 +81,23 @@ Workers handles:
 - Kafka
 - Redis
 - S3 compatible storage
-- Upstash Search keys (for search functionality)
-- Google OAuth keys (for google login)
-- SMTP server (for password reset and verification badge emails)
+- Upstash Search keys _(for search functionality)_
+- Google OAuth keys _(for google login)_
+- SMTP server _(for password reset and verification badge emails)_
 
 ## Running the Project
+
+### Free Services (Recommended)
+
+_⚠️ No credit card required_
+
+- **PostgreSQL:** Neon, Aiven PostgreSQL
+- **Kafka:** Aiven Kafka
+- **Redis:** Upstash Redis, Aiven Valkey
+- **S3 Storage:** Tigris Data
+- **Search:** Upstash Search
+- **OAuth:** Google Cloud
+- **SMTP:** Resend, Brevo
 
 ### 1. Setup Environment Variables
 

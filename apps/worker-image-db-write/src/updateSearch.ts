@@ -1,42 +1,40 @@
 import { picturesIndex, tagsIndex } from "@workspace/lib";
-import type {
-  PictureSearch,
-  TagSearch,
-  UnderProcessingPictureType,
-} from "@workspace/types";
+import type { UnderProcessingPictureType } from "@workspace/types";
+
+const returnChunks = <T>(data: T[], chunkSize: number) => {
+  const chunks: T[][] = [];
+  for (let i = 0; i < data.length; i += chunkSize) {
+    chunks.push(data.slice(i, i + chunkSize));
+  }
+  return chunks;
+};
 
 export const updatePicturesSearchData = async (
   parsedMessages: UnderProcessingPictureType[],
 ) => {
-  const pictureDataChunks: PictureSearch[][] = [];
-  let index = 0;
-  for (let i = 0; i < parsedMessages.length; i++) {
-    if (pictureDataChunks[index]?.length === 100) {
-      index++;
-      pictureDataChunks[index] = [];
-    }
-    const id = parsedMessages[i]?.id?.toString() || "";
-    if (!id) continue;
-    pictureDataChunks[index]?.push({
-      id,
+  const pictureMap = parsedMessages.map((item) => {
+    const small = item.src?.find((s) => s.resolution === "SMALL");
+    const original = item.src?.find((s) => s.resolution === "ORIGINAL");
+
+    return {
+      id: item.id,
       content: {
-        title: parsedMessages[i]?.title || "",
-        description: parsedMessages[i]?.description?.slice(0, 100) || "",
-        src:
-          parsedMessages[i]?.src?.find((s) => s.resolution === "SMALL")?.url ||
-          parsedMessages[i]?.src?.find((s) => s.resolution === "ORIGINAL")
-            ?.url ||
-          "",
+        title: item.title,
+        description: item.description?.slice(0, 100) || "",
+        src: small?.url || original?.url || "",
+        height: original?.height || 0,
+        width: original?.width || 0,
+        blurhash: item.metadata?.blurhash || "",
       },
       metadata: {
-        createdAt: parsedMessages[i]?.created_at || "",
+        createdAt: item.created_at,
       },
-    });
-  }
+    };
+  });
 
-  for (const chunk of pictureDataChunks) {
-    await picturesIndex.upsert(chunk);
-  }
+  const pictureChunks = returnChunks(pictureMap, 100);
+
+  await Promise.all(pictureChunks.map((chunk) => picturesIndex.upsert(chunk)));
 };
 
 export const updateTagsSearchData = async (
@@ -44,31 +42,14 @@ export const updateTagsSearchData = async (
 ) => {
   const tags = parsedMessages.flatMap((message) =>
     message.tags.map((tag) => ({
-      id: tag.id,
+      id: tag.id.toString(),
       content: {
         name: tag.name,
       },
     })),
   );
 
-  const tagDataChunks: TagSearch[][] = [];
-  let tagIndex = 0;
-  for (let i = 0; i < tags.length; i++) {
-    if (tagDataChunks[tagIndex]?.length === 100) {
-      tagIndex++;
-      tagDataChunks[tagIndex] = [];
-    }
-    const id = tags[i]?.id?.toString() || "";
-    if (!id) continue;
-    tagDataChunks[tagIndex]?.push({
-      id,
-      content: {
-        name: tags[i]?.content?.name || "",
-      },
-    });
-  }
+  const tagChunks = returnChunks(tags, 100);
 
-  for (const chunk of tagDataChunks) {
-    await tagsIndex.upsert(chunk);
-  }
+  await Promise.all(tagChunks.map((chunk) => tagsIndex.upsert(chunk)));
 };

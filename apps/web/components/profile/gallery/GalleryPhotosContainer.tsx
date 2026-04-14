@@ -34,7 +34,7 @@ export function GalleryPhotosContainer() {
           width: ORIGINAL?.width!,
           height: ORIGINAL?.height!,
           blurhash: pic.metadata?.blurhash,
-          user: pic.user,
+          // user: pic.user,
           key: pic.id,
           onClick: (e: React.MouseEvent<HTMLDivElement>) => {
             setOpen(true, pic);
@@ -75,7 +75,7 @@ export function GalleryPhotosContainer() {
 
   return (
     <>
-      <Masonry photos={photos} showUser={false} />
+      <Masonry photos={photos} />
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

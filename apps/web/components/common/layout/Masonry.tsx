@@ -5,13 +5,7 @@ import "react-photo-album/masonry.css";
 import { PhotoWithBlurHash } from "../image/BlurhashCanvas";
 import { GalleryPhoto } from "@/@types";
 
-export function Masonry({
-  photos,
-  showUser = true,
-}: {
-  photos: GalleryPhoto[];
-  showUser?: boolean;
-}) {
+export function Masonry({ photos }: { photos: GalleryPhoto[] }) {
   return (
     <MasonryPhotoAlbum<GalleryPhoto>
       photos={photos}
@@ -25,7 +19,7 @@ export function Masonry({
       render={{
         photo: ({ onClick }, { photo }) => (
           <div key={photo.key} onClick={onClick}>
-            <PhotoWithBlurHash photo={photo} showUser={showUser} />
+            <PhotoWithBlurHash photo={photo} />
           </div>
         ),
       }}
