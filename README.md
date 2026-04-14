@@ -88,13 +88,6 @@ Workers handles:
 
 ## Running the Project
 
-This project can be run using **two approaches**:
-
-- Manual setup (this branch)
-- Docker setup (available in [`docker-setup`](https://github.com/imSyntn/OpenFrame/tree/docker-setup?tab=readme-ov-file#docker-setup-branch) branch)
-
----
-
 ### 1. Setup Environment Variables
 
 Rename `.env.example` to `.env` and update values.
