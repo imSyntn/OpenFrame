@@ -15,7 +15,7 @@ import { useGlobalStateStore } from "@/store";
 
 export function CollecTionCardSkeleton() {
   return (
-    <Card className="overflow-hidden p-0 border border-muted h-fit">
+    <Card className="overflow-hidden w-[250px] p-0 border border-muted h-fit">
       <Skeleton className="h-40 w-full" />
       <CardContent className="p-4 space-y-3">
         <Skeleton className="h-4 w-3/4" />
@@ -51,7 +51,7 @@ export function CollectionCard({
   return (
     <Card
       key={collection.id}
-      className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted h-fit"
+      className="group overflow-hidden w-[250px] cursor-pointer hover:shadow-xl transition-all duration-300 pt-0 gap-2 border border-muted h-fit"
       onClick={() => setOpenCollectionModal(collection)}
     >
       <div className="relative h-40 w-full overflow-hidden">

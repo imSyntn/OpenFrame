@@ -43,26 +43,24 @@ export const getUser = async (
   omit?: Prisma.UserOmit,
 ) => {
   try {
-    let key;
+    const isAuth = cacheKey === "auth";
 
-    if ("email" in user) {
-      key = user.email;
-    } else {
-      key = user.id;
-    }
+    let key = "email" in user ? user.email : user.id;
 
-    const userInCache = await cache.get(`user:${cacheKey}:${key}`);
-    if (userInCache) {
-      return JSON.parse(userInCache);
+    if (!isAuth) {
+      const userInCache = await cache.get(`user:${cacheKey}:${key}`);
+      if (userInCache) {
+        return JSON.parse(userInCache);
+      }
     }
 
     const userInDb = await prisma.user.findFirst({
       where: user,
       include,
-      omit,
+      omit: isAuth ? undefined : omit,
     });
 
-    if (userInDb) {
+    if (userInDb && !isAuth) {
       await cache.set(
         `user:${cacheKey}:${key}`,
         JSON.stringify(userInDb),
@@ -146,9 +144,10 @@ export const updateUser = async (
       omit: omit,
     });
 
-    const pipeline = cache.pipeline();
-    pipeline.set("user:profile:" + updatedUser.id, JSON.stringify(updatedUser));
-    pipeline.set("user:auth:" + updatedUser.email, JSON.stringify(updatedUser));
+    await cache.set(
+      "user:profile:" + updatedUser.id,
+      JSON.stringify(updatedUser),
+    );
 
     await usersIndex.upsert({
       id: updatedUser.id,
@@ -158,10 +157,6 @@ export const updateUser = async (
       },
     });
 
-    const res = await pipeline.exec();
-    if (!res) {
-      logger.error("Failed to update user in cache");
-    }
     return updatedUser;
   } catch (error) {
     throw error;

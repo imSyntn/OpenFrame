@@ -29,9 +29,9 @@ export function CreateCollection({
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const [open, setOpen] = useState(false);
 
-  const handleModalClose = () => {
+  const handleModalClose = (id?: string) => {
     setOpen(false);
-    onCreated?.();
+    onCreated?.(id);
   };
 
   return (

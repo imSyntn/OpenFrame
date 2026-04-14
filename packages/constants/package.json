@@ -14,5 +14,8 @@
       "require": "./dist/index.cjs",
       "default": "./src/index.ts"
     }
+  },
+  "dependencies": {
+    "@workspace/typescript-config": "workspace:*"
   }
 }

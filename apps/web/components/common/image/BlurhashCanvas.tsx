@@ -12,7 +12,13 @@ export function BlurHashCanvas({ hash }: { hash: string }) {
     const width = 32;
     const height = 32;
 
-    const pixels = decode(hash, width, height);
+    let pixels;
+
+    try {
+      pixels = decode(hash, width, height);
+    } catch (error) {
+      pixels = decode("LKO2?U%2Tw=w]~RBVZRi};RPxuwH", width, height);
+    }
 
     const canvas = ref.current;
     if (!canvas) return;
@@ -67,7 +73,7 @@ export function PhotoWithBlurHash({
         alt={photo.alt ?? ""}
         onLoad={() => setLoaded(true)}
         className={cn(
-          "max-w-full max-h-[80vh] object-contain transition-transform duration-500",
+          "max-w-full max-h-[80vh] object-contain transition-transform duration-500 cursor-pointer",
           hoverEffect && "group-hover:scale-105",
         )}
       />

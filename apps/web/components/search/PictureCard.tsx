@@ -1,5 +1,4 @@
 import { PictureMatch } from "@workspace/types";
-import { Button } from "@workspace/ui/components/button";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
@@ -24,14 +23,10 @@ export function PictureCard({
       <LazyLoadImage
         src={pic.content.src}
         alt={pic.content.title}
-        className="w-full object-cover align-middle block group-hover:scale-105 transition-transform"
+        className="w-full object-cover align-middle block group-hover:scale-105 transition-transform! duration-500"
         effect="blur"
       />
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-        <Link href={`/picture/${pic.id}`}>
-          <Button>View</Button>
-        </Link>
-      </div>
+      <Link href={`/picture/${pic.id}`} className="absolute inset-0" />
     </div>
   );
 }

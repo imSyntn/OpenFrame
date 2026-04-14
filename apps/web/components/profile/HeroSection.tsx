@@ -219,7 +219,7 @@ export function HeroSection({ id }: { id: string }) {
                 <Tooltip>
                   <TooltipTrigger>
                     <li>
-                      <a href={email}>
+                      <a href={"mailto:" + email} target="_blank">
                         <Mail />
                       </a>
                     </li>

@@ -4,6 +4,7 @@ import { TagCard, TagCardSkeleton } from "./TagCard";
 import { UserCard, UserCardSkeleton } from "./UserCard";
 import { PictureCard, PictureCardSkeleton } from "./PictureCard";
 import { ErrorOccured } from "../common";
+import { PicturesContainer } from "./PicturesContainer";
 
 function Container({ children }: { children: React.ReactNode }) {
   return <div className="min-h-[30vh] w-full px-10 mb-10">{children}</div>;
@@ -132,15 +133,7 @@ export function Content({ query, type }: { query: string; type?: string }) {
       )}
       {pictures.length > 0 && (
         <ResultWrapper title="Pictures">
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
-            {pictures.map((pic) => (
-              <PictureCard
-                key={pic.id}
-                pic={pic}
-                className="break-inside-avoid mb-4"
-              />
-            ))}
-          </div>
+          <PicturesContainer pictures={pictures} />
         </ResultWrapper>
       )}
     </Container>

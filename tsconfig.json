@@ -1,21 +1,3 @@
 {
-  "extends": "@workspace/typescript-config/base.json",
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@workspace/constants": ["packages/constants/src"],
-      "@workspace/constants/*": ["packages/constants/src/*"],
-      "@workspace/lib": ["packages/lib/src"],
-      "@workspace/lib/*": ["packages/lib/src/*"],
-      "@workspace/ui": ["packages/ui/src"]
-    }
-  }
+  "extends": "@workspace/typescript-config/base.json"
 }

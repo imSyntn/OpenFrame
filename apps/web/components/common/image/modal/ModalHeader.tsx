@@ -25,7 +25,9 @@ export function ModalHeader() {
   const handleLike = async () => {
     try {
       await incrementLikeCount(image.id);
-      toast.success("Liked successfully.");
+      toast.success("Liked successfully.", {
+        description: "It may take some time to show on profile.",
+      });
     } catch (error) {
       toast.error("Failed to like.");
     }

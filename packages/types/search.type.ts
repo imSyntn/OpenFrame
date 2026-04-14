@@ -6,14 +6,19 @@ interface Match {
 
 export type PictureMatch = {
   content: {
-    title: string;
+    blurhash: string;
     description: string;
+    height: number;
     src: string;
+    title: string;
+    width: number;
+  };
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
   };
 } & Match;
-
-export type PictureSearch = { id: string } & Omit<PictureMatch, "score">;
-export type TagSearch = { id: string } & Omit<TagMatch, "score">;
 
 export type UserMatch = {
   content: { name: string; avatar: string };

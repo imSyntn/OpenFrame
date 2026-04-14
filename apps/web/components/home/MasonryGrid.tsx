@@ -86,7 +86,7 @@ export function MasonryGrid() {
   return (
     <div className={cn("w-full", isLoading && "opacity-50")}>
       {isLoading && <ImageSkeleton />}
-      <Masonry photos={photos} />
+      <Masonry photos={photos} showUser={false} />
       {isFetchingNextPage && (
         <div className="flex w-full justify-center my-3">
           <Loader2 className="animate-spin" />

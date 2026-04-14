@@ -37,7 +37,7 @@ export function ShowUserCollections({ id }: { id?: string }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+    <div className="grid  grid-cols-[repeat(auto-fill,minmax(250px,1fr))] justify-items-center gap-6 mb-10">
       {isLoading &&
         Array.from({ length: 8 }).map((_, i) => (
           <CollecTionCardSkeleton key={i} />

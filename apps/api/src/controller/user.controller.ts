@@ -83,7 +83,8 @@ export const signinController = async (
     if (!userExists) {
       return next(new ErrorWithStatus(400, "User doesn't exist"));
     }
-
+    console.log(userExists);
+    console.log(password);
     const isPasswordValid = await bcrypt.compare(
       password,
       userExists.password as string,
@@ -194,7 +195,7 @@ export const otpGenerateController = async (
 
     const otp = generateOtp();
 
-    await otpStore.set(emailData, otp, "EX", OTP_VALIDATION_TIME_LIMIT);
+    await otpStore.set(emailData, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
     const template = generateEmailTemplate({
       type: "otp",
@@ -235,7 +236,12 @@ export const otpVerifyController = async (
       return next(new ErrorWithStatus(400, "Invalid OTP"));
     }
 
-    await otpStore.set(email, "otpVerified", "EX", OTP_VALIDATION_TIME_LIMIT);
+    await otpStore.set(
+      email,
+      "otpVerified",
+      "EX",
+      OTP_VALIDATION_TIME_LIMIT * 60,
+    );
 
     return res.status(200).json({
       message: "OTP verified successfully",

@@ -1,10 +1,11 @@
+import "@workspace/lib/env";
 import { SetupIndexing } from "./indexSearch";
 import { setupKafka } from "./kafka";
 
 async function main() {
   console.log("🚀 Setting up project...");
 
-  await setupKafka();
+  // await setupKafka();
   await SetupIndexing();
 
   console.log("✅ Setup complete");

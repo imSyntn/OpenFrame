@@ -38,6 +38,7 @@ export function CollectionImageCard({
         id: item.collection_id,
         pic_ids: [item.pic_id],
       });
+      setOpenCollectionModal(null);
     } catch (error) {
       console.log(error);
     }
