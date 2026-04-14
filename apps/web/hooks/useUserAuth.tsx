@@ -92,5 +92,6 @@ export const useVerifyEmailToken = (token: string) => {
     queryKey: ["verify-email-token", token],
     queryFn: () => userVerifyEmailToken(token),
     retry: 1,
+    enabled: !!token,
   });
 };

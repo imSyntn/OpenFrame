@@ -66,9 +66,9 @@ export function GalleryPhotosContainer() {
     return (
       <NotFound
         Icon={ImageOff}
-        title="No Liked Images"
+        title="No Images"
         className="min-h-fit"
-        description={`${name} hasn't liked any images yet.`}
+        description={`${name} hasn't uploaded any images yet.`}
       />
     );
   }

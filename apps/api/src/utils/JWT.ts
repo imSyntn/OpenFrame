@@ -27,7 +27,7 @@ export const generateVerificationToken = (user: verificationTokenPayload) => {
       otp,
     },
     process.env.JWT_VERIFICATION_SECRET!,
-    { expiresIn: "10m" },
+    { expiresIn: "15m" },
   );
 };
 

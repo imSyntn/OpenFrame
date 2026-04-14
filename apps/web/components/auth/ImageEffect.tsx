@@ -14,7 +14,7 @@ export function ImageEffect({ src }: { src: string }) {
       width={420}
       height={750}
       priority
-      onLoadingComplete={() => setVisible(true)}
+      onLoad={() => setVisible(true)}
       className={cn(
         "rounded-xl transition-all duration-500",
         visible ? "opacity-100 shadow-2xl" : "opacity-0 shadow-none",

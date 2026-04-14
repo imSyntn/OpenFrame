@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useGetUploadUrl } from "@/hooks";
 import { MAX_AVATAR_SIZE } from "@workspace/constants";
 import { ImageInput } from "@/components/common";
+import { Loader2 } from "lucide-react";
 
 export function ChangeAvatar({
   changeAvatar,
@@ -23,6 +24,7 @@ export function ChangeAvatar({
   const [open, setOpen] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleClearImage = () => {
     setImageFile(null);
@@ -31,6 +33,7 @@ export function ChangeAvatar({
   const handleUploadImage = async () => {
     try {
       if (!imageFile) return;
+      setIsUploading(true);
       const { type, size } = imageFile;
 
       const { uploadUrl, fileUrl } = await getUploadUrl({
@@ -43,8 +46,6 @@ export function ChangeAvatar({
         toast.error("Failed to get upload url");
         return;
       }
-      console.log(uploadUrl);
-      console.log(fileUrl);
 
       await fetch(uploadUrl, {
         method: "PUT",
@@ -62,6 +63,8 @@ export function ChangeAvatar({
     } catch (error: any) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Failed to upload image");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -88,11 +91,17 @@ export function ChangeAvatar({
             />
 
             <div className="flex w-full justify-between">
-              <Button variant="destructive" onClick={handleClearImage}>
+              <Button
+                variant="destructive"
+                onClick={handleClearImage}
+                disabled={isUploading}
+              >
                 Clear
               </Button>
 
-              <Button onClick={handleUploadImage}>Upload</Button>
+              <Button onClick={handleUploadImage} disabled={isUploading}>
+                {isUploading ? <Loader2 className="animate-spin" /> : "Upload"}
+              </Button>
             </div>
           </div>
         )}

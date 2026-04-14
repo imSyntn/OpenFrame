@@ -438,7 +438,7 @@ export const sendVerificationLinkController = async (
     }
 
     const otp = generateOtp();
-    await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT);
+    await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
     const verificationToken = generateVerificationToken({ email, otp });
     const template = generateEmailTemplate({
