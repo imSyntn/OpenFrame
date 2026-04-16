@@ -332,7 +332,11 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0
 
-  packages/constants: {}
+  packages/constants:
+    dependencies:
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/eslint-config:
     devDependencies:
@@ -393,6 +397,9 @@ importers:
       '@upstash/search':
         specifier: ^0.1.7
         version: 0.1.7
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -421,6 +428,9 @@ importers:
       '@workspace/constants':
         specifier: workspace:*
         version: link:../constants
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       zod:
         specifier: ^3.25.76
         version: 3.25.76
