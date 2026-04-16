@@ -112,11 +112,7 @@ export function Content() {
               style={{ backgroundColor: image.metadata.dominant_color }}
             />
 
-            <PhotoWithBlurHash
-              photo={photo}
-              showUser={false}
-              hoverEffect={false}
-            />
+            <PhotoWithBlurHash photo={photo} hoverEffect={false} />
           </div>
 
           <TitleDesc
