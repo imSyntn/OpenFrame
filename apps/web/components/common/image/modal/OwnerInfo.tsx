@@ -37,6 +37,11 @@ export function OwnerInfo({ id }: { id: string }) {
     );
   }
 
+  const handleViewProfile = () => {
+    setOpen(false);
+    router.push(`/profile/${data?.id}`);
+  };
+
   return (
     <div className="flex items-center gap-3 min-w-[192px]">
       {isLoading ? (
@@ -51,7 +56,7 @@ export function OwnerInfo({ id }: { id: string }) {
         </>
       ) : (
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger asChild onClick={handleViewProfile}>
             <div className="flex items-center gap-3">
               <Avatar className="w-10 h-10">
                 <AvatarImage src={data?.avatar} alt={data?.name} />
@@ -71,7 +76,7 @@ export function OwnerInfo({ id }: { id: string }) {
             </div>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="w-72 p-4">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 w-full">
               <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12">
                   <AvatarImage src={data?.avatar} alt={data?.name} />
@@ -120,13 +125,7 @@ export function OwnerInfo({ id }: { id: string }) {
                   <p className="text-muted-foreground text-xs">Downloads</p>
                 </div>
               </div>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setOpen(false);
-                  router.push(`/profile/${data?.id}`);
-                }}
-              >
+              <Button variant="secondary" onClick={handleViewProfile}>
                 View Profile
               </Button>
             </div>

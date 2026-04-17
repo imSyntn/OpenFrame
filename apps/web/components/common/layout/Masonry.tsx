@@ -1,28 +1,25 @@
 "use client";
 
-import { MasonryPhotoAlbum } from "react-photo-album";
-import "react-photo-album/masonry.css";
 import { PhotoWithBlurHash } from "../image/BlurhashCanvas";
 import { GalleryPhoto } from "@/@types";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-export function Masonry({ photos }: { photos: GalleryPhoto[] }) {
+export function MasonryLayout({ photos }: { photos: GalleryPhoto[] }) {
   return (
-    <MasonryPhotoAlbum<GalleryPhoto>
-      photos={photos}
-      spacing={16}
-      columns={(width) => {
-        if (width < 430) return 1;
-        if (width < 640) return 2;
-        if (width < 1024) return 3;
-        return 4;
+    <ResponsiveMasonry
+      columnsCountBreakPoints={{ 350: 1, 640: 2, 1024: 3, 1280: 4 }}
+      gutterBreakPoints={{
+        350: 8,
+        640: 12,
+        1024: 17,
+        1280: 34,
       }}
-      render={{
-        photo: ({ onClick }, { photo }) => (
-          <div key={photo.key} onClick={onClick}>
-            <PhotoWithBlurHash photo={photo} />
-          </div>
-        ),
-      }}
-    />
+    >
+      <Masonry>
+        {photos.map((photo) => (
+          <PhotoWithBlurHash key={photo.key} photo={photo} />
+        ))}
+      </Masonry>
+    </ResponsiveMasonry>
   );
 }

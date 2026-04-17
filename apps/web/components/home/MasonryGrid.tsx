@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { ErrorOccured, Masonry, NotFound } from "../common";
+import { ErrorOccured, MasonryLayout, NotFound } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore } from "@/store";
 import { useGetExplorePictures } from "@/hooks";
@@ -85,8 +85,7 @@ export function MasonryGrid() {
 
   return (
     <div className={cn("w-full", isLoading && "opacity-50")}>
-      {isLoading && <ImageSkeleton />}
-      <Masonry photos={photos} />
+      {isLoading ? <ImageSkeleton /> : <MasonryLayout photos={photos} />}
       {isFetchingNextPage && (
         <div className="flex w-full justify-center my-3">
           <Loader2 className="animate-spin" />

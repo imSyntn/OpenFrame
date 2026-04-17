@@ -1,5 +1,4 @@
 import { prisma, cache, Prisma, usersIndex } from "@workspace/lib";
-import { logger } from "@workspace/lib/logger";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
 type GetUserPayload =
@@ -9,30 +8,6 @@ type GetUserPayload =
   | {
       id: string;
     };
-
-interface includeOptions {
-  pictures?: boolean;
-  _count?: boolean;
-  collection?: boolean;
-  followers?: boolean;
-  following?: boolean;
-  likes?: boolean;
-  links?: boolean;
-  metrics?: boolean;
-}
-
-interface omitOptions {
-  avatar?: boolean;
-  bio?: boolean;
-  email?: boolean;
-  google_id?: boolean;
-  id?: boolean;
-  is_verified?: boolean;
-  joined_at?: boolean;
-  location?: boolean;
-  name?: boolean;
-  password?: boolean;
-}
 
 type cacheType = "auth" | "profile";
 
@@ -125,8 +100,8 @@ interface UpdateUserPayload {
 export const updateUser = async (
   user: GetUserPayload,
   payload: UpdateUserPayload,
-  include?: includeOptions,
-  omit?: omitOptions,
+  include?: Prisma.UserInclude,
+  omit?: Prisma.UserOmit,
 ) => {
   try {
     const updates: any = { ...payload };
@@ -171,7 +146,6 @@ export const deleteUser = async (id: string) => {
 
     const pipeline = cache.pipeline();
     pipeline.del("user:profile:" + deletedUser.id);
-    pipeline.del("user:auth:" + deletedUser.email);
 
     await pipeline.exec();
     await usersIndex.delete(deletedUser.id);

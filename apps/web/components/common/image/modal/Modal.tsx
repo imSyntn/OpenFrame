@@ -11,7 +11,7 @@ export function ImageModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="min-w-[95vw] h-[90vh] p-0 overflow-hidden">
+      <DialogContent className="min-w-[95vw] h-[95vh] sm:h-[90vh] p-0 overflow-hidden">
         <Content />
       </DialogContent>
     </Dialog>

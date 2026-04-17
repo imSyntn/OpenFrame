@@ -1,5 +1,5 @@
 import { GalleryPhoto } from "@/@types";
-import { Masonry, NotFound } from "@/components/common";
+import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetUserLikedPictures } from "@/hooks";
 import { useGlobalStateStore, useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
@@ -78,7 +78,7 @@ export function Liked() {
 
   return (
     <>
-      <Masonry photos={photos} />
+      <MasonryLayout photos={photos} />
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

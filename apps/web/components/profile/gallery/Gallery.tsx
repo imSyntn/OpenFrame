@@ -7,7 +7,6 @@ import { GalleryPhotosContainer } from "./GalleryPhotosContainer";
 export function Gallery() {
   const count = useProfileStore((state) => state._count);
   const isLoading = useProfileStore((state) => state.isLoading);
-  const metrics = useProfileStore((state) => state.metrics);
 
   return (
     <div className="flex flex-col md:flex-row gap-10 min-h-[60dvh]">

@@ -2,7 +2,7 @@
 
 import { cn } from "@workspace/ui/lib/utils";
 import { decode } from "blurhash";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export function BlurHashCanvas({ hash }: { hash: string }) {
@@ -47,16 +47,11 @@ type Props = {
   hoverEffect?: boolean;
 };
 
-export function PhotoWithBlurHash({ photo, hoverEffect = true }: Props) {
+function PhotoWithBlurHashComponent({ photo, hoverEffect = true }: Props) {
   const [loaded, setLoaded] = useState(false);
-  const user = photo?.user;
 
   return (
-    <div
-      className="group relative flex items-center justify-center rounded-lg overflow-hidden"
-      style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
-      onClick={photo.onClick}
-    >
+    <div className="relative w-full h-full overflow-hidden rounded-lg">
       {!loaded && (
         <div className="absolute inset-0">
           <BlurHashCanvas hash={photo.blurhash} />
@@ -67,11 +62,15 @@ export function PhotoWithBlurHash({ photo, hoverEffect = true }: Props) {
         src={photo.src}
         alt={photo.alt ?? ""}
         onLoad={() => setLoaded(true)}
+        threshold={50}
         className={cn(
-          "max-w-full max-h-[80vh] object-contain transition-transform duration-500 cursor-pointer",
-          hoverEffect && "group-hover:scale-105",
+          "block w-full h-full object-cover cursor-pointer",
+          hoverEffect && "transition-transform duration-500 hover:scale-105",
         )}
+        onClick={photo.onClick}
       />
     </div>
   );
 }
+
+export const PhotoWithBlurHash = memo(PhotoWithBlurHashComponent);

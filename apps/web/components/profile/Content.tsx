@@ -25,7 +25,7 @@ export function Content() {
   const isOwner = loggedInUserID === id;
 
   return (
-    <div className="max-w-8xl px-8 h-fit mb-8">
+    <div className="px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 min-h-screen max-w-8xl mx-auto h-fit mb-8">
       <Tabs
         defaultValue="Gallery"
         orientation="horizontal"
@@ -57,7 +57,7 @@ export function Content() {
             >
               {isLoading ? <Skeleton className="w-16 h-4" /> : "Collections"}
             </TabsTrigger>
-            {!isLoading && isOwner && (
+            {!isLoading && (
               <TabsTrigger
                 value="liked"
                 className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
@@ -95,11 +95,9 @@ export function Content() {
             <Processing />
           </TabsContent>
         )}
-        {isOwner && (
-          <TabsContent value="liked" className="flex-1">
-            <Liked />
-          </TabsContent>
-        )}
+        <TabsContent value="liked" className="flex-1">
+          <Liked />
+        </TabsContent>
       </Tabs>
     </div>
   );

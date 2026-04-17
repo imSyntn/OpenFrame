@@ -13,15 +13,25 @@ import {
   likePictureController,
   viewPictureController,
 } from "../controller/picture.controller";
-import { authMiddleware } from "@/middleware";
+import { authMiddleware, pollingLimiter, uploadLimiter } from "@/middleware";
 
 const pictureRouter = Router();
 
 pictureRouter.get("/tags", getPictureTagsController);
 pictureRouter.get("/explore", getExplorePicturesController);
 
-pictureRouter.post("/create", authMiddleware, createPictureController);
-pictureRouter.get("/status", authMiddleware, getAllPictureStatusController);
+pictureRouter.post(
+  "/create",
+  uploadLimiter,
+  authMiddleware,
+  createPictureController,
+);
+pictureRouter.get(
+  "/status",
+  pollingLimiter,
+  authMiddleware,
+  getAllPictureStatusController,
+);
 pictureRouter.get(
   "/status/:pictureID",
   authMiddleware,
@@ -33,6 +43,7 @@ pictureRouter.get("/user/:id", getUserPicturesController);
 
 pictureRouter.post(
   "/upload-url",
+  uploadLimiter,
   authMiddleware,
   getPictureUploadUrlController,
 );

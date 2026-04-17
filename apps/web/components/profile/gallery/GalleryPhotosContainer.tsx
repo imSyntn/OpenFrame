@@ -2,7 +2,7 @@ import { GalleryPhoto, PictureType } from "@/@types";
 import { useGlobalStateStore, useProfileStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@workspace/ui/components/button";
-import { Masonry, NotFound } from "@/components/common";
+import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetPictures } from "@/hooks";
 import { ImageOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -75,7 +75,7 @@ export function GalleryPhotosContainer() {
 
   return (
     <>
-      <Masonry photos={photos} />
+      <MasonryLayout photos={photos} />
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

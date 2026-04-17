@@ -23,14 +23,14 @@ export function Modal({
   if (!data) return null;
   return (
     <Dialog open={!!data} onOpenChange={clearData}>
-      <DialogContent className="max-w-2xl max-h-[85vh] pr-0">
+      <DialogContent className="max-w-2xl max-h-[90vh] pr-0">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
             {data.title}
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[60vh] w-full pr-4">
+        <ScrollArea className="max-h-[70vh] w-full pr-4">
           <div className="space-y-4 pb-1">
             {data.description && (
               <DialogDescription>{data.description}</DialogDescription>

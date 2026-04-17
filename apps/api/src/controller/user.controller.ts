@@ -83,8 +83,7 @@ export const signinController = async (
     if (!userExists) {
       return next(new ErrorWithStatus(400, "User doesn't exist"));
     }
-    console.log(userExists);
-    console.log(password);
+
     const isPasswordValid = await bcrypt.compare(
       password,
       userExists.password as string,
@@ -349,8 +348,16 @@ export const updateUserController = async (
       );
     }
 
-    const include = {
+    const include: Prisma.UserInclude = {
+      _count: {
+        select: {
+          pictures: true,
+          collection: true,
+          likes: true,
+        },
+      },
       links: true,
+      metrics: true,
     };
     const exclude = {
       google_id: true,
@@ -404,7 +411,9 @@ export const refreshTokenController = async (
     if (!token) {
       return next(new ErrorWithStatus(401, "You are not logged in."));
     }
+
     const decoded = refreshTokenVerify(token);
+
     const user = await getUser({ id: decoded.id }, "auth");
     if (!user) {
       return next(new ErrorWithStatus(404, "User not found"));

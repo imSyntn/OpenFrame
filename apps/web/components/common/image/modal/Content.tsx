@@ -173,7 +173,7 @@ export function Content() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">BlurHash</span>
+                  <span className="text-muted-foreground mr-2">BlurHash</span>
                   <p className="break-all text-xs">
                     {image.metadata?.blurhash}
                   </p>

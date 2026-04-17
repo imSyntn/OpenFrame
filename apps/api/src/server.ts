@@ -14,7 +14,7 @@ import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { errorMiddleware } from "./middleware";
+import { apiLimiter, errorMiddleware } from "./middleware";
 
 const app: Application = express();
 
@@ -31,6 +31,8 @@ app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
 app.use("/api/collection", collectionRouter);
 app.use("/api/search", searchRouter);
+
+app.use("/api", apiLimiter);
 
 app.use(errorMiddleware);
 
