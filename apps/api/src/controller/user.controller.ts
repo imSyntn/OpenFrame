@@ -31,6 +31,8 @@ import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
 import { Prisma } from "@workspace/lib";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const googleAuthController = async (
   req: Request,
   res: Response,
@@ -56,8 +58,8 @@ export const googleAuthController = async (
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: isProduction,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -105,8 +107,8 @@ export const signinController = async (
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: isProduction,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -157,8 +159,8 @@ export const signupController = async (
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: isProduction,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 

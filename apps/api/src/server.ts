@@ -18,6 +18,8 @@ import { apiLimiter, errorMiddleware } from "./middleware";
 
 const app: Application = express();
 
+app.set("trust proxy", 1);
+
 app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 app.use(cookieParser());
