@@ -20,7 +20,23 @@ const app: Application = express();
 
 app.set("trust proxy", 1);
 
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
+const allowedOrigins = [
+  "https://open-frame-web.vercel.app",
+  "http://localhost:3000"
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    console.log("Origin:", origin);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked"));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
