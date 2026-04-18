@@ -1,5 +1,4 @@
 import { tagsType } from "@workspace/types";
-import { Photo } from "react-photo-album";
 
 export interface PictureType {
   id: string;
@@ -41,6 +40,11 @@ export interface PictureType {
   };
 }
 
-export type GalleryPhoto = Photo & {
+export type GalleryPhoto = {
+  src: string;
+  width: number;
+  height: number;
   blurhash: string;
+  key: string;
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
