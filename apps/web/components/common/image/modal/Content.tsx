@@ -10,6 +10,7 @@ import { Button } from "@workspace/ui/components/button";
 import { ImageTags } from "./ImageTags";
 import { useIncrementViewCount } from "@/hooks";
 import { notFound } from "next/navigation";
+import { cn } from "@workspace/ui/lib/utils";
 
 const TitleDesc = ({
   title,
@@ -101,14 +102,9 @@ export function Content() {
 
       <ScrollArea className="flex-1 min-h-0 px-6 pb-6">
         <div className="space-y-6">
-          <div
-            className="relative w-full flex items-center justify-center min-h-[60vh] rounded-2xl overflow-hidden p-4 sm:p-6"
-            style={{
-              background: `linear-gradient(135deg, ${image.metadata.dominant_color}08, ${image.metadata.dominant_color}20)`,
-            }}
-          >
+          <div className="relative w-full flex items-center justify-center overflow-hidden rounded-2xl p-4 sm:p-6">
             <div
-              className="absolute inset-0 scale-110 blur-3xl opacity-40"
+              className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-30"
               style={{ backgroundColor: image.metadata.dominant_color }}
             />
 
