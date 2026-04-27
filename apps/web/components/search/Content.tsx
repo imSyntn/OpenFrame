@@ -1,42 +1,30 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useSearch } from "@/hooks";
-import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
+
 import { TagCard, TagCardSkeleton } from "./TagCard";
 import { UserCard, UserCardSkeleton } from "./UserCard";
-import { PictureCard, PictureCardSkeleton } from "./PictureCard";
+import { PictureCardSkeleton } from "./PictureCard";
 import { ErrorOccured } from "../common";
 import { PicturesContainer } from "./PicturesContainer";
 
 function Container({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-[30vh] w-full px-10 mb-10">{children}</div>;
-}
-
-function ResultWrapper({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <h2 className="text-lg font-semibold my-3 text-primary text-center">
-        {title}
-      </h2>
-      {children}
-    </>
-  );
-}
-
-function HorizontalScrollWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <ScrollArea className="w-full">
-      <div className="w-max flex gap-4 mb-4">{children}</div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
-  );
+  return <div className="min-h-[50vh] w-full px-10 mb-10">{children}</div>;
 }
 
 export function Content({ query, type }: { query: string; type?: string }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const {
     data: result,
     isLoading,
@@ -45,10 +33,33 @@ export function Content({ query, type }: { query: string; type?: string }) {
     refetch,
   } = useSearch(query, type);
 
+  const { pictures = [], users = [], tags = [] } = result?.data || {};
+
+  const computedDefaultTab = useMemo(() => {
+    if (pictures.length > 0) return "pictures";
+    if (users.length > 0) return "users";
+    return "tags";
+  }, [pictures.length, users.length]);
+
+  const [activeTab, setActiveTab] = useState(type || computedDefaultTab);
+
+  useEffect(() => {
+    setActiveTab(type || computedDefaultTab);
+  }, [type, computedDefaultTab]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("type", value);
+
+    router.push(`?${params.toString()}`);
+  };
+
   if (query.length < 3) {
     return (
       <Container>
-        <p className="text-center text-muted-foreground">
+        <p className="text-center text-muted-foreground mt-8">
           Enter more than 3 chars
         </p>
       </Container>
@@ -58,27 +69,52 @@ export function Content({ query, type }: { query: string; type?: string }) {
   if (isLoading) {
     return (
       <Container>
-        <ResultWrapper title="Tags">
-          <HorizontalScrollWrapper>
-            {Array.from({ length: 20 }).map((_, i) => (
-              <TagCardSkeleton key={i} />
-            ))}
-          </HorizontalScrollWrapper>
-        </ResultWrapper>
-        <ResultWrapper title="Users">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(128px,1fr))] gap-4">
-            {Array.from({ length: 13 }).map((_, i) => (
-              <UserCardSkeleton key={i} />
-            ))}
-          </div>
-        </ResultWrapper>
-        <ResultWrapper title="Pictures">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(256px,1fr))] gap-4">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <PictureCardSkeleton key={i} />
-            ))}
-          </div>
-        </ResultWrapper>
+        <Tabs value="pictures" className="w-full mt-4">
+          <TabsList className="mb-6 grid w-full max-w-md mx-auto grid-cols-3">
+            <TabsTrigger
+              value="pictures"
+              className="data-[state=active]:text-primary!"
+            >
+              Pictures
+            </TabsTrigger>
+            <TabsTrigger
+              value="users"
+              className="data-[state=active]:text-primary!"
+            >
+              Users
+            </TabsTrigger>
+            <TabsTrigger
+              value="tags"
+              className="data-[state=active]:text-primary!"
+            >
+              Tags
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="pictures">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(256px,1fr))] gap-4">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <PictureCardSkeleton key={i} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="users">
+            <div className="flex flex-wrap gap-4 justify-center">
+              {Array.from({ length: 13 }).map((_, i) => (
+                <UserCardSkeleton key={i} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tags">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <TagCardSkeleton key={i} />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </Container>
     );
   }
@@ -95,47 +131,64 @@ export function Content({ query, type }: { query: string; type?: string }) {
     );
   }
 
-  const { pictures = [], users = [], tags = [] } = result?.data || {};
-
-  if (
-    !isLoading &&
-    pictures.length === 0 &&
-    users.length === 0 &&
-    tags.length === 0
-  ) {
+  if (pictures.length === 0 && users.length === 0 && tags.length === 0) {
     return (
       <Container>
-        <p className="text-center text-muted-foreground">No results found</p>
+        <p className="text-center text-muted-foreground mt-8">
+          No results found
+        </p>
       </Container>
     );
   }
 
   return (
     <Container>
-      {tags.length > 0 && (
-        <ResultWrapper title="Tags">
-          <HorizontalScrollWrapper>
-            {tags.map((tag) => (
-              <TagCard key={tag.id} tag={tag} className="min-w-24 h-8" />
-            ))}
-          </HorizontalScrollWrapper>
-        </ResultWrapper>
-      )}
+      <Tabs
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="w-full mt-4"
+      >
+        <TabsList className="mb-6 flex w-full max-w-md mx-auto">
+          <TabsTrigger
+            value="pictures"
+            className="flex-1 cursor-pointer data-[state=active]:text-primary!"
+          >
+            Pictures {pictures.length > 0 && `(${pictures.length})`}
+          </TabsTrigger>
+          <TabsTrigger
+            value="users"
+            className="flex-1 cursor-pointer data-[state=active]:text-primary!"
+          >
+            Users {users.length > 0 && `(${users.length})`}
+          </TabsTrigger>
+          <TabsTrigger
+            value="tags"
+            className="flex-1 cursor-pointer data-[state=active]:text-primary!"
+          >
+            Tags {tags.length > 0 && `(${tags.length})`}
+          </TabsTrigger>
+        </TabsList>
 
-      {users.length > 0 && (
-        <ResultWrapper title="Users">
-          <div className="flex flex-wrap gap-4">
+        <TabsContent value="pictures" className="mt-4 animate-in fade-in-50">
+          <PicturesContainer pictures={pictures} />
+        </TabsContent>
+
+        <TabsContent value="users" className="mt-4 animate-in fade-in-50">
+          <div className="flex flex-wrap gap-4 justify-center">
             {users.map((user) => (
               <UserCard key={user.id} user={user} />
             ))}
           </div>
-        </ResultWrapper>
-      )}
-      {pictures.length > 0 && (
-        <ResultWrapper title="Pictures">
-          <PicturesContainer pictures={pictures} />
-        </ResultWrapper>
-      )}
+        </TabsContent>
+
+        <TabsContent value="tags" className="mt-4 animate-in fade-in-50">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {tags.map((tag) => (
+              <TagCard key={tag.id} tag={tag} className="min-w-24 h-8" />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </Container>
   );
 }

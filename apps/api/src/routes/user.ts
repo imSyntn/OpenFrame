@@ -15,7 +15,7 @@ import {
   updateUserController,
   verifyEmailTokenController,
 } from "@/controller";
-import { authLimiter } from "@/middleware";
+import { authLimiter, authMiddleware } from "@/middleware";
 
 const authRouter = express.Router();
 
@@ -49,6 +49,7 @@ authRouter.get(
 authRouter.post(
   "/send-verification-link",
   authLimiter,
+  authMiddleware,
   sendVerificationLinkController,
 );
 authRouter.get(
@@ -58,6 +59,6 @@ authRouter.get(
 );
 
 authRouter.get("/:id", getUserController);
-authRouter.patch("/:id", authLimiter, updateUserController);
+authRouter.patch("/:id", authLimiter, authMiddleware, updateUserController);
 
 export { authRouter };

@@ -187,7 +187,7 @@ export function Form({
 
         <Button
           className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]"
-          disabled={!isValid || isPending}
+          disabled={isPending}
         >
           {isPending ? "Uploading..." : "Upload Image"}
         </Button>
