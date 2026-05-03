@@ -38,6 +38,7 @@ const refreshCookieOptions: CookieOptions = {
   sameSite: isProduction ? "none" : "lax",
   secure: isProduction,
   path: "/",
+  domain: ".sayantan.online",
   maxAge: 1000 * 60 * 60 * 24 * 7,
 };
 
@@ -62,8 +63,7 @@ export const googleAuthController = async (
     //   sameSite: "lax",
     //   secure: false,
     //   maxAge: 1000 * 60 * 15,
-    // });
-
+    // }
     res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     res.redirect(
@@ -501,9 +501,12 @@ export const verifyEmailTokenController = async (
 };
 
 export const logoutController = async (req: Request, res: Response) => {
-  console.log("Controller called");
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
+  res.clearCookie("refresh_token", {
+    domain: ".sayantan.online",
+    path: "/",
+  });
 
   return res.status(200).json({
     message: "Logged out successfully",
