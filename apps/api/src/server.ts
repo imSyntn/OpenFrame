@@ -22,12 +22,12 @@ app.set("trust proxy", 1);
 
 const allowedOrigins = [
   "https://open-frame-web.vercel.app",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://open-frame.sayantan.online"
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    console.log("Origin:", origin);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
