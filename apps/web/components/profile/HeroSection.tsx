@@ -147,7 +147,7 @@ export function HeroSection({ id }: { id: string }) {
 
               {location && (
                 <p className="text-sm text-muted-foreground flex items-center justify-center md:justify-start gap-1">
-                  <MapPin size={14} />
+                  <MapPin size={14} color="red" className="w-4 h-4" />
                   {location}
                 </p>
               )}

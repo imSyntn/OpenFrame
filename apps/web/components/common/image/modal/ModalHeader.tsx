@@ -1,36 +1,32 @@
-import { Share2, ThumbsUp } from "lucide-react";
+import { Share2, ThumbsUp, Trash } from "lucide-react";
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@workspace/ui/components/dialog";
 import { useGlobalStateStore, useUserStore } from "@/store";
-import { useIncrementLikeCount } from "@/hooks";
+import { useDeletePicture, useIncrementLikeCount } from "@/hooks";
 import { toast } from "sonner";
 import { cn } from "@workspace/ui/lib/utils";
 import { TooltipButton } from "../../layout";
 import { DownloadButton } from "./DownloadButton";
 import { OwnerInfo } from "./OwnerInfo";
 import { AddToCollection } from "./AddToCollection";
+import { WarningModal } from "../../WarningModal";
 
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
   const open = useGlobalStateStore((state) => state.open);
+  const setOpen = useGlobalStateStore((state) => state.setOpen);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const { mutateAsync: incrementLikeCount } = useIncrementLikeCount();
+  const { mutate: incrementLikeCount } = useIncrementLikeCount();
+  const { mutateAsync: deletePicture } = useDeletePicture();
   if (!image) {
     return null;
   }
 
-  const handleLike = async () => {
-    try {
-      await incrementLikeCount(image.id);
-      toast.success("Liked successfully.", {
-        description: "It may take some time to show on profile.",
-      });
-    } catch (error) {
-      toast.error("Failed to like.");
-    }
+  const handleLike = () => {
+    incrementLikeCount(image.id);
   };
 
   const handleShare = async () => {
@@ -44,9 +40,20 @@ export function ModalHeader() {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deletePicture({ id: image.id, userId: image.user_id });
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const isModal = open == true && !!image?.id;
 
   const Header = isModal ? DialogHeader : "div";
+  const isOwner = image.user_id === useUserStore((state) => state.id);
+
   return (
     <Header
       className={cn(
@@ -87,6 +94,16 @@ export function ModalHeader() {
             content="Add to collection"
             as="div"
           />
+        )}
+        {isLoggedIn && isOwner && (
+          <WarningModal onClick={handleDelete}>
+            <TooltipButton
+              value={<Trash />}
+              size="icon"
+              content="Delete"
+              variant="destructive"
+            />
+          </WarningModal>
         )}
         <DownloadButton />
       </div>

@@ -36,6 +36,9 @@ export function GalleryPhotosContainer() {
           blurhash: pic.metadata?.blurhash,
           // user: pic.user,
           key: pic.id,
+          title: pic.title,
+          created_at: pic.created_at,
+          tags: pic.tags,
           onClick: (e: React.MouseEvent<HTMLDivElement>) => {
             setOpen(true, pic);
           },

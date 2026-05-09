@@ -28,3 +28,7 @@ export const searchTags = async (q: string) => {
 
   return results;
 };
+
+export const deletePictureIndex = async (id: string) => {
+  await picturesIndex.delete(id);
+};

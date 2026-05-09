@@ -2,6 +2,7 @@ import { ErrorWithStatus } from "@/middleware";
 import { pictureSchema } from "@workspace/schema/picture";
 import {
   createPicture,
+  deletePicture,
   getAllPictureStatus,
   getExplorePictures,
   getPictureById,
@@ -289,6 +290,26 @@ export const getPictureByIdController = async (
     const picture = await getPictureById(id);
 
     return res.status(200).json({ data: picture });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deletePictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+
+    await deletePicture(id);
+
+    return res.status(200).json({ data: "Picture deleted successfully" });
   } catch (error) {
     next(error);
   }

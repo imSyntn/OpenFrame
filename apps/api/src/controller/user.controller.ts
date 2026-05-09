@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { CookieOptions, NextFunction, Request, Response } from "express";
 import {
   GoogleUserType,
   UserTypeDB,
@@ -33,6 +33,14 @@ import { Prisma } from "@workspace/lib";
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const refreshCookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
+  path: "/",
+  maxAge: 1000 * 60 * 60 * 24 * 7,
+};
+
 export const googleAuthController = async (
   req: Request,
   res: Response,
@@ -56,12 +64,7 @@ export const googleAuthController = async (
     //   maxAge: 1000 * 60 * 15,
     // });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: isProduction,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     res.redirect(
       `${process.env.FRONTEND_URL}?id=${id}&name=${name}&email=${email}&avatar=${avatar}&accessToken=${accessToken}`,
@@ -105,12 +108,7 @@ export const signinController = async (
       id: userExists.id,
     });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: isProduction,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     return res.status(200).json({
       message: "User logged in.",
@@ -157,12 +155,7 @@ export const signupController = async (
     const accessToken = generateAccessToken({ name, email, id: newUser.id });
     const refreshToken = generateRefreshToken({ email, id: newUser.id });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: isProduction,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     return res.status(201).json({
       message: "User created successfully",

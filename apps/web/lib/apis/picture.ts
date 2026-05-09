@@ -111,3 +111,10 @@ export const getPictureById = async (
   const res = await api.get(`/api/picture/${id}`);
   return res.data;
 };
+
+export const deletePicture = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const res = await api.delete(`/api/picture/${id}`);
+  return res.data.message;
+};

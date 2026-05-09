@@ -11,7 +11,7 @@ import {
 } from "@/controller";
 import {
   authMiddleware,
-  checkOwner,
+  checkCollectionOwner,
   collectionLimiter,
   getIfUserIsLoggedIn,
 } from "@/middleware";
@@ -35,14 +35,14 @@ collectionRouter.patch(
   "/:id",
   collectionLimiter,
   authMiddleware,
-  checkOwner,
+  checkCollectionOwner,
   updateCollectionController,
 );
 collectionRouter.delete(
   "/:id",
   collectionLimiter,
   authMiddleware,
-  checkOwner,
+  checkCollectionOwner,
   deleteCollectionController,
 );
 
@@ -50,14 +50,14 @@ collectionRouter.post(
   "/:id/items",
   collectionLimiter,
   authMiddleware,
-  checkOwner,
+  checkCollectionOwner,
   addCollectionItemsController,
 );
 collectionRouter.delete(
   "/:id/items",
   collectionLimiter,
   authMiddleware,
-  checkOwner,
+  checkCollectionOwner,
   removeCollectionItemsController,
 );
 

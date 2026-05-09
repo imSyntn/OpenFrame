@@ -1,5 +1,6 @@
 import {
   createPictureUpload,
+  deletePicture,
   getAllUploadsStatus,
   getExplorePictures,
   getPictureById,
@@ -12,7 +13,13 @@ import {
   incrementLikeCount,
   incrementViewCount,
 } from "@/lib/apis";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useGetPictures = (id: string) => {
   return useInfiniteQuery({
@@ -112,6 +119,14 @@ export const useIncrementDownloadCount = () => {
 export const useIncrementLikeCount = () => {
   return useMutation({
     mutationFn: (id: string) => incrementLikeCount(id),
+    onSuccess: () => {
+      toast.success("Liked successfully.", {
+        description: "It may take some time to show on profile.",
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to like.");
+    },
   });
 };
 
@@ -119,5 +134,21 @@ export const useGetPictureById = (id: string) => {
   return useQuery({
     queryKey: ["picture", id],
     queryFn: () => getPictureById(id),
+  });
+};
+
+export const useDeletePicture = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id }: { id: string; userId: string }) => deletePicture(id),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["user-pictures", variables.userId],
+      });
+      toast.success("Picture deleted successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to delete picture");
+    },
   });
 };

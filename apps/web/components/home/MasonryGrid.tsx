@@ -44,6 +44,9 @@ export function MasonryGrid() {
           blurhash: pic.metadata.blurhash,
           // user: pic.user,
           key: pic.id,
+          title: pic.title,
+          created_at: pic.created_at,
+          tags: pic.tags,
           onClick: () => {
             setOpen(true, pic);
           },

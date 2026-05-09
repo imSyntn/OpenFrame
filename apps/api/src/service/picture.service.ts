@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
 import { UnderProcessingPictureType } from "@workspace/types";
+import { deletePictureIndex } from "./indexing.service";
 
 export const getUserPictures = async (id: string, lastId: string | null) => {
   const cacheKey = `user:pictures:${id}:${lastId || "-1"}`;
@@ -127,6 +128,42 @@ export const getPictureById = async (id: string) => {
   await cache.set(`picture:${id}`, JSON.stringify(picture), "EX", 60 * 60 * 2);
 
   return picture;
+};
+
+export const deletePicture = async (id: string) => {
+  const picture = await prisma.picture.delete({
+    where: { id },
+  });
+
+  await deletePictureIndex(id);
+  const pipe = cache.pipeline();
+
+  const patterns = [
+    `user:pictures:${picture.user_id}:*`,
+    "explore:pictures:*",
+    `user:liked-pictures:${picture.user_id}:*`,
+  ];
+
+  pipe.del(`picture:${id}`);
+
+  await Promise.all(
+    patterns.map((pattern) => {
+      return new Promise((resolve) => {
+        const stream = cache.scanStream({
+          match: pattern,
+          count: 100,
+        });
+
+        stream.on("data", (keys) => {
+          if (keys.length) pipe.del(keys);
+        });
+
+        stream.on("end", resolve);
+      });
+    }),
+  );
+
+  await pipe.exec();
 };
 
 export const getPictureUploadUrl = async (

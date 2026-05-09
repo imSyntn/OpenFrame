@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Field, FieldLabel, FieldSet } from "@workspace/ui/components/field";
 import { ChangeAvatar } from "./ChangeAvatar";
 import { useRouter } from "next/navigation";
+import { WarningModal } from "@/components/common";
 
 export function Form({ handleClose }: { handleClose: () => void }) {
   const { name, avatar, bio, location, email, joined_at, links, id, setData } =
@@ -195,13 +196,19 @@ export function Form({ handleClose }: { handleClose: () => void }) {
         <div className="border-t pt-6 flex items-center justify-between">
           <p className="text-sm font-semibold text-destructive">Danger Zone</p>
 
-          <Button
+          {/* <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={isDeleting}
           >
             Delete Account
-          </Button>
+          </Button> */}
+
+          <WarningModal onClick={handleDelete}>
+            <Button variant="destructive" disabled={isDeleting}>
+              Delete Account
+            </Button>
+          </WarningModal>
         </div>
       </FieldSet>
     </form>

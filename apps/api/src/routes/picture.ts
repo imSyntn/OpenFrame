@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createPictureController,
+  deletePictureController,
   downloadPictureController,
   getAllPictureStatusController,
   getExplorePicturesController,
@@ -13,7 +14,12 @@ import {
   likePictureController,
   viewPictureController,
 } from "../controller/picture.controller";
-import { authMiddleware, pollingLimiter, uploadLimiter } from "@/middleware";
+import {
+  authMiddleware,
+  checkPictureOwner,
+  pollingLimiter,
+  uploadLimiter,
+} from "@/middleware";
 
 const pictureRouter = Router();
 
@@ -51,6 +57,13 @@ pictureRouter.post(
 pictureRouter.post("/view/:id", viewPictureController);
 pictureRouter.post("/download/:id", downloadPictureController);
 pictureRouter.post("/like/:id", authMiddleware, likePictureController);
+
+pictureRouter.delete(
+  "/:id",
+  authMiddleware,
+  checkPictureOwner,
+  deletePictureController,
+);
 
 pictureRouter.get("/:id", getPictureByIdController);
 
