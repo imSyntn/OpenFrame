@@ -15,6 +15,7 @@ import { MAX_PICTURE_SIZE } from "@workspace/constants";
 import { useGetUploadUrl } from "@/hooks";
 import { toast } from "sonner";
 import axios from "axios";
+import { isNSFW } from "@/lib";
 
 export function Content() {
   const [file, setFile] = useState<File | null>(null);
@@ -25,47 +26,71 @@ export function Content() {
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
   const controllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    const uploadImage = async () => {
-      if (!file) return;
-      setIsUploading(true);
-      controllerRef.current = new AbortController();
-      try {
-        const { type, size } = file;
+  const checkNFSWContent = async () => {
+    if (!file) return;
 
-        const { uploadUrl, fileUrl, id } = await getUploadUrl({
-          type,
-          size,
-        });
+    let toastId: string | number | undefined;
 
-        if (!uploadUrl) {
-          toast.error("Failed to get upload url");
-          return;
-        }
+    try {
+      toastId = toast.loading("Checking NSFW content");
+      const result = await isNSFW(file);
 
-        await axios.put(uploadUrl, file, {
-          headers: {
-            "Content-Type": type,
-          },
-          signal: controllerRef.current.signal,
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / (progressEvent.total || 1),
-            );
-            setProgress(percentCompleted);
-          },
-        });
-        setUploadedUrl(fileUrl);
-        setPictureId(id);
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error?.response?.data?.message || "Failed to upload image");
-      } finally {
-        setIsUploading(false);
+      if (result) {
+        toast.error("Image contains NSFW content", { id: toastId });
+        setFile(null);
+        return;
       }
-    };
-    uploadImage();
+      toast.dismiss(toastId);
+      uploadImage();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to check NSFW", { id: toastId });
+    }
+  };
+
+  useEffect(() => {
+    checkNFSWContent();
   }, [file]);
+
+  const uploadImage = async () => {
+    if (!file) return;
+    setIsUploading(true);
+    controllerRef.current = new AbortController();
+    try {
+      const { type, size } = file;
+
+      const { uploadUrl, fileUrl, id } = await getUploadUrl({
+        type,
+        size,
+      });
+
+      if (!uploadUrl) {
+        toast.error("Failed to get upload url");
+        return;
+      }
+
+      await axios.put(uploadUrl, file, {
+        headers: {
+          "Content-Type": type,
+        },
+        signal: controllerRef.current.signal,
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total || 1),
+          );
+
+          setProgress(percentCompleted);
+        },
+      });
+      setUploadedUrl(fileUrl);
+      setPictureId(id);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to upload image");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const cancelUpload = () => {
     setFile(null);
@@ -82,10 +107,10 @@ export function Content() {
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
-              className={cn(
-                "max-h-[70vh] w-auto rounded-md object-contain transition",
-                isUploading && "opacity-40 blur-sm",
-              )}
+              className="max-h-[70vh] w-auto rounded-md object-contain transition"
+              style={{
+                opacity: isUploading ? Math.max(progress / 100, 0.2) : 1,
+              }}
             />
 
             {isUploading && <Progress value={progress} className="w-full" />}
