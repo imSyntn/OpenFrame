@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-
-import "@workspace/ui/globals.css";
+import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
@@ -53,16 +52,17 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "OpenFrame",
-    description: "The internet's source of freely usable images. Powered by creators everywhere.",
+    description:
+      "The internet's source of freely usable images. Powered by creators everywhere.",
     url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/search?q={search_term_string}`
+        urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/search?q={search_term_string}`,
       },
-      "query-input": "required name=search_term_string"
-    }
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (

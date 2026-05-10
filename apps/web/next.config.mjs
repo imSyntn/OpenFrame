@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
+import createMDX from "@next/mdx";
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
     "@workspace/ui",
@@ -8,6 +9,7 @@ const nextConfig = {
     "@workspace/constants",
     "@workspace/schema"
   ],
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
@@ -20,4 +22,11 @@ const nextConfig = {
   }
 }
 
-export default nextConfig
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: ['rehype-slug'],
+  },
+})
+
+export default withMDX(nextConfig)

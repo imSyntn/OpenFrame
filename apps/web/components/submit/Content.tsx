@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ImageInput } from "../common";
-import { Input } from "@workspace/ui/components/input";
 import { Button } from "@workspace/ui/components/button";
 import { XIcon } from "lucide-react";
 import { Progress } from "@workspace/ui/components/progress";
-import { cn } from "@workspace/ui/lib/utils";
 import {
   Tooltip,
   TooltipContent,

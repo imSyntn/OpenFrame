@@ -2,7 +2,7 @@ import { AuthWrapper, SignupForm } from "@/components/auth";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign Up | OpenFrame",
+  title: "Sign Up",
   description: "Create your OpenFrame account and start building.",
 };
 

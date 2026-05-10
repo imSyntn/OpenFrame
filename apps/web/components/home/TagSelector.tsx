@@ -53,7 +53,7 @@ export function TagSelector({
                 </div>
               );
             })
-          : tags.map((tag) => {
+          : tags?.map((tag) => {
               const isSelected = tag.id === Number(selectedTag);
               return (
                 <div key={tag.id} className="flex flex-col items-center gap-1">

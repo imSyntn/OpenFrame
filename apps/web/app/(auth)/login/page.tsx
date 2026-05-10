@@ -2,7 +2,7 @@ import { AuthWrapper, LoginForm } from "@/components/auth";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login | OpenFrame",
+  title: "Login",
   description: "Login to your OpenFrame account and start building.",
 };
 

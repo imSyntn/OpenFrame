@@ -1,0 +1,12 @@
+@import "@workspace/ui/globals.css";
+@plugin "@tailwindcss/typography";
+
+::selection {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+::-moz-selection {
+    background-color: var(--foreground);
+    color: var(--background);
+}
