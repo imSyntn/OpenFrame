@@ -115,7 +115,7 @@ export default function AboutPage() {
                 <Badge
                   key={tech}
                   variant="secondary"
-                  className="px-5 py-2.5 text-sm font-medium bg-secondary/80 hover:bg-secondary transition-colors"
+                  className="px-5 py-2.5 text-sm font-medium border border-accent"
                 >
                   {tech}
                 </Badge>

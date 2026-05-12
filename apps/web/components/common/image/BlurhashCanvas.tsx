@@ -7,6 +7,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImageTags } from "./modal";
 import { formatDistanceToNow } from "date-fns";
+import { Lens } from "./Lens";
 
 export function BlurHashCanvasComponent({
   hash,
@@ -67,9 +68,14 @@ export const BlurHashCanvas = memo(BlurHashCanvasComponent);
 type Props = {
   photo: any;
   hoverEffect?: boolean;
+  showLens?: boolean;
 };
 
-function PhotoWithBlurHashComponent({ photo, hoverEffect = true }: Props) {
+function PhotoWithBlurHashComponent({
+  photo,
+  hoverEffect = true,
+  showLens = false,
+}: Props) {
   const [loaded, setLoaded] = useState(false);
 
   const tags = photo.tags?.map((item: { tag: tagsType }) => item.tag);
@@ -96,17 +102,19 @@ function PhotoWithBlurHashComponent({ photo, hoverEffect = true }: Props) {
         />
       </div>
 
-      <LazyLoadImage
-        src={photo.src}
-        alt={photo.alt ?? ""}
-        onLoad={() => setLoaded(true)}
-        className={cn(
-          "w-full h-full object-contain  transition-all duration-500",
-          loaded ? "opacity-100 cursor-pointer" : "opacity-0",
-          hoverEffect && "group-hover:scale-105",
-        )}
-        onClick={photo.onClick}
-      />
+      <Lens show={showLens}>
+        <LazyLoadImage
+          src={photo.src}
+          alt={photo.alt ?? ""}
+          onLoad={() => setLoaded(true)}
+          className={cn(
+            "w-full h-full object-contain  transition-all duration-500",
+            loaded ? "opacity-100 cursor-pointer" : "opacity-0",
+            hoverEffect && "group-hover:scale-105",
+          )}
+          onClick={photo.onClick}
+        />
+      </Lens>
       {hoverEffect && (
         <div className="absolute inset-0 flex flex-col justify-end p-3 opacity-0 bg-black/50 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
           {photo.title && (
