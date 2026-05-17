@@ -5,6 +5,7 @@ const VALID_SLUGS = [
   "cookie-policy",
   "terms-of-service",
   "copyright-policy",
+  "license-details",
   "faq",
   "api",
   "roadmap",

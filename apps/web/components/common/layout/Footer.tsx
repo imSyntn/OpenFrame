@@ -16,6 +16,7 @@ const legalLinks = [
   { label: "Terms of Service", href: "/terms-of-service" },
   { label: "Cookie Policy", href: "/cookie-policy" },
   { label: "Copyright Policy", href: "/copyright-policy" },
+  { label: "License Details", href: "/license-details" },
 ];
 
 const resourceLinks = [
