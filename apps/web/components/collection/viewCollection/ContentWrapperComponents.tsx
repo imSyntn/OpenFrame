@@ -183,7 +183,7 @@ export function HeaderRight({
 }
 
 export function ContentBody({ children }: { children: React.ReactElement }) {
-  return <ScrollArea className="max-h-[70vh] pr-4">{children}</ScrollArea>;
+  return <ScrollArea className="max-h-[70dvh] pr-4">{children}</ScrollArea>;
 }
 
 export function CollectionCardWrapper({

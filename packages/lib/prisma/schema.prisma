@@ -82,6 +82,7 @@ model Picture {
   tags             PicTag[]
   user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   src              Src[]
+  license          License          @default(CC0_1_0)
 
   @@index([user_id, id])
 }
@@ -154,6 +155,14 @@ model CollectionItem {
   picture       Picture    @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 
   @@id([collection_id, pic_id])
+}
+
+enum License {
+  ALL_RIGHTS_RESERVED
+  CC_BY_4_0
+  CC_BY_SA_4_0
+  CC_BY_NC_4_0
+  CC0_1_0
 }
 
 enum Resolution {

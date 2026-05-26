@@ -21,7 +21,7 @@ export function AllCollections() {
     return (
       <ErrorOccured
         title={(error as any)?.response?.data?.message}
-        className="min-h-[calc(100vh-200px)]"
+        className="min-h-[calc(100dvh-200px)]"
         onClick={() => refetch()}
       />
     );

@@ -1,4 +1,5 @@
 import { tagsType } from "@workspace/types";
+import { Licenses } from "@workspace/constants";
 
 export interface PictureType {
   id: string;
@@ -6,6 +7,7 @@ export interface PictureType {
   alt: string;
   description: string;
   created_at: string;
+  license: Licenses;
 
   user: {
     id: string;

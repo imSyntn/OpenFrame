@@ -52,7 +52,7 @@ export function OnThisPage() {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-auto">
+    <nav className="sticky top-16 max-h-[calc(100dvh-4rem)] overflow-auto">
       <p className="mb-3 text-sm font-semibold text-foreground">On This Page</p>
       <ul className="space-y-1.5 text-sm">
         {headings.map((heading) => (

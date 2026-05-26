@@ -46,7 +46,7 @@ export function CreateCollection({
           <Button>Create collection</Button>
         </DialogTrigger>
       </div>
-      <DialogContent className="min-w-[95vw] sm:min-w-[70vw] max-h-[90vh] overflow-y-auto pr-0">
+      <DialogContent className="min-w-[95vw] sm:min-w-[70vw] max-h-[90dvh] overflow-y-auto pr-0">
         <DialogHeader>
           <DialogTitle>Create collection</DialogTitle>
           <DialogDescription>
@@ -62,7 +62,7 @@ export function CreateCollection({
             </Link>
           </div>
         ) : (
-          <ScrollArea className="max-h-[70vh] pr-4">
+          <ScrollArea className="max-h-[70dvh] pr-4">
             <Form onCreated={handleModalClose} />
           </ScrollArea>
         )}

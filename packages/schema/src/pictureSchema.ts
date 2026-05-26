@@ -1,6 +1,7 @@
 import {
   PIC_DESCRIPTION_MAX_CHAR_LIMIT,
   PIC_TITLE_MAX_CHAR_LIMIT,
+  Licenses,
 } from "@workspace/constants";
 import { z } from "zod";
 
@@ -30,4 +31,5 @@ export const pictureSchema = z.object({
     )
     .min(1, "Minimum 1 tag is required")
     .max(10, "Maximum 10 tags are allowed"),
+  license: z.nativeEnum(Licenses),
 });

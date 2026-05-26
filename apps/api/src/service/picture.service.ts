@@ -1,7 +1,11 @@
 import { prisma } from "@workspace/lib/prisma";
 import { cache } from "@workspace/lib/redis";
 import { kafkaProduceMessage } from "@workspace/lib/kafka";
-import { PIC_PER_PAGE, EXPLORE_PIC_PER_PAGE } from "@workspace/constants";
+import {
+  PIC_PER_PAGE,
+  EXPLORE_PIC_PER_PAGE,
+  Licenses,
+} from "@workspace/constants";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -287,6 +291,7 @@ export const createPicture = async (
   url: string,
   userId: string,
   pictureId: string,
+  license: Licenses,
 ) => {
   const newPicture: UnderProcessingPictureType = {
     id: pictureId,
@@ -298,6 +303,7 @@ export const createPicture = async (
     stepsCompleted: [],
     created_at: new Date().toISOString(),
     userId,
+    license,
   };
 
   await cache.hset(

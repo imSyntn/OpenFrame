@@ -18,7 +18,7 @@ export function ViewCollectionModal() {
         setOpenCollectionModal(value ? collection : null)
       }
     >
-      <DialogContent className="min-w-[95vw] max-h-[90vh] overflow-y-auto pr-0">
+      <DialogContent className="min-w-[95vw] max-h-[90dvh] overflow-y-auto pr-0">
         <CollectionModalContent />
       </DialogContent>
     </Dialog>

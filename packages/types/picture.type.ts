@@ -1,9 +1,26 @@
+export type LicenseType =
+  | "ALL_RIGHTS_RESERVED"
+  | "CC_BY_4_0"
+  | "CC_BY_SA_4_0"
+  | "CC_BY_NC_4_0"
+  | "CC0_1_0";
+
 enum Resolution {
   ORIGINAL = "ORIGINAL",
   LARGE = "LARGE",
   MEDIUM = "MEDIUM",
   SMALL = "SMALL",
   THUMBNAIL = "THUMBNAIL",
+}
+
+export interface LicenseObjType {
+  identifier: string;
+  key: string;
+  name: string;
+  officialUrl?: string;
+  description: string;
+  bestFor: string;
+  permissions: Record<string, boolean>;
 }
 
 export interface SrcType {
@@ -33,6 +50,7 @@ export interface UnderProcessingPictureType {
   metadata?: Record<string, string>;
   userId?: string;
   error?: string;
+  license: LicenseType;
 }
 
 export interface MetadataCacheType {

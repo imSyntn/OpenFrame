@@ -3,14 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { ModalHeader } from "./ModalHeader";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { PhotoWithBlurHash } from "../BlurhashCanvas";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
+import { PhotoWithBlurHash, ViewBlurhashModal } from "../BlurhashCanvas";
 import { tagsType } from "@workspace/types";
 import { useGlobalStateStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import { ImageTags } from "./ImageTags";
 import { useIncrementViewCount } from "@/hooks";
-import { notFound } from "next/navigation";
-import { cn } from "@workspace/ui/lib/utils";
+import { EyeIcon, InfoIcon } from "lucide-react";
+import { LICENSES_MAP } from "@workspace/constants";
+import Link from "next/link";
 
 const TitleDesc = ({
   title,
@@ -143,6 +150,24 @@ export function Content() {
 
           <ImageTags tags={tags} showTitle={false} />
 
+          <div className="flex flex-col gap-2">
+            <p className="text-foreground text-base font-semibold">License</p>
+            <Alert variant={image.license}>
+              <InfoIcon />
+              <AlertTitle>{LICENSES_MAP[image.license].name}</AlertTitle>
+              <AlertDescription>
+                {LICENSES_MAP[image.license].description}
+              </AlertDescription>
+              <AlertAction>
+                <Button variant="link">
+                  <Link href="/license-details" target="_blank">
+                    Learn More
+                  </Link>
+                </Button>
+              </AlertAction>
+            </Alert>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-xl border p-5">
               <h3 className="font-semibold text-base mb-4">Details</h3>
@@ -174,9 +199,14 @@ export function Content() {
 
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground mr-2">BlurHash</span>
-                  <p className="break-all text-xs">
-                    {image.metadata?.blurhash}
-                  </p>
+                  <ViewBlurhashModal
+                    hash={image.metadata?.blurhash}
+                    aspectRatio={`${originalWidth} / ${originalHeight}`}
+                  >
+                    <Button size="sm" variant="outline">
+                      <EyeIcon /> View BlurHash
+                    </Button>
+                  </ViewBlurhashModal>
                 </div>
               </div>
             </div>

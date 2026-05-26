@@ -3,16 +3,25 @@ import type { SrcType, UnderProcessingPictureType } from "@workspace/types";
 
 export const bulkWrite = async (items: UnderProcessingPictureType[]) => {
   await prisma.$transaction(async (tx) => {
-    await tx.picture.createMany({
-      data: items.map((item) => ({
-        id: item.id,
-        user_id: item.userId as string,
-        title: item.title,
-        description: item.description,
-        alt: item.title,
-      })),
-      skipDuplicates: true,
-    });
+    for (const item of items) {
+      await tx.picture.upsert({
+        where: { id: item.id },
+        update: {
+          title: item.title,
+          description: item.description,
+          alt: item.title,
+          license: item.license,
+        },
+        create: {
+          id: item.id,
+          user_id: item.userId as string,
+          title: item.title,
+          description: item.description,
+          alt: item.title,
+          license: item.license,
+        },
+      });
+    }
 
     await tx.metadata.createMany({
       data: items.map((item) => ({

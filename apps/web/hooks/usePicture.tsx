@@ -80,6 +80,8 @@ export const useCreatePictureUpload = () => {
       description?: string;
       tags: { id: number; name: string }[];
       url: string;
+      pictureId: string;
+      license: string;
     }) => createPictureUpload(payload),
   });
 };

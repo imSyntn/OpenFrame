@@ -73,7 +73,7 @@ export function Liked() {
       <NotFound
         Icon={ImageOff}
         title="No Liked Images"
-        className="min-h-[50vh]"
+        className="min-h-[50dvh]"
         description={`${name} hasn't liked any images yet.`}
       />
     );

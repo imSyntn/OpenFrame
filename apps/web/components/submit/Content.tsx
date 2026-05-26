@@ -105,7 +105,7 @@ export function Content() {
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
-              className="max-h-[70vh] w-auto rounded-md object-contain transition"
+              className="max-h-[70dvh] w-auto rounded-md object-contain transition"
               style={{
                 opacity: isUploading ? Math.max(progress / 100, 0.2) : 1,
               }}

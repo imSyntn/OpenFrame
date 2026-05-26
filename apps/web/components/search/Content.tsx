@@ -18,7 +18,7 @@ import { ErrorOccured } from "../common";
 import { PicturesContainer } from "./PicturesContainer";
 
 function Container({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-[50vh] w-full px-10 mb-10">{children}</div>;
+  return <div className="min-h-[50dvh] w-full px-10 mb-10">{children}</div>;
 }
 
 export function Content({ query, type }: { query: string; type?: string }) {
@@ -124,7 +124,7 @@ export function Content({ query, type }: { query: string; type?: string }) {
       <Container>
         <ErrorOccured
           title={(error as any)?.response?.data?.message}
-          className="min-h-[calc(100vh-200px)]"
+          className="min-h-[calc(100dvh-200px)]"
           onClick={() => refetch()}
         />
       </Container>

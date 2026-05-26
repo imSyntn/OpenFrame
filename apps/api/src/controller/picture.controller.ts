@@ -15,7 +15,11 @@ import {
   incrementLikeCount,
   incrementViewCount,
 } from "@/service";
-import { MAX_AVATAR_SIZE, MAX_PICTURE_SIZE } from "@workspace/constants";
+import {
+  MAX_AVATAR_SIZE,
+  MAX_PICTURE_SIZE,
+  Licenses,
+} from "@workspace/constants";
 import { Request, Response, NextFunction } from "express";
 
 export const getUserPicturesController = async (
@@ -133,7 +137,7 @@ export const createPictureController = async (
   next: NextFunction,
 ) => {
   try {
-    const { title, description, tags, url, pictureId } = req.body;
+    const { title, description, tags, url, pictureId, license } = req.body;
     const { id: userID } = req.user as { id: string };
 
     const picture = pictureSchema.parse({
@@ -142,6 +146,7 @@ export const createPictureController = async (
       tags,
       url,
       pictureId,
+      license,
     });
 
     await createPicture(
@@ -151,6 +156,7 @@ export const createPictureController = async (
       picture.url,
       userID,
       picture.pictureId,
+      picture.license,
     );
 
     return res.status(200).json({ message: "Picture uploaded successfully" });

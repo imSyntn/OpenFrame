@@ -13,6 +13,7 @@ import { DownloadButton } from "./DownloadButton";
 import { OwnerInfo } from "./OwnerInfo";
 import { AddToCollection } from "./AddToCollection";
 import { WarningModal } from "../../WarningModal";
+import { copyToClipboard } from "@/utils";
 
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
@@ -29,15 +30,12 @@ export function ModalHeader() {
     incrementLikeCount(image.id);
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/picture/${image.id}`,
-      );
-      toast.success("Link copied to clipboard.");
-    } catch (error) {
-      toast.error("Failed to copy link.");
-    }
+  const handleShare = () => {
+    copyToClipboard(
+      `${window.location.origin}/picture/${image.id}`,
+      "Link copied to clipboard",
+      "Failed to copy link",
+    );
   };
 
   const handleDelete = async () => {

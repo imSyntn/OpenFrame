@@ -370,6 +370,9 @@ importers:
 
   packages/constants:
     dependencies:
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../types
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -464,6 +467,9 @@ importers:
       '@workspace/constants':
         specifier: workspace:*
         version: link:../constants
+      '@workspace/types':
+        specifier: workspace:^
+        version: link:../types
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

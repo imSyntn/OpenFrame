@@ -55,6 +55,8 @@ export const createPictureUpload = async (payload: {
   description?: string;
   tags: { id: number; name: string }[];
   url: string;
+  pictureId: string;
+  license: string;
 }) => {
   const res = await api.post("/api/picture/create", payload);
   return res.data.message;

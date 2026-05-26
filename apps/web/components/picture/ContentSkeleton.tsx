@@ -22,8 +22,8 @@ export function ContentSkeleton() {
 
       <ScrollArea className="flex-1 min-h-0 px-6 pb-6">
         <div className="space-y-6">
-          <div className="w-full flex justify-center rounded-xl overflow-hidden min-h-[60vh]">
-            <Skeleton className="w-full h-[60vh] rounded-xl" />
+          <div className="w-full flex justify-center rounded-xl overflow-hidden min-h-[60dvh]">
+            <Skeleton className="w-full h-[60dvh] rounded-xl" />
           </div>
 
           <div className="space-y-2">

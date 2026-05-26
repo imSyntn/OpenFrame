@@ -16,7 +16,7 @@ export function NotFound({
   return (
     <div
       className={cn(
-        "flex min-h-[calc(100vh-55px)] w-full items-center justify-center px-6",
+        "flex min-h-[calc(100dvh-55px)] w-full items-center justify-center px-6",
         className,
       )}
     >

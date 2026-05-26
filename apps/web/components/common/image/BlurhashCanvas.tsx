@@ -8,15 +8,28 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImageTags } from "./modal";
 import { formatDistanceToNow } from "date-fns";
 import { Lens } from "./Lens";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { copyToClipboard } from "@/utils";
+import { Button } from "@workspace/ui/components/button";
+import { Copy } from "lucide-react";
 
 export function BlurHashCanvasComponent({
   hash,
   width,
   height,
+  className,
 }: {
   hash: string;
   width: number;
   height: number;
+  className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -51,7 +64,12 @@ export function BlurHashCanvasComponent({
   }, [hash, width, height]);
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <div
+      className={cn(
+        "absolute inset-0 flex items-center justify-center pointer-events-none",
+        className,
+      )}
+    >
       <canvas
         ref={ref}
         className="w-full h-full max-w-full max-h-full scale-100 rounded-xl"
@@ -91,7 +109,7 @@ function PhotoWithBlurHashComponent({
     >
       <div
         className={cn(
-          "absolute inset-0 transition-opacity duration-500",
+          "absolute inset-0 transition-opacity duration-500 pointer-events-none",
           loaded ? "opacity-0" : "opacity-100",
         )}
       >
@@ -139,3 +157,49 @@ function PhotoWithBlurHashComponent({
 }
 
 export const PhotoWithBlurHash = memo(PhotoWithBlurHashComponent);
+
+export function ViewBlurhashModal({
+  hash,
+  aspectRatio,
+  children,
+}: {
+  hash: string;
+  aspectRatio: string;
+  children: React.ReactNode;
+}) {
+  const copyBlurhash = () => {
+    copyToClipboard(
+      hash,
+      "Blurhash copied to clipboard",
+      "Error to copy blurhash",
+    );
+  };
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>BlurHash</DialogTitle>
+          <DialogDescription className="flex items-center">
+            {hash}
+            <Button size="icon" variant="ghost" onClick={copyBlurhash}>
+              <Copy />
+            </Button>
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex w-full justify-center">
+          <div
+            className="relative overflow-hidden rounded-xl"
+            style={{
+              aspectRatio,
+              width: "min(100%, 70vh)",
+              maxHeight: "70vh",
+            }}
+          >
+            <BlurHashCanvas hash={hash || ""} width={300} height={300} />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
