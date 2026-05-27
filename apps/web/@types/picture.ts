@@ -27,6 +27,7 @@ export interface PictureType {
   metadata: {
     blurhash: string;
     dominant_color: string;
+    palette: string[];
     others?: Record<string, string>;
   };
 

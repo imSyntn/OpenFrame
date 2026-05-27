@@ -93,7 +93,8 @@ export function OwnerInfo({ id }: { id: string }) {
 
                   {data?.location && (
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <MapPin className="h-3 w-3" /> {data?.location}
+                      <MapPin className="h-3 w-3" color="red" />{" "}
+                      {data?.location}
                     </p>
                   )}
                 </div>

@@ -1,11 +1,7 @@
 import "@workspace/lib/env";
 import { kafka, kafkaProduceMessage } from "@workspace/lib/kafka";
 import { logger } from "@workspace/lib/logger";
-import {
-  extractMetadata,
-  getBlurHash,
-  getDominantColor,
-} from "./metadataExtractor";
+import { extractMetadata, getBlurHash, getColors } from "./metadataExtractor";
 import { cache } from "@workspace/lib/redis";
 import type {
   MetadataCacheType,
@@ -70,17 +66,20 @@ const run = async () => {
 
         const buffer = Buffer.from(await img.arrayBuffer());
 
-        const [metadata, blurhash, dominant_color] = await Promise.all([
+        const [metadata, blurhash, colors] = await Promise.all([
           extractMetadata(buffer),
           getBlurHash(buffer),
-          getDominantColor(buffer),
+          getColors(buffer),
         ]);
+
+        const { dominant_color, palette } = colors;
 
         const updatedCache: MetadataCacheType = {
           metadata: {
             others: metadata,
             blurhash,
             dominant_color: dominant_color as string,
+            palette,
           },
           stepsCompleted: ["metadata", "blurhash", "dominant_color"],
           status: "done",

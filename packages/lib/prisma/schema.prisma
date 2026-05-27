@@ -101,11 +101,12 @@ model Src {
 }
 
 model Metadata {
-  pic_id         String  @id
+  pic_id         String   @id
   dominant_color String
+  palette        String[] @default([])
   blurhash       String
   others         Json?
-  picture        Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)
+  picture        Picture  @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 }
 
 model Tag {

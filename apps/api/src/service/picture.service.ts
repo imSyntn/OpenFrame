@@ -203,6 +203,7 @@ export const getPictureTags = async () => {
   }
 
   const tags = await prisma.tag.findMany({
+    take: 20,
     include: {
       pictures: {
         take: 1,

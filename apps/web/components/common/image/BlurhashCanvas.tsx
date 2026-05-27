@@ -87,12 +87,14 @@ type Props = {
   photo: any;
   hoverEffect?: boolean;
   showLens?: boolean;
+  isPreview?: boolean;
 };
 
 function PhotoWithBlurHashComponent({
   photo,
   hoverEffect = true,
   showLens = false,
+  isPreview = false,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
 
@@ -104,7 +106,12 @@ function PhotoWithBlurHashComponent({
       style={{
         aspectRatio: `${photo.width} / ${photo.height}`,
         width: "100%",
-        maxHeight: "60vh",
+        ...(isPreview
+          ? {
+              maxHeight: "60vh",
+              maxWidth: `calc(60vh * (${photo.width} / ${photo.height}))`,
+            }
+          : {}),
       }}
     >
       <div
