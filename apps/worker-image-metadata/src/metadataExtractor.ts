@@ -26,10 +26,13 @@ export const getBlurHash = async (imageBuffer: Buffer) => {
   return blurhash;
 };
 
-export const getDominantColor = async (imageBuffer: Buffer) => {
+export const getColors = async (imageBuffer: Buffer) => {
   const palette = await Vibrant.from(imageBuffer).getPalette();
 
-  const color = palette.Vibrant?.hex;
+  const dominant_color = palette.Vibrant?.hex;
+  const paletteArray = Object.values(palette)
+    .map((color) => color?.hex)
+    .filter((color) => typeof color === "string");
 
-  return color;
+  return { dominant_color, palette: paletteArray };
 };

@@ -18,6 +18,7 @@ import { useIncrementViewCount } from "@/hooks";
 import { EyeIcon, InfoIcon } from "lucide-react";
 import { LICENSES_MAP } from "@workspace/constants";
 import Link from "next/link";
+import { ColorBlock } from "./ColorBlock";
 
 const TitleDesc = ({
   title,
@@ -92,10 +93,14 @@ export function Content() {
     .map((tag) => tag.tag);
 
   const original = image?.src?.find((s) => s.resolution === "ORIGINAL");
+  const previewImage =
+    image?.src?.find(
+      (s) => s.resolution === "MEDIUM" || s.resolution === "LARGE",
+    ) || original;
   const originalWidth = original?.width;
   const originalHeight = original?.height;
   const photo = {
-    src: original?.url!,
+    src: previewImage?.url!,
     alt: image?.alt,
     width: originalWidth!,
     height: originalHeight!,
@@ -119,6 +124,7 @@ export function Content() {
               photo={photo}
               hoverEffect={false}
               showLens={true}
+              isPreview={true}
             />
           </div>
 
@@ -186,19 +192,19 @@ export function Content() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Dominant</span>
+                  <ColorBlock color={image?.metadata?.dominant_color} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Palette</span>
                   <div className="flex items-center gap-2">
-                    <div
-                      className="w-5 h-5 rounded border"
-                      style={{
-                        backgroundColor: image?.metadata?.dominant_color,
-                      }}
-                    />
-                    <span>{image.metadata?.dominant_color}</span>
+                    {image?.metadata?.palette?.map((color) => (
+                      <ColorBlock key={color} color={color} />
+                    ))}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground mr-2">BlurHash</span>
+                  <span className="text-muted-foreground">BlurHash</span>
                   <ViewBlurhashModal
                     hash={image.metadata?.blurhash}
                     aspectRatio={`${originalWidth} / ${originalHeight}`}

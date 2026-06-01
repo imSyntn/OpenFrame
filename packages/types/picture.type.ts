@@ -37,6 +37,13 @@ export interface tagsType {
   url?: string;
 }
 
+interface MetadataType {
+  others: Record<string, string>;
+  blurhash: string;
+  dominant_color: string;
+  palette: string[];
+}
+
 export interface UnderProcessingPictureType {
   id: string;
   title: string;
@@ -47,14 +54,14 @@ export interface UnderProcessingPictureType {
   processing: "ongoing" | "ready" | "failed" | "done";
   created_at: string;
   stepsCompleted: string[];
-  metadata?: Record<string, string>;
+  metadata?: MetadataType;
   userId?: string;
   error?: string;
   license: LicenseType;
 }
 
 export interface MetadataCacheType {
-  metadata: Record<string, string>;
+  metadata: MetadataType;
   stepsCompleted: string[];
   retry?: number;
   status: "done" | "failed";
