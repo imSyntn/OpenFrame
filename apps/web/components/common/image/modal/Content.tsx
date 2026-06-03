@@ -13,26 +13,61 @@ import { PhotoWithBlurHash, ViewBlurhashModal } from "../BlurhashCanvas";
 import { tagsType } from "@workspace/types";
 import { useGlobalStateStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
 import { ImageTags } from "./ImageTags";
 import { useIncrementViewCount } from "@/hooks";
-import { EyeIcon, InfoIcon } from "lucide-react";
+import { AlertTriangle, Ellipsis, EyeIcon, InfoIcon } from "lucide-react";
 import { LICENSES_MAP } from "@workspace/constants";
 import Link from "next/link";
 import { ColorBlock } from "./ColorBlock";
+import { useRouter } from "next/navigation";
 
 const TitleDesc = ({
   title,
   description,
+  imageId,
 }: {
   title: string;
   description?: string;
+  imageId: string;
 }) => {
   const [show, setShow] = useState(false);
+  const router = useRouter();
+  const setOpen = useGlobalStateStore((state) => state.setOpen);
+
+  const handleReport = () => {
+    setOpen(false);
+    router.push(`/report?imageId=${imageId}`);
+  };
+
   return (
     <div>
-      <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-        {title}
-      </h2>
+      <div className="flex gap-3 items-center justify-between">
+        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+          {title}
+        </h2>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon-sm">
+              <Ellipsis />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" side="top" className="w-fit px-2 py-1">
+            <Button
+              variant="ghost"
+              className="text-destructive hover:text-destructive"
+              onClick={handleReport}
+            >
+              <AlertTriangle />
+              Report
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
       {description && (
         <>
           <p
@@ -131,6 +166,7 @@ export function Content() {
           <TitleDesc
             title={image.title}
             description={image.description || ""}
+            imageId={image.id}
           />
 
           <div className="flex gap-10 text-sm">
@@ -184,6 +220,10 @@ export function Content() {
                   label="Date"
                   value={new Date(image.created_at).toDateString()}
                 />
+                <InfoRow
+                  label="Size"
+                  value={`${(Number(original?.size) / 1024 / 1024).toFixed(2)} MB`}
+                />
               </div>
             </div>
 
@@ -194,9 +234,9 @@ export function Content() {
                   <span className="text-muted-foreground">Dominant</span>
                   <ColorBlock color={image?.metadata?.dominant_color} />
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Palette</span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     {image?.metadata?.palette?.map((color) => (
                       <ColorBlock key={color} color={color} />
                     ))}

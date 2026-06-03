@@ -5,7 +5,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { decode } from "blurhash";
 import { memo, useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { ImageTags } from "./modal";
+import { TransparentTag } from "./modal";
 import { formatDistanceToNow } from "date-fns";
 import { Lens } from "./Lens";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { copyToClipboard } from "@/utils";
 import { Button } from "@workspace/ui/components/button";
-import { Copy } from "lucide-react";
+import { Copy, Share2 } from "lucide-react";
 
 export function BlurHashCanvasComponent({
   hash,
@@ -98,7 +98,9 @@ function PhotoWithBlurHashComponent({
 }: Props) {
   const [loaded, setLoaded] = useState(false);
 
-  const tags = photo.tags?.map((item: { tag: tagsType }) => item.tag);
+  const tags: tagsType[] = photo.tags?.map(
+    (item: { tag: tagsType }) => item.tag,
+  );
 
   return (
     <div
@@ -141,22 +143,43 @@ function PhotoWithBlurHashComponent({
         />
       </Lens>
       {hoverEffect && (
-        <div className="absolute inset-0 flex flex-col justify-end p-3 opacity-0 bg-black/50 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-          {photo.title && (
-            <p className="text-white text-sm font-semibold leading-tight truncate">
-              {photo.title}
-            </p>
-          )}
-          {photo.created_at && (
-            <p className="text-white text-xs mb-1">
-              {formatDistanceToNow(new Date(photo.created_at), {
-                addSuffix: true,
-              })}
-            </p>
-          )}
-          {tags && tags.length > 0 && (
-            <ImageTags tags={tags.slice(0, 3)} showTitle={false} />
-          )}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-0 transition-all duration-500 group-hover:opacity-100" />
+
+          <div className="absolute inset-x-0 bottom-0 flex translate-y-6 flex-col gap-3 p-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="space-y-1">
+              {photo.title && (
+                <h3 className="line-clamp-1 text-base font-semibold tracking-wide text-white drop-shadow-xl">
+                  {photo.title}
+                </h3>
+              )}
+
+              <div className="flex items-center gap-2">
+                {photo.created_at && (
+                  <p className="text-[11px] font-medium tracking-[0.15em] text-white/65 uppercase">
+                    {formatDistanceToNow(new Date(photo.created_at), {
+                      addSuffix: true,
+                    })}
+                  </p>
+                )}
+                <div className="h-1 w-1 rounded-full bg-white/40" />
+
+                <p className="text-[11px] tracking-[0.15em] text-white/50 uppercase">
+                  OpenFrame
+                </p>
+              </div>
+            </div>
+
+            {tags && tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {tags.slice(0, 3).map((tag) => (
+                  <div key={tag.id} className="pointer-events-auto">
+                    <TransparentTag tag={tag} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

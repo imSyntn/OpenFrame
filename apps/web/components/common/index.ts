@@ -6,3 +6,4 @@ export * from "./SearchBar";
 export * from "./ErrorOccured";
 export * from "./WarningModal";
 export * from "./OnThisPage";
+export * from "./NotLoggedIn";

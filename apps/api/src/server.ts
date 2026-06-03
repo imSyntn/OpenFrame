@@ -8,6 +8,7 @@ import {
   authRouter,
   collectionRouter,
   pictureRouter,
+  reportRouter,
   searchRouter,
 } from "@/routes";
 import passport from "passport";
@@ -33,6 +34,7 @@ app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
 app.use("/api/collection", collectionRouter);
 app.use("/api/search", searchRouter);
+app.use("/api/report", reportRouter);
 
 app.use("/api", apiLimiter);
 

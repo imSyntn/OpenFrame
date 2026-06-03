@@ -15,10 +15,33 @@ export interface EmailVerificationTemplateGenerateType {
   duration: string;
 }
 
+export interface ReportSubmitTemplateGenerateType {
+  name: string;
+  reportId: string;
+  contentTitle: string;
+  reportReason: string;
+  reportUrl: string;
+}
+
+export interface ReportUpdatedTemplateGenerateType {
+  reportId: string;
+  contentTitle: string;
+  status: string;
+  note: string;
+  reportUrl: string;
+}
+
 export interface EmailTemplateGenerateType {
-  type: "otp" | "welcome" | "email-verification";
+  type:
+    | "otp"
+    | "welcome"
+    | "email-verification"
+    | "report-submit"
+    | "report-updated";
   data:
     | OTPTemplateGenerateType
     | WelcomeTemplateGenerateType
-    | EmailVerificationTemplateGenerateType;
+    | EmailVerificationTemplateGenerateType
+    | ReportSubmitTemplateGenerateType
+    | ReportUpdatedTemplateGenerateType;
 }
