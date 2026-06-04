@@ -1,11 +1,10 @@
-import { GalleryPhoto, PictureType } from "@/@types";
+import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore, useProfileStore } from "@/store";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetPictures } from "@/hooks";
 import { ImageOff, Loader2 } from "lucide-react";
-import { toast } from "sonner";
 
 export function GalleryPhotosContainer() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
@@ -20,7 +19,10 @@ export function GalleryPhotosContainer() {
     error,
   } = useGetPictures(id);
 
-  const pictures = data?.pages.flatMap((page) => page.data) || [];
+  const pictures = useMemo(
+    () => data?.pages.flatMap((page) => page.data) || [],
+    [data],
+  );
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -30,16 +32,16 @@ export function GalleryPhotosContainer() {
           (src) => src.resolution === "THUMBNAIL" || src.resolution === "SMALL",
         );
         return {
-          src: thumbnail?.url || ORIGINAL?.url!,
-          width: ORIGINAL?.width!,
-          height: ORIGINAL?.height!,
+          src: thumbnail?.url || ORIGINAL?.url || "",
+          width: ORIGINAL?.width || 0,
+          height: ORIGINAL?.height || 0,
           blurhash: pic.metadata?.blurhash,
           // user: pic.user,
           key: pic.id,
           title: pic.title,
           created_at: pic.created_at,
           tags: pic.tags,
-          onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+          onClick: () => {
             setOpen(true, pic);
           },
         };
@@ -59,6 +61,7 @@ export function GalleryPhotosContainer() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p className="text-destructive">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(error as any).response?.data?.message || "Something went wrong"}
         </p>
       </div>

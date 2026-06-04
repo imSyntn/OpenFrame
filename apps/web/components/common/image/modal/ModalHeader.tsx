@@ -6,7 +6,6 @@ import {
 } from "@workspace/ui/components/dialog";
 import { useGlobalStateStore, useUserStore } from "@/store";
 import { useDeletePicture, useIncrementLikeCount } from "@/hooks";
-import { toast } from "sonner";
 import { cn } from "@workspace/ui/lib/utils";
 import { TooltipButton } from "../../layout";
 import { DownloadButton } from "./DownloadButton";
@@ -20,6 +19,7 @@ export function ModalHeader() {
   const open = useGlobalStateStore((state) => state.open);
   const setOpen = useGlobalStateStore((state) => state.setOpen);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const userId = useUserStore((state) => state.id);
   const { mutate: incrementLikeCount } = useIncrementLikeCount();
   const { mutateAsync: deletePicture } = useDeletePicture();
   if (!image) {
@@ -50,7 +50,7 @@ export function ModalHeader() {
   const isModal = open == true && !!image?.id;
 
   const Header = isModal ? DialogHeader : "div";
-  const isOwner = image.user_id === useUserStore((state) => state.id);
+  const isOwner = image.user_id === userId;
 
   return (
     <Header

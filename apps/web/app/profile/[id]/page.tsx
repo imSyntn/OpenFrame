@@ -31,7 +31,7 @@ export async function generateMetadata({
         images: data.avatar ? [data.avatar] : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "User Profile",
     };

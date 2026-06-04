@@ -135,10 +135,10 @@ export function Content() {
   const originalWidth = original?.width;
   const originalHeight = original?.height;
   const photo = {
-    src: previewImage?.url!,
+    src: previewImage?.url,
     alt: image?.alt,
-    width: originalWidth!,
-    height: originalHeight!,
+    width: originalWidth,
+    height: originalHeight,
     blurhash: image?.metadata?.blurhash,
     user: image?.user,
   };

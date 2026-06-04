@@ -15,6 +15,7 @@ export function ReportStatusContent({ reportId }: { reportId: string }) {
   }
 
   if (error || !report) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <ErrorOccured error={(error as any)?.response?.data?.message} />;
   }
 

@@ -22,7 +22,7 @@ export function ReportContent() {
         </div>
       ) : (
         <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]">
-          {reports?.map((item: any) => (
+          {reports?.map((item) => (
             <ReportCard key={item.id} report={item} />
           ))}
         </div>

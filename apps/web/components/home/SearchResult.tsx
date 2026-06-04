@@ -76,6 +76,7 @@ export function SearchResults({ query }: { query: string }) {
     return (
       <Container>
         <p className="text-center text-destructive">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(error as any)?.response?.data?.message || "Error fetching results"}
         </p>
       </Container>

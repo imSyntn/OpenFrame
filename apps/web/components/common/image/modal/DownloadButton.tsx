@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { CheckCircle2, ChevronDown, XCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { useImageDownloader } from "use_image_downloader";
 

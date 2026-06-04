@@ -48,6 +48,7 @@ export function UpdateStatus({
   });
   const { mutate: updateReport, isPending } = useUpdateReport();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = (data: any) => {
     updateReport({ ...data, reportId });
   };

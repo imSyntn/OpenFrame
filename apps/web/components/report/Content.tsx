@@ -1,5 +1,4 @@
 import { useGetPictureById } from "@/hooks";
-import { Separator } from "@workspace/ui/components/separator";
 import React from "react";
 import { NotFound } from "../common";
 import { AlertCircle } from "lucide-react";

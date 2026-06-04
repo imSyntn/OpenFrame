@@ -56,6 +56,7 @@ export function LoginForm({
       setTimeout(() => {
         router.push("/");
       }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.dismiss(toastId);
 

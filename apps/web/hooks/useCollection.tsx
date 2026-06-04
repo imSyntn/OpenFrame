@@ -84,6 +84,7 @@ export const useDeleteCollection = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteCollection(id),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.dismiss();
       console.log(error);
@@ -106,6 +107,7 @@ export const useDeleteCollectionItems = () => {
   return useMutation({
     mutationFn: ({ id, pic_ids }: { id: string; pic_ids: string[] }) =>
       removeCollectionItems(id, pic_ids),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.dismiss();
       console.log(error);
@@ -128,6 +130,7 @@ export const useAddCollectionItems = () => {
   return useMutation({
     mutationFn: ({ id, pic_ids }: { id: string; pic_ids: string[] }) =>
       addCollectionItems(id, pic_ids),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.dismiss();
       console.log(error);

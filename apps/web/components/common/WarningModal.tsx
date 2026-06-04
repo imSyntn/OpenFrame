@@ -15,6 +15,7 @@ export function WarningModal({
   onClick,
   children,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClick: (e?: any) => void;
   children: React.ReactNode;
 }) {

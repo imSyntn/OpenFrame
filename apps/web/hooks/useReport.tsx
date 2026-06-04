@@ -19,11 +19,12 @@ export const useCreateReport = () => {
       title: string;
       reason: string;
     }) => reportImage({ picId, title, reason }),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Report submitted successfully.", {
         description: "It may take some time to review the report.",
       });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to report.");
     },
@@ -63,6 +64,7 @@ export const useUpdateReport = () => {
         queryKey: ["report", response.data.reportId],
       });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to update report.");
     },

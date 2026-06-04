@@ -32,6 +32,7 @@ export function LicenseSelector({
   fieldState,
 }: {
   license: LicenseObjType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fieldState: any;
 }) {
   const permissions = Object.entries(license.permissions);

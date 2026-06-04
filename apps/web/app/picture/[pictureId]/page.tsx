@@ -36,7 +36,7 @@ export async function generateMetadata({
         images: imageUrl ? [imageUrl] : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Picture Not Found",
     };

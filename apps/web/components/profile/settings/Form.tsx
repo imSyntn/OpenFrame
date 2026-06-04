@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useProfileStore } from "@/store";
 import {
   Avatar,
@@ -49,6 +49,7 @@ export function Form({ handleClose }: { handleClose: () => void }) {
       handleClose();
       toast.success("Profile updated successfully");
       setData(res);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(
@@ -65,6 +66,8 @@ export function Form({ handleClose }: { handleClose: () => void }) {
       await deleteUser();
       toast.success("Profile deleted successfully", { id: toastId });
       router.push("/signup");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(
@@ -83,12 +86,14 @@ export function Form({ handleClose }: { handleClose: () => void }) {
     setValue("avatar", avatar);
   };
 
+  const avatarSrc = watch("avatar") || avatar;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FieldSet disabled={isPending}>
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={watch("avatar") || avatar} />
+            <AvatarImage src={avatarSrc} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>
           </Avatar>
 

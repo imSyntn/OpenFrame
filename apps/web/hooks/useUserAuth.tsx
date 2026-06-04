@@ -9,7 +9,6 @@ import {
   userSignup,
   userVerifyEmailToken,
 } from "@/lib/apis";
-import { useUserStore } from "@/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
 import { toast } from "sonner";
@@ -44,6 +43,7 @@ export const useLogout = () => {
         window.location.href = "/";
       }, 1000);
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.dismiss();
       toast.error("Logout failed", {

@@ -18,7 +18,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { copyToClipboard } from "@/utils";
 import { Button } from "@workspace/ui/components/button";
-import { Copy, Share2 } from "lucide-react";
+import { Copy } from "lucide-react";
 
 export function BlurHashCanvasComponent({
   hash,
@@ -84,6 +84,7 @@ export function BlurHashCanvasComponent({
 export const BlurHashCanvas = memo(BlurHashCanvasComponent);
 
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   photo: any;
   hoverEffect?: boolean;
   showLens?: boolean;

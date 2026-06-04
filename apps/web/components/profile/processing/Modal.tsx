@@ -10,7 +10,7 @@ import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import { BadgeCheck, Check, Hash, LoaderIcon } from "lucide-react";
+import { BadgeCheck, Check, LoaderIcon } from "lucide-react";
 import { ImageTags } from "@/components/common";
 
 export function Modal({

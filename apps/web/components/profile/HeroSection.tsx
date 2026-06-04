@@ -34,7 +34,6 @@ import {
 import { cn } from "@workspace/ui/lib/utils";
 import { notFound } from "next/navigation";
 import { useUserDetails } from "@/hooks";
-import { toast } from "sonner";
 import { SettingsModal } from "./settings/SettingsModal";
 import { VerifyEmail } from "./VerifyEmail";
 import {
@@ -92,14 +91,16 @@ export function HeroSection({ id }: { id: string }) {
         isLoading: false,
       });
     }
-  }, [isLoading, isError]);
+  }, [isLoading, isError, data]);
 
   if (isError) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((error as any)?.response?.status === 404) {
       return notFound();
     }
     return (
       <ErrorOccured
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message}
         onClick={() => refetch()}
       />
@@ -219,7 +220,11 @@ export function HeroSection({ id }: { id: string }) {
                 <Tooltip>
                   <TooltipTrigger>
                     <li>
-                      <a href={"mailto:" + email} target="_blank">
+                      <a
+                        href={"mailto:" + email}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Mail />
                       </a>
                     </li>

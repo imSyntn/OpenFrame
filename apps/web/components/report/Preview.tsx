@@ -14,10 +14,10 @@ export function Preview({ image }: { image: PictureType }) {
     ) || original;
 
   const photo = {
-    src: previewImage?.url!,
+    src: previewImage?.url,
     alt: image?.alt,
-    width: original?.width!,
-    height: original?.height!,
+    width: original?.width,
+    height: original?.height,
     blurhash: image?.metadata?.blurhash,
     user: image?.user,
   };

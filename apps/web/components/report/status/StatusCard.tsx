@@ -28,8 +28,8 @@ const statusStyles = {
 
 export function StatusCard({ report }: { report: ReportType }) {
   const thumbnail =
-    report.picture?.src?.find((img: any) => img.resolution === "SMALL") ||
-    report.picture?.src?.find((img: any) => img.resolution === "THUMBNAIL");
+    report.picture?.src?.find((img) => img.resolution === "SMALL") ||
+    report.picture?.src?.find((img) => img.resolution === "THUMBNAIL");
 
   return (
     <div className="mx-auto max-w-5xl p-4 md:p-8">

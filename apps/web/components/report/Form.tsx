@@ -28,6 +28,7 @@ export function Form({ imageId }: { imageId: string }) {
   });
   const { mutateAsync: reportImage, isPending } = useCreateReport();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     const res = await reportImage({ ...data, picId: imageId });
     router.push(`/report/status/${res.data.reportId}`);

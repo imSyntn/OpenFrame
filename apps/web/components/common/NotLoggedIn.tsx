@@ -1,5 +1,4 @@
 import React from "react";
-import { NotFound } from "./NotFound";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";

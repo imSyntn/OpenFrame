@@ -3,6 +3,7 @@ type NSFWPrediction = {
   probability: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let modelPromise: Promise<any> | null = null;
 
 export const getNSFWModel = async () => {
