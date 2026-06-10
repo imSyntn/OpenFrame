@@ -21,7 +21,7 @@
     "db:generate": "prisma generate",
     "db:seed": "prisma db seed",
     "kafka-topic-and-search-setup": "tsx src/setup/script.ts",
-    "setup:all": "pnpm db:deploy && pnpm db:generate && pnpm db:seed && pnpm kafka-topic-and-search-setup"
+    "setup:all": "pnpm db:generate &&pnpm db:deploy && pnpm db:seed && pnpm kafka-topic-and-search-setup"
   },
   "keywords": [],
   "author": "",

@@ -26,7 +26,7 @@ authRouter.post("/otp/verify", authLimiter, otpVerifyController);
 authRouter.post("/reset-password", authLimiter, resetPasswordController);
 authRouter.get("/refresh-token", authLimiter, refreshTokenController);
 authRouter.get("/logout", authLimiter, logoutController);
-authRouter.delete("/delete", authLimiter, deleteUserController);
+authRouter.delete("/delete", authLimiter, authMiddleware, deleteUserController);
 
 authRouter.get(
   "/google",

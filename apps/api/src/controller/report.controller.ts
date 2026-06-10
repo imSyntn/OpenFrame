@@ -45,9 +45,8 @@ export const createReportController = async (
       await sendEmail(email, "Report Submitted", template);
     } catch (error) {
       console.error("Error sending email:", error);
-    } finally {
-      return res.status(200).json({ message: "Reported", data: { reportId } });
     }
+    return res.status(200).json({ message: "Reported", data: { reportId } });
   } catch (error) {
     next(error);
   }
@@ -114,11 +113,10 @@ export const updateReportController = async (
       await sendEmail(report.user_email, "Report Status Updated", template);
     } catch (error) {
       console.error("Error sending email:", error);
-    } finally {
-      return res
-        .status(200)
-        .json({ message: "Report updated", data: { reportId } });
     }
+    return res
+      .status(200)
+      .json({ message: "Report updated", data: { reportId } });
   } catch (error) {
     next(error);
   }

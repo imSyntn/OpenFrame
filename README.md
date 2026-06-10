@@ -114,7 +114,14 @@ Rename `.env.example` to `.env` and update values.
 pnpm install
 
 # setup everything (DB migration, Prisma client generation, DB seeding, Kafka topics creation)
-pnpm setup
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
+pnpm kafka-topic-and-search-setup
+
+# or
+
+pnpm setup:all
 
 # build all apps including packages
 pnpm build
@@ -139,8 +146,9 @@ Once all services are running:
 pnpm dev        # run all apps in dev mode
 pnpm build      # build all apps including packages
 pnpm start      # start production build
-pnpm setup      # setup everything (DB migration, Prisma client generation, DB seeding, Kafka topics creation)
 pnpm db:generate # generate Prisma client
 pnpm db:migrate # run DB migration
 pnpm db:seed     # seed the database
+pnpm kafka-topic-and-search-setup # setup Kafka topics and Search (requires Kafka and Search running)
+pnpm setup:all # setup everything (DB migration, Prisma client generation, DB seeding, Kafka topics creation, Search setup)
 ```

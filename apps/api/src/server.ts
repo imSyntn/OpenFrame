@@ -15,7 +15,11 @@ import passport from "passport";
 import "./utils/passport";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { apiLimiter, errorMiddleware } from "./middleware";
+import {
+  apiLimiter,
+  compressionMiddleware,
+  errorMiddleware,
+} from "./middleware";
 
 const app: Application = express();
 
@@ -26,9 +30,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+app.use(compressionMiddleware);
+
 app.get("/api/health", (req: Request, res: Response) => {
   return res.status(200).json({ message: "OK" });
 });
+
+app.use("/api", apiLimiter);
 
 app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
@@ -36,10 +44,9 @@ app.use("/api/collection", collectionRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/report", reportRouter);
 
-app.use("/api", apiLimiter);
-
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Server started on port 4000");
+const port = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
