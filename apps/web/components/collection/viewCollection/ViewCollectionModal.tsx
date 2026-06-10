@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent } from "@workspace/ui/components/dialog";
-import { useGlobalStateStore, useUserStore } from "@/store";
+import { useGlobalStateStore } from "@/store";
 import { CollectionModalContent } from "./CollectionModalContent";
 
 export function ViewCollectionModal() {

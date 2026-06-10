@@ -91,6 +91,7 @@ export function ForgotPassword() {
         });
         setStep((prev) => Math.min(prev + 1, 2));
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       const message = error?.response?.data?.message;

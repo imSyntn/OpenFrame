@@ -3,3 +3,4 @@ export * from "./userDetails";
 export * from "./picture";
 export * from "./collections";
 export * from "./search";
+export * from "./report";

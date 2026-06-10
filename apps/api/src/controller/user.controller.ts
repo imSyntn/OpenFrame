@@ -271,7 +271,7 @@ export const resetPasswordController = async (
     await updateUser({ email }, { password: hashedPassword });
 
     res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
+    res.clearCookie("refresh_token", refreshCookieOptions);
 
     return res.status(200).json({
       message: "Password reset successfully",
@@ -387,7 +387,7 @@ export const deleteUserController = async (
     await deleteUser(id);
 
     res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
+    res.clearCookie("refresh_token", refreshCookieOptions);
 
     return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
@@ -502,11 +502,7 @@ export const verifyEmailTokenController = async (
 
 export const logoutController = async (req: Request, res: Response) => {
   res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
-  res.clearCookie("refresh_token", {
-    domain: ".sayantan.online",
-    path: "/",
-  });
+  res.clearCookie("refresh_token", refreshCookieOptions);
 
   return res.status(200).json({
     message: "Logged out successfully",

@@ -26,6 +26,7 @@ export function OwnerInfo({ id }: { id: string }) {
         <CircleAlert className="h-8 w-8 text-destructive" />
         <div>
           <p className="font-semibold flex items-center gap-1 line-clamp-1">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {(error as any)?.response?.data?.message ||
               "Failed to load owner info"}
           </p>

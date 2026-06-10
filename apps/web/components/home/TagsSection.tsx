@@ -10,6 +10,7 @@ export function TagsSection() {
   if (isError) {
     return (
       <ErrorOccured
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message}
         description="Failed to load tags. Please try again."
         onClick={() => refetch()}

@@ -150,8 +150,6 @@ export const deleteUser = async (id: string) => {
     await pipeline.exec();
     await usersIndex.delete(deletedUser.id);
 
-    await usersIndex.delete(deletedUser.id);
-
     return deletedUser;
   } catch (error) {
     throw error;

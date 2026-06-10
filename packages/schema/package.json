@@ -11,7 +11,9 @@
   "exports": {
     "./auth": "./dist/authSchema.js",
     "./picture": "./dist/pictureSchema.js",
-    "./collection": "./dist/collectionSchema.js"
+    "./collection": "./dist/collectionSchema.js",
+    "./report": "./dist/reportSchema.js",
+    "./index": "./dist/index.js"
   },
   "author": "",
   "license": "ISC",

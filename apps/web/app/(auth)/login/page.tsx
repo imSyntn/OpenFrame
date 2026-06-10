@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Login to your OpenFrame account and start building.",
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <AuthWrapper>
       <LoginForm />

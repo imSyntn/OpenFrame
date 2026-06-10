@@ -30,7 +30,10 @@ export function MasonryGrid() {
     refetch,
   } = useGetExplorePictures(tag);
 
-  const pictures = data?.pages.flatMap((page) => page.data) ?? [];
+  const pictures = useMemo(
+    () => data?.pages.flatMap((page) => page.data) ?? [],
+    [data],
+  );
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -38,9 +41,9 @@ export function MasonryGrid() {
         const original = pic.src.find((src) => src.resolution === "ORIGINAL");
         const thumbnail = pic.src.find((src) => src.resolution === "THUMBNAIL");
         return {
-          src: thumbnail?.url || original?.url!,
-          width: original?.width!,
-          height: original?.height!,
+          src: thumbnail?.url || original?.url || "",
+          width: original?.width || 0,
+          height: original?.height || 0,
           blurhash: pic.metadata.blurhash,
           // user: pic.user,
           key: pic.id,
@@ -61,6 +64,7 @@ export function MasonryGrid() {
         Icon={CameraOff}
         title="No pictures found"
         description={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any)?.response?.data?.message ||
           "No pictures found matching your criteria."
         }
@@ -71,6 +75,7 @@ export function MasonryGrid() {
   if (isError) {
     return (
       <ErrorOccured
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message}
         description="Failed to load pictures. Please try again."
         onClick={() => refetch()}

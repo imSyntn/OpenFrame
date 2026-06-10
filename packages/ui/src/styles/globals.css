@@ -182,3 +182,24 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@theme inline {
+  --animate-progress: progress 3s ease-in-out infinite;
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+    transform: translateX(0%);
+  }
+
+  50% {
+    width: 100%;
+    transform: translateX(0%);
+  }
+
+  100% {
+    width: 100%;
+    transform: translateX(100%);
+  }
+}

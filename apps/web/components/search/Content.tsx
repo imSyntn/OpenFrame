@@ -123,7 +123,10 @@ export function Content({ query, type }: { query: string; type?: string }) {
     return (
       <Container>
         <ErrorOccured
-          title={(error as any)?.response?.data?.message}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          title={
+            (error as any)?.response?.data?.message || "Something went wrong"
+          }
           className="min-h-[calc(100dvh-200px)]"
           onClick={() => refetch()}
         />

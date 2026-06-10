@@ -6,6 +6,7 @@ export default defineConfig({
     "src/authSchema.ts",
     "src/pictureSchema.ts",
     "src/collectionSchema.ts",
+    "src/reportSchema.ts",
   ],
   format: ["esm"],
   target: "node20",

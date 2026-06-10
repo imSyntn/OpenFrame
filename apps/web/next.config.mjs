@@ -15,7 +15,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "open-frame.t3.tigrisfiles.io",
         pathname: "/**",
       },
     ],

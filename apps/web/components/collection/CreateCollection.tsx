@@ -43,7 +43,7 @@ export function CreateCollection({
         )}
       >
         <DialogTrigger asChild>
-          <Button>Create collection</Button>
+          <Button disabled={!isLoggedIn}>Create collection</Button>
         </DialogTrigger>
       </div>
       <DialogContent className="min-w-[95vw] sm:min-w-[70vw] max-h-[90dvh] overflow-y-auto pr-0">

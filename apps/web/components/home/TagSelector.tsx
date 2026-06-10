@@ -4,7 +4,7 @@ import { tagsType } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 

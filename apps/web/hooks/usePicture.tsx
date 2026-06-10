@@ -126,6 +126,7 @@ export const useIncrementLikeCount = () => {
         description: "It may take some time to show on profile.",
       });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to like.");
     },
@@ -149,6 +150,7 @@ export const useDeletePicture = () => {
       });
       toast.success("Picture deleted successfully");
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to delete picture");
     },

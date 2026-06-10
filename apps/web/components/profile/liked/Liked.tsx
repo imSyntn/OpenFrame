@@ -20,7 +20,10 @@ export function Liked() {
     fetchNextPage,
   } = useGetUserLikedPictures(userId || "");
 
-  const pictures = picturesData?.pages.flatMap((page) => page.data) || [];
+  const pictures = useMemo(
+    () => picturesData?.pages.flatMap((page) => page.data) || [],
+    [picturesData],
+  );
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -30,16 +33,16 @@ export function Liked() {
           (src) => src.resolution === "THUMBNAIL" || src.resolution === "SMALL",
         );
         return {
-          src: thumbnail?.url || ORIGINAL?.url!,
-          width: ORIGINAL?.width!,
-          height: ORIGINAL?.height!,
+          src: thumbnail?.url || ORIGINAL?.url || "",
+          width: ORIGINAL?.width || 0,
+          height: ORIGINAL?.height || 0,
           blurhash: pic.metadata?.blurhash,
           // user: pic.user,
           key: pic.id,
           title: pic.title,
           created_at: pic.created_at,
           tags: pic.tags,
-          onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+          onClick: () => {
             setOpen(true, pic);
           },
         };
@@ -62,6 +65,7 @@ export function Liked() {
         title="Error occured"
         className="min-h-fit"
         description={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).response?.data?.message || "Something went wrong"
         }
       />

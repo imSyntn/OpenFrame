@@ -52,6 +52,7 @@ export const CollectionPageContent = ({
     return (
       <NotFound
         Icon={FileX}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message || "Unknown error"}
         description="The collection you're looking for doesn't exist or the link may be incorrect."
       />

@@ -1,10 +1,16 @@
+"use client";
+
 import { AUTH_PAGE_IMAGES } from "@workspace/constants";
 import Image from "next/image";
 import { Logo } from "../common";
 import { ImageEffect } from "./ImageEffect";
+import { useState } from "react";
 
 export function AuthWrapper({ children }: { children: React.ReactNode }) {
-  const index = Math.floor(Math.random() * AUTH_PAGE_IMAGES.length);
+  const [index] = useState(() =>
+    Math.floor(Math.random() * AUTH_PAGE_IMAGES.length),
+  );
+
   return (
     <div className="max-w-8xl mx-auto grid min-h-svh lg:grid-cols-2">
       <div className="relative hidden lg:block">

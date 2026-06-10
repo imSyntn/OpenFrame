@@ -1,6 +1,4 @@
 import React from "react";
-import { Input } from "@workspace/ui/components/input";
-import { Search } from "lucide-react";
 import { Logo } from "../Logo";
 import { cn } from "@workspace/ui/lib/utils";
 import { HeaderRight } from "./HeaderRight";

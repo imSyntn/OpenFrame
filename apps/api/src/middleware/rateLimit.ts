@@ -36,3 +36,11 @@ export const collectionLimiter = rateLimit({
   max: 30,
   message: { message: "Too many collection requests" },
 });
+
+export const reportLimiter = rateLimit({
+  store: RateLimitStore("rl:report"),
+  windowMs: 60 * 1000,
+  max: 10,
+  skipSuccessfulRequests: true,
+  message: { message: "Too many report requests" },
+});

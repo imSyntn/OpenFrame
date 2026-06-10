@@ -21,6 +21,12 @@ export const metadata: Metadata = {
     description:
       "The internet's source of freely usable images. Powered by creators everywhere.",
     url: "/",
+    images: [
+      {
+        url: "/logo.png",
+        alt: "OpenFrame",
+      },
+    ],
     siteName: "OpenFrame",
     locale: "en_US",
     type: "website",

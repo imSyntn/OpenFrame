@@ -5,14 +5,11 @@ import { pictureSchema } from "@workspace/schema/picture";
 import { Input } from "@workspace/ui/components/input";
 import {
   Field,
-  FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
   FieldSet,
-  FieldTitle,
 } from "@workspace/ui/components/field";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -27,10 +24,7 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@workspace/ui/components/combobox";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@workspace/ui/components/radio-group";
+import { RadioGroup } from "@workspace/ui/components/radio-group";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { useCreatePictureUpload, useGetTags } from "@/hooks";
 import { toast } from "sonner";
@@ -74,6 +68,7 @@ export function Form({
     }
   }, [uploadedUrl, pictureId]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submit = async (data: any) => {
     try {
       await createPictureUpload(data);
@@ -81,6 +76,7 @@ export function Form({
         description: "Picture is being processed. It will take a few minutes.",
       });
       router.push(`/profile/${userId}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Failed to upload image");
