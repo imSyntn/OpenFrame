@@ -51,9 +51,6 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.1008.0
         version: 3.1008.0
-      '@types/nodemailer':
-        specifier: ^7.0.11
-        version: 7.0.11
       '@workspace/constants':
         specifier: workspace:*
         version: link:../../packages/constants
@@ -93,9 +90,6 @@ importers:
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
-      nodemailer:
-        specifier: ^8.0.1
-        version: 8.0.1
       passport:
         specifier: ^0.7.0
         version: 0.7.0
