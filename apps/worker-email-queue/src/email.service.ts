@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import fs from "fs";
 import path from "path";
-import {
+import type {
   EmailTemplateGenerateType,
   EmailVerificationTemplateGenerateType,
   OTPTemplateGenerateType,
@@ -9,6 +9,7 @@ import {
   ReportUpdatedTemplateGenerateType,
   WelcomeTemplateGenerateType,
 } from "@workspace/types";
+import { logger } from "@workspace/lib";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -64,16 +65,18 @@ export const generateEmailTemplate = (payload: EmailTemplateGenerateType) => {
         .replace("{{MODERATOR_NOTE}}", data.note)
         .replace("{{REPORT_URL}}", data.reportUrl);
     }
-    default: {
+    case "welcome": {
       const data = payload.data as WelcomeTemplateGenerateType;
       return template
         .replace("{{NAME}}", data.name)
         .replace("{{DASHBOARD_URL}}", data.dashboardUrl);
     }
+    default:
+      return "";
   }
 };
 
-export const sendEmail = async (to: string, subject: string, html: string) => {
+const sendEmail = async (to: string, subject: string, html: string) => {
   const info = await transporter.sendMail({
     from: '"OpenFrame" <OpenFrame@sayantan.online>',
     to,
@@ -82,4 +85,40 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
   });
 
   return !!info.messageId;
+};
+
+export const sendEmailWithRetry = async (
+  to: string,
+  subject: string,
+  template: string,
+  maxRetries = 3,
+) => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const info = await sendEmail(to, subject, template);
+
+      if (info) {
+        return info;
+      }
+
+      throw new Error("Email provider returned no info");
+    } catch (error) {
+      lastError = error;
+
+      logger.warn("Email send failed", {
+        to,
+        subject,
+        attempt,
+        maxRetries,
+      });
+
+      if (attempt < maxRetries) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
+      }
+    }
+  }
+
+  throw lastError;
 };

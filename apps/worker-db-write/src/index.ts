@@ -3,7 +3,11 @@ import { kafka } from "@workspace/lib/kafka";
 import { logger } from "@workspace/lib/logger";
 import { cache } from "@workspace/lib/redis";
 import { bulkWrite } from "./bulkWrite";
-import type { UnderProcessingPictureType } from "@workspace/types";
+import { engagementBulkWrite } from "./engagementBulkWrite";
+import type {
+  UnderProcessingPictureType,
+  EngagementEventType,
+} from "@workspace/types";
 import { updatePicturesSearchData, updateTagsSearchData } from "./updateSearch";
 
 const consumer = kafka.consumer({ groupId: "worker-db-write" });
@@ -12,7 +16,7 @@ class WriteError extends Error {}
 const run = async () => {
   await consumer.connect();
   await consumer.subscribe({
-    topics: ["picture-ready-for-DB-write"],
+    topic: "db-write",
   });
 
   await consumer.run({
@@ -25,8 +29,8 @@ const run = async () => {
       isRunning,
       isStale,
     }) => {
-      logger.info("batch received...");
-      const parsedMessages: UnderProcessingPictureType[] = [];
+      const pictureMessages: UnderProcessingPictureType[] = [];
+      const engagementMessages: EngagementEventType[] = [];
 
       for (const message of batch.messages) {
         if (!isRunning() || isStale()) break;
@@ -37,8 +41,17 @@ const run = async () => {
             resolveOffset(message.offset);
             continue;
           }
-          const parsed: UnderProcessingPictureType = JSON.parse(value);
-          parsedMessages.push(parsed);
+
+          const envelope = JSON.parse(value);
+
+          if (envelope.action === "picture-write") {
+            pictureMessages.push(envelope.data as UnderProcessingPictureType);
+          } else if (envelope.action === "engagement-event") {
+            engagementMessages.push(envelope.data as EngagementEventType);
+          } else {
+            logger.warn("Unknown action:", envelope.action);
+            resolveOffset(message.offset);
+          }
         } catch (err) {
           logger.error("JSON parse error:", err);
           resolveOffset(message.offset);
@@ -46,21 +59,18 @@ const run = async () => {
       }
 
       try {
-        if (parsedMessages.length > 0) {
-          logger.info(`Processing ${parsedMessages.length} messages...`);
-
+        if (pictureMessages.length > 0) {
+          logger.info(
+            `Processing ${pictureMessages.length} picture messages...`,
+          );
           await heartbeat();
 
           try {
-            await bulkWrite(parsedMessages);
-
-            for (const message of batch.messages) {
-              resolveOffset(message.offset);
-            }
+            await bulkWrite(pictureMessages);
 
             const pipeline = cache.pipeline();
 
-            for (const message of parsedMessages) {
+            for (const message of pictureMessages) {
               pipeline.hset(
                 `picture:upload:${message.userId}`,
                 message.id,
@@ -72,22 +82,53 @@ const run = async () => {
 
             await pipeline.exec();
 
-            await updatePicturesSearchData(parsedMessages);
-            await updateTagsSearchData(parsedMessages);
+            await updatePicturesSearchData(pictureMessages);
+            await updateTagsSearchData(pictureMessages);
 
-            await commitOffsetsIfNecessary();
-
-            logger.info("Batch processed successfully");
+            logger.info("Picture write completed");
           } catch (err: any) {
-            logger.error("write-failed", err);
+            logger.error("picture-write-failed", err);
             throw new WriteError(err.message);
           }
         }
+
+        if (engagementMessages.length > 0) {
+          logger.info(
+            `Processing ${engagementMessages.length} engagement messages...`,
+          );
+
+          const likeMessages = engagementMessages.filter(
+            (msg) => msg.type === "like",
+          );
+          const viewMessages = engagementMessages.filter(
+            (msg) => msg.type === "view",
+          );
+          const downloadMessages = engagementMessages.filter(
+            (msg) => msg.type === "download",
+          );
+
+          await heartbeat();
+
+          await engagementBulkWrite(
+            likeMessages,
+            viewMessages,
+            downloadMessages,
+          );
+
+          logger.info("Engagement write completed");
+        }
+
+        for (const message of batch.messages) {
+          resolveOffset(message.offset);
+        }
+
+        await commitOffsetsIfNecessary();
+        logger.info("Batch processed successfully");
       } catch (err: any) {
         logger.error("Batch failed", err);
         const pipeline = cache.pipeline();
         if (err instanceof WriteError) {
-          for (const message of parsedMessages) {
+          for (const message of pictureMessages) {
             pipeline.hset(
               `picture:upload:${message.userId}`,
               message.id,
@@ -102,6 +143,8 @@ const run = async () => {
         await pipeline.exec();
         throw err;
       }
+
+      await heartbeat();
     },
   });
 };

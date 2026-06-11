@@ -1,14 +1,14 @@
 import { ErrorWithStatus } from "@/middleware";
 import {
-  generateEmailTemplate,
   getReportList,
   createReport,
   getReportById,
-  sendEmail,
   updateReport,
 } from "@/service";
+import { kafkaProduceMessage } from "@workspace/lib/kafka";
 import { NextFunction, Request, Response } from "express";
 import { reportSchema, reportUpdateSchema } from "@workspace/schema/report";
+import { logger } from "@workspace/lib";
 
 export const createReportController = async (
   req: Request,
@@ -30,7 +30,7 @@ export const createReportController = async (
 
     const reportId = await createReport(picId, email, userId, title, reason);
 
-    const template = generateEmailTemplate({
+    const emailPayload = {
       type: "report-submit",
       data: {
         name,
@@ -38,13 +38,15 @@ export const createReportController = async (
         contentTitle: title,
         reportReason: reason,
         reportUrl: `${process.env.FRONTEND_URL}/report/status/${reportId}`,
+        to: email,
+        subject: "Report Submitted",
       },
-    });
+    };
 
     try {
-      await sendEmail(email, "Report Submitted", template);
+      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
     } catch (error) {
-      console.error("Error sending email:", error);
+      logger.error("Error producing report-submit email message:", error);
     }
     return res.status(200).json({ message: "Reported", data: { reportId } });
   } catch (error) {
@@ -98,7 +100,7 @@ export const updateReportController = async (
       return next(new ErrorWithStatus(404, "Report not found"));
     }
 
-    const template = generateEmailTemplate({
+    const emailPayload = {
       type: "report-updated",
       data: {
         reportId,
@@ -106,13 +108,14 @@ export const updateReportController = async (
         reportUrl: `${process.env.FRONTEND_URL}/report/status/${reportId}`,
         status,
         note: note ?? "-",
+        to: report.user_email,
+        subject: "Report Status Updated",
       },
-    });
-
+    };
     try {
-      await sendEmail(report.user_email, "Report Status Updated", template);
+      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
     } catch (error) {
-      console.error("Error sending email:", error);
+      logger.error("Error producing report-updated email message:", error);
     }
     return res
       .status(200)

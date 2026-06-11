@@ -28,25 +28,52 @@
 
 ## Features
 
-- High-performance image upload & delivery
-- Kafka-powered background processing (resize, metadata, analytics)
-- Scalable database with Prisma + PostgreSQL
-- Secure authentication
+### User Experience
+
+- User authentication and customizable profiles
+- Advanced search across photos, tags, and creators
+- Curated collections and creator profiles
+- High-performance image upload and delivery
+- Direct-to-S3 uploads using presigned URLs
+
+### Image Intelligence
+
+- EXIF metadata extraction
+- BlurHash generation for fast image previews
+- Dominant color and palette extraction
+- NSFW content detection
+- Image optimization and processing pipeline
+
+### Architecture & Scalability
+
+- Event-driven architecture powered by Kafka
+- Asynchronous worker-based image processing
+- Redis-backed caching layer
+- Scalable PostgreSQL database with Prisma ORM
+- Search functionality powered by Upstash Search
+- Email queue processing
+- Modular REST API built with Node.js and Express
+- Optimized frontend built with Next.js
 - Monorepo architecture with Turborepo
-- Modular API with Node.js + Express
-- Optimized frontend with Next.js
 
 ## Folder Structure
+
+### Monorepo
+
+The project is organized as a Turborepo monorepo with:
+
+- Applications (`apps/*`)
+- Shared packages (`packages/*`)
 
 ```text
 apps/
   web/ # Frontend
   api/ # REST API
-  worker-image-processor/ # Kafka consumers (background job - image processing)
-  worker-image-metadata/ # Kafka consumers (background job - image metadata extraction)
-  worker-image-finalize/ # Kafka consumers (background job - image finalization for DB write)
-  worker-image-db-write/ # Kafka consumers (background job - image db write)
-  worker-engagement-db-write/ # Kafka consumers (background job - engagement db write)
+  worker-image-processor/ # Kafka consumer (background job - image processing)
+  worker-image-metadata/ # Kafka consumer (background job - image metadata extraction)
+  worker-image-finalize/ # Kafka consumer (background job - image finalization for DB write)
+  worker-db-write/ # Kafka consumer (background job - image & engagement db write)
+  worker-email-queue/ # Kafka consumer (background job - email queue)
 
 packages/
   lib/ # shared utilities (Prisma, Redis etc.)
@@ -54,28 +81,80 @@ packages/
   constants/ # shared constants
   types/ # shared types
   schema/ # shared schemas
-
-setup/ # setup scripts
 ```
 
 ## Database ER Diagram
 
 ![ER Diagram](./docs/images/er-diagram.png)
 
-## Kafka (Worker Flow)
+## Architecture Overview
 
-![Architecture](./docs/images/architecture.png)
+OpenFrame follows an event-driven architecture.
 
-- API or workers produce events (image uploads, metadata extraction completed, image processing completed, image engagement events etc.)
-- Workers consume events asynchronously
+### Upload Strategy
 
-Workers handles:
+Images are uploaded directly from the client to S3-compatible storage using presigned URLs.
+
+Benefits:
+
+- Reduced API bandwidth
+- Better scalability
+- Faster uploads
+- Lower server load
+
+### Upload Pipeline
+
+1. Client requests a presigned upload URL
+2. API generates and returns the URL
+3. Client uploads directly to S3-compatible storage
+4. API publishes a `picture-upload` event
+5. Workers asynchronously:
+   - Extract metadata
+   - Generate blurhash
+   - Extract dominant color and palette
+   - Upload processed variants
+   - Update database
+   - Refresh cache
+
+### Read Pipeline
+
+1. Client requests image data
+2. API checks Redis cache
+3. Falls back to PostgreSQL if needed
+4. Cache is refreshed automatically
+
+### Caching
+
+Redis is used for:
+
+- Image metadata caching
+- Frequently accessed picture data
+- Engagement metrics caching
+- Reducing PostgreSQL load
+
+### Background Jobs
+
+Kafka workers handle:
 
 - Image processing
 - Metadata extraction
-- Image finalization
-- Uploading images to S3 and updating the database
-- Updating image engagement (views, likes, downloads)
+- Database updates
+- Engagement aggregation
+- Email delivery
+
+## Kafka Topics
+
+> Kafka is used to decouple image processing, metadata extraction, database updates and email delivery through asynchronous events.
+
+- picture-upload
+- metadata-extraction-complete
+- processing-complete
+- db-write
+- email-queue
+
+## Architecture Diagram
+
+![Architecture](./docs/images/architecture.png)
 
 ## Prerequisites
 

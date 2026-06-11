@@ -128,8 +128,8 @@ const run = async () => {
       await pipeline.exec();
 
       await kafkaProduceMessage(
-        "picture-ready-for-DB-write",
-        JSON.stringify(updatedCache),
+        "db-write",
+        JSON.stringify({ action: "picture-write", data: updatedCache }),
       );
     },
   });

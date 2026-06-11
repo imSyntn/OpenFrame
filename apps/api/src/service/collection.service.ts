@@ -34,7 +34,9 @@ export const getCollections = async (nextCursor: string) => {
         include: {
           picture: {
             select: {
-              src: true,
+              src: {
+                orderBy: { size: "asc" },
+              },
               id: true,
               title: true,
               user_id: true,
@@ -126,7 +128,9 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
         include: {
           picture: {
             select: {
-              src: true,
+              src: {
+                orderBy: { size: "asc" },
+              },
               id: true,
               title: true,
               user_id: true,
@@ -201,7 +205,9 @@ export const getCollectionById = async (id: string, isOwner: boolean) => {
     include: {
       picture: {
         select: {
-          src: true,
+          src: {
+            orderBy: { size: "asc" },
+          },
           id: true,
           title: true,
           user_id: true,

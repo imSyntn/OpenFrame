@@ -18,18 +18,11 @@ import {
   signupSchema,
 } from "@workspace/schema/auth";
 import { ErrorWithStatus } from "@/middleware";
-import {
-  createUser,
-  deleteUser,
-  generateEmailTemplate,
-  getUser,
-  sendEmail,
-  updateUser,
-} from "@/service";
+import { createUser, deleteUser, getUser, updateUser } from "@/service";
 import bcrypt from "bcryptjs";
 import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
-import { Prisma } from "@workspace/lib";
+import { Prisma, kafkaProduceMessage, logger } from "@workspace/lib";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -54,6 +47,22 @@ export const googleAuthController = async (
 
     const profile = req.user as UserTypeDB;
     const { name, email, id, avatar } = profile;
+
+    const emailPayload = {
+      type: "welcome",
+      data: {
+        name,
+        dashboardUrl: process.env.FRONTEND_URL,
+        to: email,
+        subject: "Welcome to OpenFrame",
+      },
+    };
+
+    try {
+      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+    } catch (error) {
+      logger.error("Error producing google-auth welcome email message:", error);
+    }
 
     const accessToken = generateAccessToken({ name, email, id });
     const refreshToken = generateRefreshToken({ email, id });
@@ -152,6 +161,22 @@ export const signupController = async (
       password: hashedPassword,
     } as UserTypeUnregistered);
 
+    const emailPayload = {
+      type: "welcome",
+      data: {
+        name,
+        dashboardUrl: process.env.FRONTEND_URL,
+        to: email,
+        subject: "Welcome to OpenFrame",
+      },
+    };
+
+    try {
+      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+    } catch (error) {
+      logger.error("Error producing welcome email message:", error);
+    }
+
     const accessToken = generateAccessToken({ name, email, id: newUser.id });
     const refreshToken = generateRefreshToken({ email, id: newUser.id });
 
@@ -191,20 +216,17 @@ export const otpGenerateController = async (
 
     await otpStore.set(emailData, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
-    const template = generateEmailTemplate({
+    const emailPayload = {
       type: "otp",
       data: {
         name: userExist.name,
         otp,
         duration: OTP_VALIDATION_TIME_LIMIT.toString(),
+        to: email,
+        subject: "OTP Verification",
       },
-    });
-
-    const emailSent = await sendEmail(email, "OTP Verification", template);
-
-    if (!emailSent) {
-      return next(new ErrorWithStatus(500, "Failed to send email"));
-    }
+    };
+    await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
 
     return res.status(200).json({
       message: "OTP sent successfully",
@@ -451,18 +473,20 @@ export const sendVerificationLinkController = async (
     await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
     const verificationToken = generateVerificationToken({ email, otp });
-    const template = generateEmailTemplate({
+
+    const emailPayload = {
       type: "email-verification",
       data: {
         name: user.name,
         verificationUrl: `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`,
         duration: OTP_VALIDATION_TIME_LIMIT.toString(),
+        to: email,
+        subject: "Email Verification",
       },
-    });
-    const emailSent = await sendEmail(email, "Email Verification", template);
-    if (!emailSent) {
-      return next(new ErrorWithStatus(500, "Failed to send email"));
-    }
+    };
+
+    await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+
     return res.status(200).json({
       message: "Email verification link sent successfully",
     });
