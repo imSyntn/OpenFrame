@@ -22,6 +22,7 @@ export function Header({ className }: { className?: string }) {
               Collections
             </LinkWithActiveState>
             <LinkWithActiveState href="/search">Search</LinkWithActiveState>
+            <LinkWithActiveState href="/about">About</LinkWithActiveState>
           </nav>
         </div>
 

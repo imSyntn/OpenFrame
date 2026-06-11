@@ -75,7 +75,7 @@ async function runBulk(
   }
 }
 
-export const bulkWrite = async (
+export const engagementBulkWrite = async (
   likeMessages: EngagementEventType[],
   viewMessages: EngagementEventType[],
   downloadMessages: EngagementEventType[],

@@ -1,5 +1,5 @@
 {
-  "name": "worker-engagement-db-write",
+  "name": "worker-db-write",
   "version": "1.0.0",
   "description": "",
   "type": "module",

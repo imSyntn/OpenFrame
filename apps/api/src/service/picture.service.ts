@@ -30,7 +30,9 @@ export const getUserPictures = async (id: string, lastId: string | null) => {
     skip: lastId ? 1 : 0,
     orderBy: { created_at: "desc" },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -77,7 +79,9 @@ export const getUserLikedPictures = async (
     include: {
       picture: {
         include: {
-          src: true,
+          src: {
+            orderBy: { size: "asc" },
+          },
           metadata: true,
           tags: {
             include: {
@@ -113,7 +117,9 @@ export const getPictureById = async (id: string) => {
   const picture = await prisma.picture.findUnique({
     where: { id },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -259,7 +265,9 @@ export const getExplorePictures = async (
     skip: lastId ? 1 : 0,
     orderBy: { created_at: "desc" },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -330,11 +338,10 @@ export const getPictureStatus = async (userId: string, pictureID: string) => {
 
 export const incrementViewCount = async (pictureID: string, userID: string) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "view",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "view", pictureID, userID },
     }),
   );
 };
@@ -344,22 +351,20 @@ export const incrementDownloadCount = async (
   userID: string,
 ) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "download",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "download", pictureID, userID },
     }),
   );
 };
 
 export const incrementLikeCount = async (pictureID: string, userID: string) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "like",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "like", pictureID, userID },
     }),
   );
 };

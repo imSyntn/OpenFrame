@@ -1,29 +1,31 @@
-export interface OTPTemplateGenerateType {
+interface BaseTemplateGenerateType {
+  to: string;
+  subject: string;
   name: string;
+}
+
+export interface OTPTemplateGenerateType extends BaseTemplateGenerateType {
   otp: string;
   duration: string;
 }
 
-export interface WelcomeTemplateGenerateType {
-  name: string;
+export interface WelcomeTemplateGenerateType extends BaseTemplateGenerateType {
   dashboardUrl: string;
 }
 
-export interface EmailVerificationTemplateGenerateType {
-  name: string;
+export interface EmailVerificationTemplateGenerateType extends BaseTemplateGenerateType {
   verificationUrl: string;
   duration: string;
 }
 
-export interface ReportSubmitTemplateGenerateType {
-  name: string;
+export interface ReportSubmitTemplateGenerateType extends BaseTemplateGenerateType {
   reportId: string;
   contentTitle: string;
   reportReason: string;
   reportUrl: string;
 }
 
-export interface ReportUpdatedTemplateGenerateType {
+export interface ReportUpdatedTemplateGenerateType extends BaseTemplateGenerateType {
   reportId: string;
   contentTitle: string;
   status: string;
@@ -31,17 +33,24 @@ export interface ReportUpdatedTemplateGenerateType {
   reportUrl: string;
 }
 
-export interface EmailTemplateGenerateType {
-  type:
-    | "otp"
-    | "welcome"
-    | "email-verification"
-    | "report-submit"
-    | "report-updated";
-  data:
-    | OTPTemplateGenerateType
-    | WelcomeTemplateGenerateType
-    | EmailVerificationTemplateGenerateType
-    | ReportSubmitTemplateGenerateType
-    | ReportUpdatedTemplateGenerateType;
-}
+export type EmailTemplateGenerateType =
+  | {
+      type: "otp";
+      data: OTPTemplateGenerateType;
+    }
+  | {
+      type: "welcome";
+      data: WelcomeTemplateGenerateType;
+    }
+  | {
+      type: "email-verification";
+      data: EmailVerificationTemplateGenerateType;
+    }
+  | {
+      type: "report-submit";
+      data: ReportSubmitTemplateGenerateType;
+    }
+  | {
+      type: "report-updated";
+      data: ReportUpdatedTemplateGenerateType;
+    };

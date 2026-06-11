@@ -30,7 +30,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1008.0",
     "@aws-sdk/s3-request-presigner": "^3.1008.0",
-    "@types/nodemailer": "^7.0.11",
     "@workspace/constants": "workspace:*",
     "@workspace/lib": "workspace:*",
     "@workspace/schema": "workspace:*",
@@ -44,7 +43,6 @@
     "ioredis": "^5.10.0",
     "jsonwebtoken": "^9.0.3",
     "nanoid": "^5.1.6",
-    "nodemailer": "^8.0.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "rate-limit-redis": "^4.3.1",
