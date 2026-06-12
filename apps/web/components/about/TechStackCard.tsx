@@ -18,18 +18,21 @@ import {
 import React from "react";
 
 const TECHSTACKS = [
-  { name: "Next.js", icon: <Hexagon className="h-5 w-5" /> },
-  { name: "MDX", icon: <FileCode2 className="h-5 w-5" /> },
-  { name: "Tailwind CSS", icon: <PaintBucket className="h-5 w-5" /> },
-  { name: "Node.js", icon: <Server className="h-5 w-5" /> },
-  { name: "Express.js", icon: <Code2 className="h-5 w-5" /> },
-  { name: "PostgreSQL", icon: <Database className="h-5 w-5" /> },
-  { name: "Prisma ORM", icon: <Layers className="h-5 w-5" /> },
-  { name: "Redis", icon: <Zap className="h-5 w-5" /> },
-  { name: "Apache Kafka", icon: <Workflow className="h-5 w-5" /> },
-  { name: "Turborepo", icon: <SquareStack className="h-5 w-5" /> },
-  { name: "Upstash Search", icon: <Search className="h-5 w-5" /> },
-  { name: "Amazon S3", icon: <Cloud className="h-5 w-5" /> },
+  { name: "Next.js", img: "https://skillicons.dev/icons?i=nextjs" },
+  { name: "MDX", img: "https://svgl.app/library/markdown-dark.svg" },
+  { name: "Tailwind CSS", img: "https://skillicons.dev/icons?i=tailwind" },
+  { name: "Node.js", img: "https://skillicons.dev/icons?i=nodejs" },
+  { name: "Express.js", img: "https://skillicons.dev/icons?i=express" },
+  { name: "PostgreSQL", img: "https://skillicons.dev/icons?i=postgresql" },
+  { name: "Prisma ORM", img: "https://skillicons.dev/icons?i=prisma" },
+  { name: "Redis", img: "https://skillicons.dev/icons?i=redis" },
+  { name: "Apache Kafka", img: "https://skillicons.dev/icons?i=kafka" },
+  {
+    name: "Turborepo",
+    img: "https://svgl.app/library/turborepo-icon-dark.svg",
+  },
+  { name: "Upstash Search", img: "https://svgl.app/library/upstash.svg" },
+  { name: "Amazon S3", img: "https://svgl.app/library/aws_dark.svg" },
 ];
 
 export function TechStackCard() {
@@ -60,8 +63,8 @@ export function TechStackCard() {
               key={tech.name}
               className="group flex flex-col items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 p-1.5 transition-all duration-300 hover:bg-secondary/60 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 cursor-default"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
-                {tech.icon}
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#171717]">
+                <img src={tech.img} alt={tech.name} />
               </div>
               <span className="text-[11px] font-semibold text-center leading-tight text-muted-foreground group-hover:text-foreground transition-colors">
                 {tech.name}

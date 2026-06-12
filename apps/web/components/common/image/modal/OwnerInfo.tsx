@@ -9,10 +9,10 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@workspace/ui/components/hover-card";
 import { useRouter } from "next/navigation";
 
 export function OwnerInfo({ id }: { id: string }) {
@@ -38,7 +38,8 @@ export function OwnerInfo({ id }: { id: string }) {
     );
   }
 
-  const handleViewProfile = () => {
+  const handleViewProfile = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setOpen(false);
     router.push(`/profile/${data?.id}`);
   };
@@ -56,9 +57,12 @@ export function OwnerInfo({ id }: { id: string }) {
           </div>
         </>
       ) : (
-        <Tooltip>
-          <TooltipTrigger asChild onClick={handleViewProfile}>
-            <div className="flex items-center gap-3">
+        <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <div
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={handleViewProfile}
+            >
               <Avatar className="w-10 h-10">
                 <AvatarImage src={data?.avatar} alt={data?.name} />
                 <AvatarFallback>{data?.name.charAt(0)}</AvatarFallback>
@@ -75,8 +79,8 @@ export function OwnerInfo({ id }: { id: string }) {
                 </p>
               </div>
             </div>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" className="w-72 p-4">
+          </HoverCardTrigger>
+          <HoverCardContent side="bottom" className="w-72 p-4">
             <div className="flex flex-col gap-3 w-full">
               <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12">
@@ -131,8 +135,8 @@ export function OwnerInfo({ id }: { id: string }) {
                 View Profile
               </Button>
             </div>
-          </TooltipContent>
-        </Tooltip>
+          </HoverCardContent>
+        </HoverCard>
       )}
     </div>
   );

@@ -18,3 +18,6 @@ export const copyToClipboard = async (
     toast.error(errorMessage || "Failed to copy to clipboard.");
   }
 };
+
+export const getBlurImage = (url: string) =>
+  url.replace("/upload/", "/upload/w_50,e_blur:1000,q_1,f_auto/");

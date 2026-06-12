@@ -44,23 +44,30 @@ export const googleAuthController = async (
       return next(new ErrorWithStatus(400, "Authentication failed"));
     }
 
-    const profile = req.user as UserTypeDB;
-    const { name, email, id, avatar } = profile;
-
-    const emailPayload = {
-      type: "welcome",
-      data: {
-        name,
-        dashboardUrl: process.env.FRONTEND_URL,
-        to: email,
-        subject: "Welcome to OpenFrame",
-      },
+    const profile = req.user as UserTypeDB & {
+      newUser: boolean;
     };
+    const { name, email, id, avatar, newUser } = profile;
 
-    try {
-      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
-    } catch (error) {
-      logger.error("Error producing google-auth welcome email message:", error);
+    if (newUser) {
+      const emailPayload = {
+        type: "welcome",
+        data: {
+          name,
+          dashboardUrl: process.env.FRONTEND_URL,
+          to: email,
+          subject: "Welcome to OpenFrame",
+        },
+      };
+
+      try {
+        await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+      } catch (error) {
+        logger.error(
+          "Error producing google-auth welcome email message:",
+          error,
+        );
+      }
     }
 
     const accessToken = generateAccessToken({ name, email, id });
