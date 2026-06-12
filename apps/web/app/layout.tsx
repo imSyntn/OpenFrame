@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     url: "/",
     images: [
       {
-        url: "/logo.png",
+        url: "/og.png",
         alt: "OpenFrame",
       },
     ],
@@ -32,6 +32,12 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
+    images: [
+      {
+        url: "/og.png",
+        alt: "OpenFrame",
+      },
+    ],
     card: "summary_large_image",
     title: "OpenFrame",
     description:

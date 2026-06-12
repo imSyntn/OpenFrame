@@ -78,7 +78,9 @@ export function Liked() {
         Icon={ImageOff}
         title="No Liked Images"
         className="min-h-[50dvh]"
-        description={`${name} hasn't liked any images yet.`}
+        description={
+          "You haven't liked any images yet or it may take some time for newly liked images to appear."
+        }
       />
     );
   }
@@ -86,6 +88,9 @@ export function Liked() {
   return (
     <>
       <MasonryLayout photos={photos} />
+      <p className="text-center text-muted-foreground mt-4 text-sm">
+        It may take some time for newly liked images to appear.
+      </p>
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

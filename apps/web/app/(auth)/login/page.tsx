@@ -1,10 +1,6 @@
-import { AuthWrapper, LoginForm } from "@/components/auth";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your OpenFrame account and start building.",
-};
+import { AuthWrapper, LoginForm } from "@/components/auth";
 
 export default async function LoginPage() {
   return (

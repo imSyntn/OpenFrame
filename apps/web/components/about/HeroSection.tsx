@@ -1,5 +1,3 @@
-import { Badge } from "@workspace/ui/components/badge";
-
 export function HeroSection() {
   return (
     <div className="relative flex min-h-[85dvh] flex-col items-center justify-center px-6 text-center overflow-hidden">
@@ -7,7 +5,7 @@ export function HeroSection() {
         <img
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/v1778582808/about_jxwp6r.jpg"
           alt=""
-          className="h-full w-full object-cover scale-105 animate-[heroZoom_20s_ease-in-out_infinite_alternate]"
+          className="h-full w-full object-cover scale-105 animate-[heroZoom_10s_ease-in-out_infinite_alternate]"
         />
       </div>
 
