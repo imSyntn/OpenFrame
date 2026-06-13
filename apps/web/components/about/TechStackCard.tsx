@@ -19,6 +19,10 @@ import React from "react";
 
 const TECHSTACKS = [
   { name: "Next.js", img: "https://skillicons.dev/icons?i=nextjs" },
+  {
+    name: "Zustand",
+    img: "https://github.com/pmndrs/zustand/raw/main/docs/favicon.ico",
+  },
   { name: "MDX", img: "https://svgl.app/library/markdown-dark.svg" },
   { name: "Tailwind CSS", img: "https://skillicons.dev/icons?i=tailwind" },
   { name: "Node.js", img: "https://skillicons.dev/icons?i=nodejs" },
