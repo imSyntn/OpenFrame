@@ -472,6 +472,12 @@ importers:
       "@workspace/constants":
         specifier: workspace:*
         version: link:../constants
+      "@workspace/types":
+        specifier: workspace:^
+        version: link:../types
+      "@workspace/typescript-config":
+        specifier: workspace:*
+        version: link:../typescript-config
       zod:
         specifier: ^3.25.76
         version: 3.25.76
