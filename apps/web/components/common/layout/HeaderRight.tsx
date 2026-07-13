@@ -57,7 +57,15 @@ export function HeaderRight() {
       );
       router.replace(`?${newParams.toString()}`);
     }
-  }, [idParam, nameParam, emailParam, avatarParam, accessToken]);
+  }, [
+    isLoggedIn,
+    idParam,
+    nameParam,
+    emailParam,
+    avatarParam,
+    accessToken,
+    avatar,
+  ]);
 
   useEffect(() => {
     if (data && !isLoading && !isError && !isLoggedIn) {

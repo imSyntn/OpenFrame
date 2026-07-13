@@ -67,6 +67,7 @@ export function SignupForm({
           router.push("/");
         }, 2000);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.dismiss(toastId);
 
@@ -120,6 +121,7 @@ export function SignupForm({
               type="email"
               placeholder="m@example.com"
               className="bg-background"
+              autoComplete="email"
               {...register("email")}
             />
             <FieldDescription>
@@ -133,7 +135,9 @@ export function SignupForm({
             <Input
               id="password"
               type="password"
+              placeholder="********"
               className="bg-background"
+              autoComplete="new-password"
               {...register("password")}
             />
             <FieldDescription>
@@ -146,7 +150,9 @@ export function SignupForm({
             <Input
               id="confirm-password"
               type="password"
+              placeholder="********"
               className="bg-background"
+              autoComplete="new-password"
               {...register("confirmPassword")}
             />
             <FieldDescription>Please confirm your password.</FieldDescription>

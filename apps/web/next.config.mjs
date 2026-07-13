@@ -1,12 +1,6 @@
-import dotenv from "dotenv";
-import path from "path";
-
-dotenv.config({
-  path: path.resolve(process.cwd(), "../../.env"),
-});
+import createMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
   transpilePackages: [
     "@workspace/ui",
@@ -15,21 +9,28 @@ const nextConfig = {
     "@workspace/constants",
     "@workspace/schema"
   ],
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "open-frame.t3.tigrisfiles.io",
         pathname: "/**",
       },
     ],
-  },
-  experimental: {
-    turbopack: {
-      root: path.resolve(process.cwd(), "../../"),
-    },
-  },
+  }
 }
 
-export default nextConfig
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: ['rehype-slug'],
+  },
+})
+
+export default withMDX(nextConfig)

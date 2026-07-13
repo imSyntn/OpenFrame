@@ -2,6 +2,7 @@ import { ErrorWithStatus } from "@/middleware";
 import { pictureSchema } from "@workspace/schema/picture";
 import {
   createPicture,
+  deletePicture,
   getAllPictureStatus,
   getExplorePictures,
   getPictureById,
@@ -14,7 +15,11 @@ import {
   incrementLikeCount,
   incrementViewCount,
 } from "@/service";
-import { MAX_AVATAR_SIZE, MAX_PICTURE_SIZE } from "@workspace/constants";
+import {
+  MAX_AVATAR_SIZE,
+  MAX_PICTURE_SIZE,
+  Licenses,
+} from "@workspace/constants";
 import { Request, Response, NextFunction } from "express";
 
 export const getUserPicturesController = async (
@@ -132,7 +137,7 @@ export const createPictureController = async (
   next: NextFunction,
 ) => {
   try {
-    const { title, description, tags, url, pictureId } = req.body;
+    const { title, description, tags, url, pictureId, license } = req.body;
     const { id: userID } = req.user as { id: string };
 
     const picture = pictureSchema.parse({
@@ -141,6 +146,7 @@ export const createPictureController = async (
       tags,
       url,
       pictureId,
+      license,
     });
 
     await createPicture(
@@ -150,6 +156,7 @@ export const createPictureController = async (
       picture.url,
       userID,
       picture.pictureId,
+      picture.license,
     );
 
     return res.status(200).json({ message: "Picture uploaded successfully" });
@@ -289,6 +296,26 @@ export const getPictureByIdController = async (
     const picture = await getPictureById(id);
 
     return res.status(200).json({ data: picture });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deletePictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params as { id: string };
+
+    if (!id) {
+      return next(new ErrorWithStatus(400, "Invalid picture id"));
+    }
+
+    await deletePicture(id);
+
+    return res.status(200).json({ data: "Picture deleted successfully" });
   } catch (error) {
     next(error);
   }

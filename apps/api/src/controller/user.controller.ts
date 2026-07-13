@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { CookieOptions, NextFunction, Request, Response } from "express";
 import {
   GoogleUserType,
   UserTypeDB,
@@ -18,18 +18,21 @@ import {
   signupSchema,
 } from "@workspace/schema/auth";
 import { ErrorWithStatus } from "@/middleware";
-import {
-  createUser,
-  deleteUser,
-  generateEmailTemplate,
-  getUser,
-  sendEmail,
-  updateUser,
-} from "@/service";
+import { createUser, deleteUser, getUser, updateUser } from "@/service";
 import bcrypt from "bcryptjs";
 import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
-import { Prisma } from "@workspace/lib";
+import { Prisma, kafkaProduceMessage, logger } from "@workspace/lib";
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const refreshCookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
+  path: "/",
+  maxAge: 1000 * 60 * 60 * 24 * 7,
+};
 
 export const googleAuthController = async (
   req: Request,
@@ -41,8 +44,31 @@ export const googleAuthController = async (
       return next(new ErrorWithStatus(400, "Authentication failed"));
     }
 
-    const profile = req.user as UserTypeDB;
-    const { name, email, id, avatar } = profile;
+    const profile = req.user as UserTypeDB & {
+      newUser: boolean;
+    };
+    const { name, email, id, avatar, newUser } = profile;
+
+    if (newUser) {
+      const emailPayload = {
+        type: "welcome",
+        data: {
+          name,
+          dashboardUrl: process.env.FRONTEND_URL,
+          to: email,
+          subject: "Welcome to OpenFrame",
+        },
+      };
+
+      try {
+        await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+      } catch (error) {
+        logger.error(
+          "Error producing google-auth welcome email message:",
+          error,
+        );
+      }
+    }
 
     const accessToken = generateAccessToken({ name, email, id });
     const refreshToken = generateRefreshToken({ email, id });
@@ -54,12 +80,7 @@ export const googleAuthController = async (
     //   maxAge: 1000 * 60 * 15,
     // });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     res.redirect(
       `${process.env.FRONTEND_URL}?id=${id}&name=${name}&email=${email}&avatar=${avatar}&accessToken=${accessToken}`,
@@ -83,8 +104,7 @@ export const signinController = async (
     if (!userExists) {
       return next(new ErrorWithStatus(400, "User doesn't exist"));
     }
-    console.log(userExists);
-    console.log(password);
+
     const isPasswordValid = await bcrypt.compare(
       password,
       userExists.password as string,
@@ -104,12 +124,7 @@ export const signinController = async (
       id: userExists.id,
     });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     return res.status(200).json({
       message: "User logged in.",
@@ -153,15 +168,26 @@ export const signupController = async (
       password: hashedPassword,
     } as UserTypeUnregistered);
 
+    const emailPayload = {
+      type: "welcome",
+      data: {
+        name,
+        dashboardUrl: process.env.FRONTEND_URL,
+        to: email,
+        subject: "Welcome to OpenFrame",
+      },
+    };
+
+    try {
+      await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+    } catch (error) {
+      logger.error("Error producing welcome email message:", error);
+    }
+
     const accessToken = generateAccessToken({ name, email, id: newUser.id });
     const refreshToken = generateRefreshToken({ email, id: newUser.id });
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    res.cookie("refresh_token", refreshToken, refreshCookieOptions);
 
     return res.status(201).json({
       message: "User created successfully",
@@ -197,20 +223,17 @@ export const otpGenerateController = async (
 
     await otpStore.set(emailData, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
-    const template = generateEmailTemplate({
+    const emailPayload = {
       type: "otp",
       data: {
         name: userExist.name,
         otp,
         duration: OTP_VALIDATION_TIME_LIMIT.toString(),
+        to: email,
+        subject: "OTP Verification",
       },
-    });
-
-    const emailSent = await sendEmail(email, "OTP Verification", template);
-
-    if (!emailSent) {
-      return next(new ErrorWithStatus(500, "Failed to send email"));
-    }
+    };
+    await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
 
     return res.status(200).json({
       message: "OTP sent successfully",
@@ -277,7 +300,7 @@ export const resetPasswordController = async (
     await updateUser({ email }, { password: hashedPassword });
 
     res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
+    res.clearCookie("refresh_token", refreshCookieOptions);
 
     return res.status(200).json({
       message: "Password reset successfully",
@@ -349,8 +372,16 @@ export const updateUserController = async (
       );
     }
 
-    const include = {
+    const include: Prisma.UserInclude = {
+      _count: {
+        select: {
+          pictures: true,
+          collection: true,
+          likes: true,
+        },
+      },
       links: true,
+      metrics: true,
     };
     const exclude = {
       google_id: true,
@@ -385,7 +416,7 @@ export const deleteUserController = async (
     await deleteUser(id);
 
     res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
+    res.clearCookie("refresh_token", refreshCookieOptions);
 
     return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
@@ -404,7 +435,9 @@ export const refreshTokenController = async (
     if (!token) {
       return next(new ErrorWithStatus(401, "You are not logged in."));
     }
+
     const decoded = refreshTokenVerify(token);
+
     const user = await getUser({ id: decoded.id }, "auth");
     if (!user) {
       return next(new ErrorWithStatus(404, "User not found"));
@@ -447,18 +480,20 @@ export const sendVerificationLinkController = async (
     await otpStore.set(email, otp, "EX", OTP_VALIDATION_TIME_LIMIT * 60);
 
     const verificationToken = generateVerificationToken({ email, otp });
-    const template = generateEmailTemplate({
+
+    const emailPayload = {
       type: "email-verification",
       data: {
         name: user.name,
         verificationUrl: `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`,
         duration: OTP_VALIDATION_TIME_LIMIT.toString(),
+        to: email,
+        subject: "Email Verification",
       },
-    });
-    const emailSent = await sendEmail(email, "Email Verification", template);
-    if (!emailSent) {
-      return next(new ErrorWithStatus(500, "Failed to send email"));
-    }
+    };
+
+    await kafkaProduceMessage("email-queue", JSON.stringify(emailPayload));
+
     return res.status(200).json({
       message: "Email verification link sent successfully",
     });
@@ -499,7 +534,7 @@ export const verifyEmailTokenController = async (
 export const logoutController = async (req: Request, res: Response) => {
   console.log("Controller called");
   res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
+  res.clearCookie("refresh_token", refreshCookieOptions);
 
   return res.status(200).json({
     message: "Logged out successfully",

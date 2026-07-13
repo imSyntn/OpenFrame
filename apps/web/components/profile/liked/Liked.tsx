@@ -1,5 +1,5 @@
 import { GalleryPhoto } from "@/@types";
-import { Masonry, NotFound } from "@/components/common";
+import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetUserLikedPictures } from "@/hooks";
 import { useGlobalStateStore, useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
@@ -20,7 +20,10 @@ export function Liked() {
     fetchNextPage,
   } = useGetUserLikedPictures(userId || "");
 
-  const pictures = picturesData?.pages.flatMap((page) => page.data) || [];
+  const pictures = useMemo(
+    () => picturesData?.pages.flatMap((page) => page.data) || [],
+    [picturesData],
+  );
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -30,13 +33,16 @@ export function Liked() {
           (src) => src.resolution === "THUMBNAIL" || src.resolution === "SMALL",
         );
         return {
-          src: thumbnail?.url || ORIGINAL?.url!,
-          width: ORIGINAL?.width!,
-          height: ORIGINAL?.height!,
+          src: thumbnail?.url || ORIGINAL?.url || "",
+          width: ORIGINAL?.width || 0,
+          height: ORIGINAL?.height || 0,
           blurhash: pic.metadata?.blurhash,
-          user: pic.user,
+          // user: pic.user,
           key: pic.id,
-          onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+          title: pic.title,
+          created_at: pic.created_at,
+          tags: pic.tags,
+          onClick: () => {
             setOpen(true, pic);
           },
         };
@@ -59,6 +65,7 @@ export function Liked() {
         title="Error occured"
         className="min-h-fit"
         description={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).response?.data?.message || "Something went wrong"
         }
       />
@@ -70,15 +77,20 @@ export function Liked() {
       <NotFound
         Icon={ImageOff}
         title="No Liked Images"
-        className="min-h-[50vh]"
-        description={`${name} hasn't liked any images yet.`}
+        className="min-h-[50dvh]"
+        description={
+          "You haven't liked any images yet or it may take some time for newly liked images to appear."
+        }
       />
     );
   }
 
   return (
     <>
-      <Masonry photos={photos} />
+      <MasonryLayout photos={photos} />
+      <p className="text-center text-muted-foreground mt-4 text-sm">
+        It may take some time for newly liked images to appear.
+      </p>
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

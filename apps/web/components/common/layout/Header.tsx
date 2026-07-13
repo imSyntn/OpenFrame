@@ -1,6 +1,4 @@
 import React from "react";
-import { Input } from "@workspace/ui/components/input";
-import { Search } from "lucide-react";
 import { Logo } from "../Logo";
 import { cn } from "@workspace/ui/lib/utils";
 import { HeaderRight } from "./HeaderRight";
@@ -24,6 +22,7 @@ export function Header({ className }: { className?: string }) {
               Collections
             </LinkWithActiveState>
             <LinkWithActiveState href="/search">Search</LinkWithActiveState>
+            <LinkWithActiveState href="/about">About</LinkWithActiveState>
           </nav>
         </div>
 

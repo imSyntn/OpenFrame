@@ -16,6 +16,7 @@ import { Processing } from "./processing/Processing";
 import { ShowUserCollections } from "../collection";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Liked } from "./liked/Liked";
+import { ReportContent } from "./reports/ReportContent";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);
@@ -25,7 +26,7 @@ export function Content() {
   const isOwner = loggedInUserID === id;
 
   return (
-    <div className="max-w-8xl px-8 h-fit mb-8">
+    <div className="px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 min-h-screen max-w-8xl mx-auto h-fit mb-8">
       <Tabs
         defaultValue="Gallery"
         orientation="horizontal"
@@ -75,6 +76,15 @@ export function Content() {
                 Processing
               </TabsTrigger>
             )}
+            {!isLoading && isOwner && (
+              <TabsTrigger
+                value="reports"
+                className="pl-3 data-[state=active]:border-b-primary rounded-none px-0 data-[state=active]:text-primary! cursor-pointer max-w-fit"
+                disabled={isLoading || !isOwner}
+              >
+                Reports
+              </TabsTrigger>
+            )}
           </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
@@ -95,9 +105,12 @@ export function Content() {
             <Processing />
           </TabsContent>
         )}
+        <TabsContent value="liked" className="flex-1">
+          <Liked />
+        </TabsContent>
         {isOwner && (
-          <TabsContent value="liked" className="flex-1">
-            <Liked />
+          <TabsContent value="reports" className="flex-1">
+            <ReportContent />
           </TabsContent>
         )}
       </Tabs>

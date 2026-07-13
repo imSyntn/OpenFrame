@@ -15,18 +15,18 @@ import {
   updateUserController,
   verifyEmailTokenController,
 } from "@/controller";
-import { authMiddleware } from "@/middleware";
+import { authLimiter, authMiddleware } from "@/middleware";
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", signupController);
-authRouter.post("/signin", signinController);
-authRouter.post("/otp", otpGenerateController);
-authRouter.post("/otp/verify", otpVerifyController);
-authRouter.post("/reset-password", resetPasswordController);
-authRouter.get("/refresh-token", refreshTokenController);
-authRouter.get("/logout", logoutController);
-authRouter.delete("/delete", authMiddleware, deleteUserController);
+authRouter.post("/signup", authLimiter, signupController);
+authRouter.post("/signin", authLimiter, signinController);
+authRouter.post("/otp", authLimiter, otpGenerateController);
+authRouter.post("/otp/verify", authLimiter, otpVerifyController);
+authRouter.post("/reset-password", authLimiter, resetPasswordController);
+authRouter.get("/refresh-token", authLimiter, refreshTokenController);
+authRouter.get("/logout", authLimiter, logoutController);
+authRouter.delete("/delete", authLimiter, authMiddleware, deleteUserController);
 
 authRouter.get(
   "/google",
@@ -48,12 +48,17 @@ authRouter.get(
 
 authRouter.post(
   "/send-verification-link",
+  authLimiter,
   authMiddleware,
   sendVerificationLinkController,
 );
-authRouter.get("/verify-email-token/:token", verifyEmailTokenController);
+authRouter.get(
+  "/verify-email-token/:token",
+  authLimiter,
+  verifyEmailTokenController,
+);
 
 authRouter.get("/:id", getUserController);
-authRouter.patch("/:id", authMiddleware, updateUserController);
+authRouter.patch("/:id", authLimiter, authMiddleware, updateUserController);
 
 export { authRouter };

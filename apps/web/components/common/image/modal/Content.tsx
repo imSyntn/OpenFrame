@@ -3,27 +3,71 @@
 import React, { useEffect, useState } from "react";
 import { ModalHeader } from "./ModalHeader";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { PhotoWithBlurHash } from "../BlurhashCanvas";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
+import { PhotoWithBlurHash, ViewBlurhashModal } from "../BlurhashCanvas";
 import { tagsType } from "@workspace/types";
 import { useGlobalStateStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
 import { ImageTags } from "./ImageTags";
 import { useIncrementViewCount } from "@/hooks";
-import { notFound } from "next/navigation";
+import { AlertTriangle, Ellipsis, EyeIcon, InfoIcon } from "lucide-react";
+import { LICENSES_MAP } from "@workspace/constants";
+import Link from "next/link";
+import { ColorBlock } from "./ColorBlock";
+import { useRouter } from "next/navigation";
 
 const TitleDesc = ({
   title,
   description,
+  imageId,
 }: {
   title: string;
   description?: string;
+  imageId: string;
 }) => {
   const [show, setShow] = useState(false);
+  const router = useRouter();
+  const setOpen = useGlobalStateStore((state) => state.setOpen);
+
+  const handleReport = () => {
+    setOpen(false);
+    router.push(`/report?imageId=${imageId}`);
+  };
+
   return (
     <div>
-      <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-        {title}
-      </h2>
+      <div className="flex gap-3 items-center justify-between">
+        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+          {title}
+        </h2>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon-sm">
+              <Ellipsis />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" side="top" className="w-fit px-2 py-1">
+            <Button
+              variant="ghost"
+              className="text-destructive hover:text-destructive"
+              onClick={handleReport}
+            >
+              <AlertTriangle />
+              Report
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
       {description && (
         <>
           <p
@@ -84,13 +128,17 @@ export function Content() {
     .map((tag) => tag.tag);
 
   const original = image?.src?.find((s) => s.resolution === "ORIGINAL");
+  const previewImage =
+    image?.src?.find(
+      (s) => s.resolution === "MEDIUM" || s.resolution === "LARGE",
+    ) || original;
   const originalWidth = original?.width;
   const originalHeight = original?.height;
   const photo = {
-    src: original?.url!,
+    src: previewImage?.url,
     alt: image?.alt,
-    width: originalWidth!,
-    height: originalHeight!,
+    width: originalWidth,
+    height: originalHeight,
     blurhash: image?.metadata?.blurhash,
     user: image?.user,
   };
@@ -101,27 +149,24 @@ export function Content() {
 
       <ScrollArea className="flex-1 min-h-0 px-6 pb-6">
         <div className="space-y-6">
-          <div
-            className="relative w-full flex items-center justify-center min-h-[60vh] rounded-2xl overflow-hidden p-4 sm:p-6"
-            style={{
-              background: `linear-gradient(135deg, ${image.metadata.dominant_color}08, ${image.metadata.dominant_color}20)`,
-            }}
-          >
+          <div className="relative w-full flex items-center justify-center overflow-hidden rounded-2xl p-4 sm:p-6">
             <div
-              className="absolute inset-0 scale-110 blur-3xl opacity-40"
+              className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-30"
               style={{ backgroundColor: image.metadata.dominant_color }}
             />
 
             <PhotoWithBlurHash
               photo={photo}
-              showUser={false}
               hoverEffect={false}
+              showLens={true}
+              isPreview={true}
             />
           </div>
 
           <TitleDesc
             title={image.title}
             description={image.description || ""}
+            imageId={image.id}
           />
 
           <div className="flex gap-10 text-sm">
@@ -147,6 +192,24 @@ export function Content() {
 
           <ImageTags tags={tags} showTitle={false} />
 
+          <div className="flex flex-col gap-2">
+            <p className="text-foreground text-base font-semibold">License</p>
+            <Alert variant={image.license}>
+              <InfoIcon />
+              <AlertTitle>{LICENSES_MAP[image.license].name}</AlertTitle>
+              <AlertDescription>
+                {LICENSES_MAP[image.license].description}
+              </AlertDescription>
+              <AlertAction>
+                <Button variant="link">
+                  <Link href="/license-details" target="_blank">
+                    Learn More
+                  </Link>
+                </Button>
+              </AlertAction>
+            </Alert>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-xl border p-5">
               <h3 className="font-semibold text-base mb-4">Details</h3>
@@ -157,6 +220,10 @@ export function Content() {
                   label="Date"
                   value={new Date(image.created_at).toDateString()}
                 />
+                <InfoRow
+                  label="Size"
+                  value={`${(Number(original?.size) / 1024 / 1024).toFixed(2)} MB`}
+                />
               </div>
             </div>
 
@@ -165,22 +232,27 @@ export function Content() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Dominant</span>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-5 h-5 rounded border"
-                      style={{
-                        backgroundColor: image?.metadata?.dominant_color,
-                      }}
-                    />
-                    <span>{image.metadata?.dominant_color}</span>
+                  <ColorBlock color={image?.metadata?.dominant_color} />
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Palette</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {image?.metadata?.palette?.map((color) => (
+                      <ColorBlock key={color} color={color} />
+                    ))}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">BlurHash</span>
-                  <p className="break-all text-xs">
-                    {image.metadata?.blurhash}
-                  </p>
+                  <ViewBlurhashModal
+                    hash={image.metadata?.blurhash}
+                    aspectRatio={`${originalWidth} / ${originalHeight}`}
+                  >
+                    <Button size="sm" variant="outline">
+                      <EyeIcon /> View BlurHash
+                    </Button>
+                  </ViewBlurhashModal>
                 </div>
               </div>
             </div>

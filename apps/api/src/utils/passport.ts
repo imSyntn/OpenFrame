@@ -27,6 +27,7 @@ passport.use(
         _json: profile._json as GoogleUserType["_json"],
       };
 
+      let newUser = false;
       let userExists = await getUser(
         {
           email: googleUser.email,
@@ -35,8 +36,9 @@ passport.use(
       );
       if (!userExists) {
         userExists = await createUser(googleUser);
+        newUser = true;
       }
-      return done(null, userExists);
+      return done(null, { ...userExists, newUser });
     },
   ),
 );

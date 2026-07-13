@@ -2,7 +2,7 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Search | OpenFrame",
+  title: "Search",
   description: "Search for high-resolution photos",
 };
 

@@ -9,6 +9,7 @@ export function StatCard({
   headingClass,
   textClass,
   showGradient,
+  className,
 }: {
   value?: number;
   label: string;
@@ -16,12 +17,14 @@ export function StatCard({
   headingClass?: string;
   textClass?: string;
   showGradient?: boolean;
+  className?: string;
 }) {
   return (
     <div
       className={cn(
         "flex flex-col gap-1 border rounded-lg px-4 py-3 bg-card items-center md:items-start",
         showGradient && "bg-gradient-to-b from-card via-card to-muted/30",
+        className,
       )}
     >
       {isLoading ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent } from "@workspace/ui/components/dialog";
-import { useGlobalStateStore, useUserStore } from "@/store";
+import { useGlobalStateStore } from "@/store";
 import { CollectionModalContent } from "./CollectionModalContent";
 
 export function ViewCollectionModal() {
@@ -18,7 +18,7 @@ export function ViewCollectionModal() {
         setOpenCollectionModal(value ? collection : null)
       }
     >
-      <DialogContent className="min-w-[95vw] max-h-[90vh] overflow-y-auto pr-0">
+      <DialogContent className="min-w-[95vw] max-h-[90dvh] overflow-y-auto pr-0">
         <CollectionModalContent />
       </DialogContent>
     </Dialog>

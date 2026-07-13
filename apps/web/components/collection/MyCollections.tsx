@@ -18,8 +18,9 @@ export function ShowUserCollections({ id }: { id?: string }) {
   if (isError) {
     return (
       <ErrorOccured
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message}
-        className="min-h-[calc(100vh-200px)]"
+        className="min-h-[calc(100dvh-200px)]"
         onClick={() => refetch()}
       />
     );
@@ -29,7 +30,7 @@ export function ShowUserCollections({ id }: { id?: string }) {
     return (
       <NotFound
         Icon={FileX}
-        className="min-h-[calc(100vh-200px)]"
+        className="min-h-[calc(100dvh-200px)]"
         title="No collections found"
         description="You haven't created any collections yet."
       />

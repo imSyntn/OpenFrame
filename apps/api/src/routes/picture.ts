@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createPictureController,
+  deletePictureController,
   downloadPictureController,
   getAllPictureStatusController,
   getExplorePicturesController,
@@ -13,15 +14,30 @@ import {
   likePictureController,
   viewPictureController,
 } from "../controller/picture.controller";
-import { authMiddleware } from "@/middleware";
+import {
+  authMiddleware,
+  checkPictureOwner,
+  pollingLimiter,
+  uploadLimiter,
+} from "@/middleware";
 
 const pictureRouter = Router();
 
 pictureRouter.get("/tags", getPictureTagsController);
 pictureRouter.get("/explore", getExplorePicturesController);
 
-pictureRouter.post("/create", authMiddleware, createPictureController);
-pictureRouter.get("/status", authMiddleware, getAllPictureStatusController);
+pictureRouter.post(
+  "/create",
+  uploadLimiter,
+  authMiddleware,
+  createPictureController,
+);
+pictureRouter.get(
+  "/status",
+  pollingLimiter,
+  authMiddleware,
+  getAllPictureStatusController,
+);
 pictureRouter.get(
   "/status/:pictureID",
   authMiddleware,
@@ -33,6 +49,7 @@ pictureRouter.get("/user/:id", getUserPicturesController);
 
 pictureRouter.post(
   "/upload-url",
+  uploadLimiter,
   authMiddleware,
   getPictureUploadUrlController,
 );
@@ -40,6 +57,13 @@ pictureRouter.post(
 pictureRouter.post("/view/:id", viewPictureController);
 pictureRouter.post("/download/:id", downloadPictureController);
 pictureRouter.post("/like/:id", authMiddleware, likePictureController);
+
+pictureRouter.delete(
+  "/:id",
+  authMiddleware,
+  checkPictureOwner,
+  deletePictureController,
+);
 
 pictureRouter.get("/:id", getPictureByIdController);
 

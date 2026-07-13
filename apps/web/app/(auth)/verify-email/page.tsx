@@ -1,10 +1,6 @@
-import { AuthWrapper, EmailVerification } from "@/components/auth";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Verify Email | OpenFrame",
-  description: "Verify your email address to continue.",
-};
+import { AuthWrapper, EmailVerification } from "@/components/auth";
 
 export default function VerifyEmailPage() {
   return (

@@ -2,7 +2,6 @@ import { UnderProcessingPictureType } from "@workspace/types";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { error } from "node:console";
 import React from "react";
 
 export function CardSkeleton() {

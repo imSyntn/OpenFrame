@@ -11,13 +11,16 @@
   "exports": {
     "./auth": "./dist/authSchema.js",
     "./picture": "./dist/pictureSchema.js",
-    "./collection": "./dist/collectionSchema.js"
+    "./collection": "./dist/collectionSchema.js",
+    "./report": "./dist/reportSchema.js",
+    "./index": "./dist/index.js"
   },
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "@workspace/constants": "workspace:*",
+    "@workspace/types": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
     "zod": "^3.25.76"
   }

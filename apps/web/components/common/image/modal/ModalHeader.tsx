@@ -1,52 +1,57 @@
-import { Share2, ThumbsUp } from "lucide-react";
+import { Share2, ThumbsUp, Trash } from "lucide-react";
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@workspace/ui/components/dialog";
 import { useGlobalStateStore, useUserStore } from "@/store";
-import { useIncrementLikeCount } from "@/hooks";
-import { toast } from "sonner";
+import { useDeletePicture, useIncrementLikeCount } from "@/hooks";
 import { cn } from "@workspace/ui/lib/utils";
 import { TooltipButton } from "../../layout";
 import { DownloadButton } from "./DownloadButton";
 import { OwnerInfo } from "./OwnerInfo";
 import { AddToCollection } from "./AddToCollection";
+import { WarningModal } from "../../WarningModal";
+import { copyToClipboard } from "@/utils";
 
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
   const open = useGlobalStateStore((state) => state.open);
+  const setOpen = useGlobalStateStore((state) => state.setOpen);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const { mutateAsync: incrementLikeCount } = useIncrementLikeCount();
+  const userId = useUserStore((state) => state.id);
+  const { mutate: incrementLikeCount } = useIncrementLikeCount();
+  const { mutateAsync: deletePicture } = useDeletePicture();
   if (!image) {
     return null;
   }
 
-  const handleLike = async () => {
-    try {
-      await incrementLikeCount(image.id);
-      toast.success("Liked successfully.", {
-        description: "It may take some time to show on profile.",
-      });
-    } catch (error) {
-      toast.error("Failed to like.");
-    }
+  const handleLike = () => {
+    incrementLikeCount(image.id);
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
+    copyToClipboard(
+      `${window.location.origin}/picture/${image.id}`,
+      "Link copied to clipboard",
+      "Failed to copy link",
+    );
+  };
+
+  const handleDelete = async () => {
     try {
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/picture/${image.id}`,
-      );
-      toast.success("Link copied to clipboard.");
+      await deletePicture({ id: image.id, userId: image.user_id });
+      setOpen(false);
     } catch (error) {
-      toast.error("Failed to copy link.");
+      console.log(error);
     }
   };
 
   const isModal = open == true && !!image?.id;
 
   const Header = isModal ? DialogHeader : "div";
+  const isOwner = image.user_id === userId;
+
   return (
     <Header
       className={cn(
@@ -87,6 +92,16 @@ export function ModalHeader() {
             content="Add to collection"
             as="div"
           />
+        )}
+        {isLoggedIn && isOwner && (
+          <WarningModal onClick={handleDelete}>
+            <TooltipButton
+              value={<Trash />}
+              size="icon"
+              content="Delete"
+              variant="destructive"
+            />
+          </WarningModal>
         )}
         <DownloadButton />
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useProfileStore } from "@/store";
 import {
   Avatar,
@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Field, FieldLabel, FieldSet } from "@workspace/ui/components/field";
 import { ChangeAvatar } from "./ChangeAvatar";
 import { useRouter } from "next/navigation";
+import { WarningModal } from "@/components/common";
 
 export function Form({ handleClose }: { handleClose: () => void }) {
   const { name, avatar, bio, location, email, joined_at, links, id, setData } =
@@ -48,6 +49,7 @@ export function Form({ handleClose }: { handleClose: () => void }) {
       handleClose();
       toast.success("Profile updated successfully");
       setData(res);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(
@@ -64,6 +66,8 @@ export function Form({ handleClose }: { handleClose: () => void }) {
       await deleteUser();
       toast.success("Profile deleted successfully", { id: toastId });
       router.push("/signup");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(
@@ -82,12 +86,14 @@ export function Form({ handleClose }: { handleClose: () => void }) {
     setValue("avatar", avatar);
   };
 
+  const avatarSrc = watch("avatar") || avatar;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FieldSet disabled={isPending}>
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={watch("avatar") || avatar} />
+            <AvatarImage src={avatarSrc} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>
           </Avatar>
 
@@ -195,13 +201,19 @@ export function Form({ handleClose }: { handleClose: () => void }) {
         <div className="border-t pt-6 flex items-center justify-between">
           <p className="text-sm font-semibold text-destructive">Danger Zone</p>
 
-          <Button
+          {/* <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={isDeleting}
           >
             Delete Account
-          </Button>
+          </Button> */}
+
+          <WarningModal onClick={handleDelete}>
+            <Button variant="destructive" disabled={isDeleting}>
+              Delete Account
+            </Button>
+          </WarningModal>
         </div>
       </FieldSet>
     </form>

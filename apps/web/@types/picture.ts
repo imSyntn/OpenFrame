@@ -1,5 +1,5 @@
 import { tagsType } from "@workspace/types";
-import { Photo } from "react-photo-album";
+import { Licenses } from "@workspace/constants";
 
 export interface PictureType {
   id: string;
@@ -7,6 +7,7 @@ export interface PictureType {
   alt: string;
   description: string;
   created_at: string;
+  license: Licenses;
 
   user: {
     id: string;
@@ -26,6 +27,7 @@ export interface PictureType {
   metadata: {
     blurhash: string;
     dominant_color: string;
+    palette: string[];
     others?: Record<string, string>;
   };
 
@@ -41,11 +43,11 @@ export interface PictureType {
   };
 }
 
-export type GalleryPhoto = Photo & {
+export type GalleryPhoto = {
+  src: string;
+  width: number;
+  height: number;
   blurhash: string;
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
+  key: string;
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 };

@@ -47,7 +47,7 @@ export function VerifyEmail() {
             Verify your email
           </DialogTitle>
           <DialogDescription>
-            We'll send a verification link to your email address.
+            We&apos;ll send a verification link to your email address.
           </DialogDescription>
         </DialogHeader>
 

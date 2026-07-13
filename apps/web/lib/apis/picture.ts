@@ -55,6 +55,8 @@ export const createPictureUpload = async (payload: {
   description?: string;
   tags: { id: number; name: string }[];
   url: string;
+  pictureId: string;
+  license: string;
 }) => {
   const res = await api.post("/api/picture/create", payload);
   return res.data.message;
@@ -110,4 +112,11 @@ export const getPictureById = async (
 ): Promise<{ data: PictureType }> => {
   const res = await api.get(`/api/picture/${id}`);
   return res.data;
+};
+
+export const deletePicture = async (
+  id: string,
+): Promise<{ message: string }> => {
+  const res = await api.delete(`/api/picture/${id}`);
+  return res.data.message;
 };

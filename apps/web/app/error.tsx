@@ -18,7 +18,7 @@ export default function Error({ error, reset }: ErrorProps) {
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-55px)] text-center px-6">
+      <div className="flex flex-col items-center justify-center min-h-[calc(100dvh-55px)] text-center px-6">
         <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
           <AlertTriangle className="w-8 h-8 text-destructive" />
         </div>

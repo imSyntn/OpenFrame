@@ -21,7 +21,7 @@ export function ImageInput({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
+
     if (file && file.size > MAX_SIZE) {
       toast.error(`File size exceeds the limit of ${MAX_SIZE / 1024 / 1024}MB`);
       return;
@@ -68,7 +68,7 @@ export function ImageInput({
       <Label className="cursor-pointer flex items-center justify-center">
         <Input
           type="file"
-          accept="image/*"
+          accept=".png,.jpeg,.jpg"
           onChange={handleImageChange}
           className="hidden"
           ref={inputRef}

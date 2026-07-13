@@ -111,7 +111,7 @@ function DropdownContent() {
   };
 
   return (
-    <DropdownMenuContent className="w-52 max-h-[60vh]">
+    <DropdownMenuContent className="w-52 max-h-[60dvh]">
       <DropdownMenuGroup>
         <DropdownMenuLabel className="text-center">
           Choose collection

@@ -1,5 +1,5 @@
 import React from "react";
-import { Collection, SrcType } from "@workspace/types";
+import { Collection } from "@workspace/types";
 import { Clock, RefreshCcw } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardContent, CardFooter } from "@workspace/ui/components/card";

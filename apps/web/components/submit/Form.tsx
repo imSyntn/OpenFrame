@@ -5,7 +5,6 @@ import { pictureSchema } from "@workspace/schema/picture";
 import { Input } from "@workspace/ui/components/input";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -25,11 +24,14 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@workspace/ui/components/combobox";
+import { RadioGroup } from "@workspace/ui/components/radio-group";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { useCreatePictureUpload, useGetTags } from "@/hooks";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store";
+import { Licenses, LICENSES_MAP } from "@workspace/constants";
+import { LicenseSelector } from "./LicenseSelector";
 
 export function Form({
   uploadedUrl,
@@ -47,11 +49,13 @@ export function Form({
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isValid },
+    getValues,
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(pictureSchema),
     defaultValues: {
       tags: [],
+      license: Licenses.CC0_1_0,
     },
   });
   const anchor = useComboboxAnchor();
@@ -64,6 +68,7 @@ export function Form({
     }
   }, [uploadedUrl, pictureId]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submit = async (data: any) => {
     try {
       await createPictureUpload(data);
@@ -71,6 +76,7 @@ export function Form({
         description: "Picture is being processed. It will take a few minutes.",
       });
       router.push(`/profile/${userId}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Failed to upload image");
@@ -80,6 +86,9 @@ export function Form({
   if (!isLoading && !!error) {
     toast.error("Failed to fetch tags");
   }
+
+  const availableLicenses = Object.values(LICENSES_MAP);
+  console.log(getValues("url"));
 
   return (
     <form
@@ -183,11 +192,41 @@ export function Form({
 
             {errors.tags && <FieldError>{errors.tags.message}</FieldError>}
           </Field>
+
+          <Field>
+            <FieldLabel>License</FieldLabel>
+
+            <Controller
+              name="license"
+              control={control}
+              render={({ field, fieldState }) => (
+                <RadioGroup
+                  name={field.name}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  {availableLicenses.map((license) => (
+                    <LicenseSelector
+                      key={license.key}
+                      license={license}
+                      fieldState={fieldState}
+                    />
+                  ))}
+                </RadioGroup>
+              )}
+            />
+
+            {errors.license && (
+              <FieldError>{errors.license.message}</FieldError>
+            )}
+          </Field>
         </FieldGroup>
+
+        {errors.pictureId && <FieldError>Image error</FieldError>}
 
         <Button
           className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]"
-          disabled={!isValid || isPending}
+          disabled={isPending}
         >
           {isPending ? "Uploading..." : "Upload Image"}
         </Button>

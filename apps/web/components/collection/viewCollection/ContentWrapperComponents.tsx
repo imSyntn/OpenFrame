@@ -10,7 +10,7 @@ import { UpdateCollection } from "../UpdateCollection";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { toast } from "sonner";
 import { Collection } from "@workspace/types";
-import { useGlobalStateStore, useUserStore } from "@/store";
+import { useGlobalStateStore } from "@/store";
 import { useDeleteCollection } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
@@ -125,7 +125,7 @@ export function HeaderRight({
         `${window.location.origin}/collections/${collection?.id}`,
       );
       toast.success("Link copied to clipboard.");
-    } catch (error) {
+    } catch {
       toast.error("Failed to copy link.");
     }
   };
@@ -183,7 +183,7 @@ export function HeaderRight({
 }
 
 export function ContentBody({ children }: { children: React.ReactElement }) {
-  return <ScrollArea className="max-h-[70vh] pr-4">{children}</ScrollArea>;
+  return <ScrollArea className="max-h-[70dvh] pr-4">{children}</ScrollArea>;
 }
 
 export function CollectionCardWrapper({

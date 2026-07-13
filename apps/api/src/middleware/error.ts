@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import { logger } from "@workspace/lib/logger";
+import jwt from "jsonwebtoken";
 
 export class ErrorWithStatus extends Error {
   constructor(
@@ -26,6 +27,13 @@ export const errorMiddleware = (
         field: e.path.join("."),
         message: e.message,
       })),
+    });
+  }
+
+  if (err instanceof jwt.JsonWebTokenError) {
+    res.clearCookie("refresh_token");
+    return res.status(401).json({
+      message: "Invalid token",
     });
   }
 

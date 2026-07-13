@@ -56,6 +56,7 @@ export function LoginForm({
       setTimeout(() => {
         router.push("/");
       }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.dismiss(toastId);
 
@@ -98,6 +99,7 @@ export function LoginForm({
               type="email"
               placeholder="m@example.com"
               className="bg-background"
+              autoComplete="email"
               {...register("email")}
             />
             {errors.email && <FieldError errors={[errors.email]} />}
@@ -110,7 +112,9 @@ export function LoginForm({
             <Input
               id="password"
               type="password"
+              placeholder="********"
               className="bg-background"
+              autoComplete="current-password"
               {...register("password")}
             />
             {errors.password && <FieldError errors={[errors.password]} />}

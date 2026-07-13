@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  name        String       @db.VarChar(80)
-  email       String       @unique
-  joined_at   DateTime     @default(now())
-  avatar      String       @default("https://cdn-icons-png.flaticon.com/512/3177/3177440.png")
-  bio         String?      @db.VarChar(160)
-  is_verified Boolean      @default(false)
-  location    String?      @db.VarChar(100)
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(80)
+  email       String   @unique
+  joined_at   DateTime @default(now())
+  avatar      String   @default("https://cdn-icons-png.flaticon.com/512/3177/3177440.png")
+  bio         String?  @db.VarChar(160)
+  is_verified Boolean  @default(false)
+  location    String?  @db.VarChar(100)
   google_id   String?
   password    String?
-  collection  Collection[]
-  followers   Follow[]     @relation("UserFollowing")
-  following   Follow[]     @relation("UserFollowers")
-  likes       Like[]
-  links       Links[]
-  metrics     Metrics?
-  pictures    Picture[]
+
+  collection Collection[]
+  followers  Follow[]     @relation("UserFollowing")
+  following  Follow[]     @relation("UserFollowers")
+  likes      Like[]
+  links      Links[]
+  metrics    Metrics?
+  pictures   Picture[]
+  reports    Report[]
 }
 
 model Links {
@@ -82,6 +84,8 @@ model Picture {
   tags             PicTag[]
   user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   src              Src[]
+  license          License          @default(CC0_1_0)
+  reports          Report[]
 
   @@index([user_id, id])
 }
@@ -100,11 +104,12 @@ model Src {
 }
 
 model Metadata {
-  pic_id         String  @id
+  pic_id         String   @id
   dominant_color String
+  palette        String[] @default([])
   blurhash       String
   others         Json?
-  picture        Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)
+  picture        Picture  @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 }
 
 model Tag {
@@ -154,6 +159,39 @@ model CollectionItem {
   picture       Picture    @relation(fields: [pic_id], references: [id], onDelete: Cascade)
 
   @@id([collection_id, pic_id])
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  pic_id     String
+  user_email String
+  user_id    String
+  title      String       @db.VarChar(60)
+  reason     String       @db.VarChar(4000)
+  status     ReportStatus @default(PENDING)
+  note       String?      @db.VarChar(4000)
+  created_at DateTime     @default(now())
+
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  picture Picture @relation(fields: [pic_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([pic_id])
+}
+
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  REJECTED
+  RESOLVED
+}
+
+enum License {
+  ALL_RIGHTS_RESERVED
+  CC_BY_4_0
+  CC_BY_SA_4_0
+  CC_BY_NC_4_0
+  CC0_1_0
 }
 
 enum Resolution {

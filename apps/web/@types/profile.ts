@@ -1,5 +1,3 @@
-import { PictureType } from "./picture";
-
 export interface ProfileType {
   id: string;
   name: string;

@@ -11,8 +11,8 @@ export const setupKafka = async () => {
       { topic: "picture-upload", numPartitions: 2 },
       { topic: "metadata-extraction-complete", numPartitions: 2 },
       { topic: "processing-complete", numPartitions: 1 },
-      { topic: "picture-ready-for-DB-write", numPartitions: 1 },
-      { topic: "engagement-events", numPartitions: 2 },
+      { topic: "db-write", numPartitions: 2 },
+      { topic: "email-queue", numPartitions: 2 },
     ],
   });
 

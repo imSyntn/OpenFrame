@@ -193,7 +193,7 @@ export const deleteCollectionController = async (
     const { id } = req.params;
     const { id: user_id } = req.user as { id: string };
     if (!id) {
-      return res.status(400).json({ message: "Collection ID is required" });
+      return next(new ErrorWithStatus(400, "Collection ID is required"));
     }
     const collection = await deleteCollection(id as string, user_id);
     return res

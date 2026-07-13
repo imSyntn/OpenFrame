@@ -1,12 +1,17 @@
 import { prisma } from "@workspace/lib/prisma";
 import { cache } from "@workspace/lib/redis";
 import { kafkaProduceMessage } from "@workspace/lib/kafka";
-import { PIC_PER_PAGE, EXPLORE_PIC_PER_PAGE } from "@workspace/constants";
+import {
+  PIC_PER_PAGE,
+  EXPLORE_PIC_PER_PAGE,
+  Licenses,
+} from "@workspace/constants";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
 import { UnderProcessingPictureType } from "@workspace/types";
+import { deletePictureIndex } from "./indexing.service";
 
 export const getUserPictures = async (id: string, lastId: string | null) => {
   const cacheKey = `user:pictures:${id}:${lastId || "-1"}`;
@@ -25,7 +30,9 @@ export const getUserPictures = async (id: string, lastId: string | null) => {
     skip: lastId ? 1 : 0,
     orderBy: { created_at: "desc" },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -72,7 +79,9 @@ export const getUserLikedPictures = async (
     include: {
       picture: {
         include: {
-          src: true,
+          src: {
+            orderBy: { size: "asc" },
+          },
           metadata: true,
           tags: {
             include: {
@@ -108,7 +117,9 @@ export const getPictureById = async (id: string) => {
   const picture = await prisma.picture.findUnique({
     where: { id },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -127,6 +138,42 @@ export const getPictureById = async (id: string) => {
   await cache.set(`picture:${id}`, JSON.stringify(picture), "EX", 60 * 60 * 2);
 
   return picture;
+};
+
+export const deletePicture = async (id: string) => {
+  const picture = await prisma.picture.delete({
+    where: { id },
+  });
+
+  await deletePictureIndex(id);
+  const pipe = cache.pipeline();
+
+  const patterns = [
+    `user:pictures:${picture.user_id}:*`,
+    "explore:pictures:*",
+    `user:liked-pictures:${picture.user_id}:*`,
+  ];
+
+  pipe.del(`picture:${id}`);
+
+  await Promise.all(
+    patterns.map((pattern) => {
+      return new Promise((resolve) => {
+        const stream = cache.scanStream({
+          match: pattern,
+          count: 100,
+        });
+
+        stream.on("data", (keys) => {
+          if (keys.length) pipe.del(keys);
+        });
+
+        stream.on("end", resolve);
+      });
+    }),
+  );
+
+  await pipe.exec();
 };
 
 export const getPictureUploadUrl = async (
@@ -162,6 +209,7 @@ export const getPictureTags = async () => {
   }
 
   const tags = await prisma.tag.findMany({
+    take: 20,
     include: {
       pictures: {
         take: 1,
@@ -217,7 +265,9 @@ export const getExplorePictures = async (
     skip: lastId ? 1 : 0,
     orderBy: { created_at: "desc" },
     include: {
-      src: true,
+      src: {
+        orderBy: { size: "asc" },
+      },
       metadata: true,
       tags: {
         include: {
@@ -250,6 +300,7 @@ export const createPicture = async (
   url: string,
   userId: string,
   pictureId: string,
+  license: Licenses,
 ) => {
   const newPicture: UnderProcessingPictureType = {
     id: pictureId,
@@ -261,6 +312,7 @@ export const createPicture = async (
     stepsCompleted: [],
     created_at: new Date().toISOString(),
     userId,
+    license,
   };
 
   await cache.hset(
@@ -286,11 +338,10 @@ export const getPictureStatus = async (userId: string, pictureID: string) => {
 
 export const incrementViewCount = async (pictureID: string, userID: string) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "view",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "view", pictureID, userID },
     }),
   );
 };
@@ -300,22 +351,20 @@ export const incrementDownloadCount = async (
   userID: string,
 ) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "download",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "download", pictureID, userID },
     }),
   );
 };
 
 export const incrementLikeCount = async (pictureID: string, userID: string) => {
   await kafkaProduceMessage(
-    "engagement-events",
+    "db-write",
     JSON.stringify({
-      type: "like",
-      pictureID,
-      userID,
+      action: "engagement-event",
+      data: { type: "like", pictureID, userID },
     }),
   );
 };

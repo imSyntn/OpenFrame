@@ -16,6 +16,7 @@
     }
   },
   "dependencies": {
-    "@workspace/typescript-config": "workspace:*"
+    "@workspace/typescript-config": "workspace:*",
+    "@workspace/types": "workspace:*"
   }
 }

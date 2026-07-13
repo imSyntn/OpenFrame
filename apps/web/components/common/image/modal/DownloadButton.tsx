@@ -32,6 +32,8 @@ export function DownloadButton() {
       toast.error("Failed to download.");
       return;
     }
+
+    let toastId;
     try {
       const name =
         image.title +
@@ -39,10 +41,27 @@ export function DownloadButton() {
         variant.toLowerCase() +
         "." +
         url.split(".").reverse()[0];
+
+      toastId = toast.success(
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <p className="font-medium">Thanks for downloading!</p>
+
+            <p className="text-sm text-muted-foreground">
+              Please support creators by respecting the image license and giving
+              attribution when required.
+            </p>
+          </div>
+        </div>,
+        {
+          position: "bottom-center",
+        },
+      );
+
       await downloadImage(url, name);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to download.");
+      toast.error("Failed to download.", { id: toastId });
     } finally {
       incrementDownloadCount({ id: image.id, ownerId: image.user_id }).catch(
         (e) => console.log(e),

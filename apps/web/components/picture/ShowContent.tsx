@@ -4,10 +4,8 @@ import { useGlobalStateStore } from "@/store";
 import { useGetPictureById } from "@/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Content, ErrorOccured, NotFound } from "@/components/common";
+import { Content, ErrorOccured } from "@/components/common";
 import { ContentSkeleton } from "./ContentSkeleton";
-import { AlertCircle, CameraOff } from "lucide-react";
-import { Button } from "@workspace/ui/components/button";
 import { notFound } from "next/navigation";
 
 export function ShowContent({ pictureId }: { pictureId: string }) {
@@ -39,8 +37,9 @@ export function ShowContent({ pictureId }: { pictureId: string }) {
   if (isError) {
     return (
       <ErrorOccured
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         title={(error as any)?.response?.data?.message}
-        className="min-h-[calc(100vh-200px)]"
+        className="min-h-[calc(100dvh-200px)]"
         onClick={() => refetch()}
       />
     );

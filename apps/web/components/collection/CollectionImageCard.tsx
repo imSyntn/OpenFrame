@@ -6,7 +6,6 @@ import { CollectionItem } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export function CollectionImageCard({
@@ -21,7 +20,6 @@ export function CollectionImageCard({
   const setOpenCollectionModal = useGlobalStateStore(
     (state) => state.setOpenCollectionModal,
   );
-  const router = useRouter();
 
   const img =
     item.picture.src.find((s) => s.resolution === "THUMBNAIL") ||

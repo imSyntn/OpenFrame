@@ -35,7 +35,7 @@ export function UpdateCollection() {
           <Settings />
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-[95vw] sm:min-w-[70vw] max-h-[90vh] overflow-y-auto pr-0">
+      <DialogContent className="min-w-[95vw] sm:min-w-[70vw] max-h-[90dvh] overflow-y-auto pr-0">
         <DialogHeader>
           <DialogTitle>Update collection</DialogTitle>
           <DialogDescription>
@@ -51,7 +51,7 @@ export function UpdateCollection() {
             </Link>
           </div>
         ) : (
-          <ScrollArea className="max-h-[70vh] pr-4">
+          <ScrollArea className="max-h-[70dvh] pr-4">
             <Form onUpdated={handleOnUpdateModalClose} />
           </ScrollArea>
         )}

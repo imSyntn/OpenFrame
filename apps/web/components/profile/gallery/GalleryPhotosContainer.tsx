@@ -1,11 +1,10 @@
-import { GalleryPhoto, PictureType } from "@/@types";
+import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore, useProfileStore } from "@/store";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
-import { Masonry, NotFound } from "@/components/common";
+import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetPictures } from "@/hooks";
 import { ImageOff, Loader2 } from "lucide-react";
-import { toast } from "sonner";
 
 export function GalleryPhotosContainer() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
@@ -20,7 +19,10 @@ export function GalleryPhotosContainer() {
     error,
   } = useGetPictures(id);
 
-  const pictures = data?.pages.flatMap((page) => page.data) || [];
+  const pictures = useMemo(
+    () => data?.pages.flatMap((page) => page.data) || [],
+    [data],
+  );
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -30,13 +32,16 @@ export function GalleryPhotosContainer() {
           (src) => src.resolution === "THUMBNAIL" || src.resolution === "SMALL",
         );
         return {
-          src: thumbnail?.url || ORIGINAL?.url!,
-          width: ORIGINAL?.width!,
-          height: ORIGINAL?.height!,
+          src: thumbnail?.url || ORIGINAL?.url || "",
+          width: ORIGINAL?.width || 0,
+          height: ORIGINAL?.height || 0,
           blurhash: pic.metadata?.blurhash,
-          user: pic.user,
+          // user: pic.user,
           key: pic.id,
-          onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+          title: pic.title,
+          created_at: pic.created_at,
+          tags: pic.tags,
+          onClick: () => {
             setOpen(true, pic);
           },
         };
@@ -56,6 +61,7 @@ export function GalleryPhotosContainer() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p className="text-destructive">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(error as any).response?.data?.message || "Something went wrong"}
         </p>
       </div>
@@ -75,7 +81,7 @@ export function GalleryPhotosContainer() {
 
   return (
     <>
-      <Masonry photos={photos} showUser={false} />
+      <MasonryLayout photos={photos} />
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

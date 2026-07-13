@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Masonry } from "../common";
+import { MasonryLayout } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { PictureMatch } from "@workspace/types";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export function PicturesContainer({ pictures }: { pictures: PictureMatch[] }) {
         width: pic.content.width,
         height: pic.content.height,
         blurhash: pic.content.blurhash,
-        user: pic.user,
+        // user: pic.user,
         key: pic.id.toString(),
         onClick: () => {
           router.push(`/picture/${pic.id}`);
@@ -24,5 +24,5 @@ export function PicturesContainer({ pictures }: { pictures: PictureMatch[] }) {
     [pictures],
   );
 
-  return <Masonry photos={photos} showUser={false} />;
+  return <MasonryLayout photos={photos} />;
 }
