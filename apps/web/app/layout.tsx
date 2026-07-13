@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
+import { MigrationNotice } from "@/components/common/notice";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -27,6 +28,9 @@ export default function RootLayout({
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
         <Providers>
+          {/* Migration Notice */}
+          <MigrationNotice />
+
           {children}
           <Toaster richColors />
           <ImageModal />
