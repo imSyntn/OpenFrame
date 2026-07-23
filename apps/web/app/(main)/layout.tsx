@@ -1,4 +1,5 @@
 import { Header } from "@/components/common";
+import { Feature } from "@/components/common/notice";
 
 export default function MainLayout({
   children,
@@ -8,6 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
+      <Feature />
       {children}
     </>
   );
