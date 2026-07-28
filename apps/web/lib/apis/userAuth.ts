@@ -42,3 +42,8 @@ export const userVerifyEmailToken = async (token: string) => {
   const res = await api.get(`/api/user/verify-email-token/${token}`);
   return res.data.message;
 };
+
+export const userGenerateApiKey = async () => {
+  const res = await api.get(`/api/user/generate-api-key`);
+  return res.data.data;
+};

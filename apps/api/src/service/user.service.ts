@@ -1,3 +1,4 @@
+import { generateApiKey } from "@/utils";
 import { prisma, cache, Prisma, usersIndex } from "@workspace/lib";
 import { GoogleUserType, UserTypeUnregistered } from "@workspace/types";
 
@@ -95,6 +96,7 @@ interface UpdateUserPayload {
     name: string;
     url: string;
   }[];
+  api_key?: string;
 }
 
 export const updateUser = async (
@@ -151,6 +153,22 @@ export const deleteUser = async (id: string) => {
     await usersIndex.delete(deletedUser.id);
 
     return deletedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createApiKey = async (user_id: string) => {
+  try {
+    const apiKey = generateApiKey();
+
+    const newApiKey = await prisma.apiKey.create({
+      data: {
+        user_id,
+        key: apiKey,
+      },
+    });
+    return newApiKey;
   } catch (error) {
     throw error;
   }

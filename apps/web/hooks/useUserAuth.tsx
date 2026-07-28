@@ -1,5 +1,6 @@
 import {
   userChangePassword,
+  userGenerateApiKey,
   userLogin,
   userLogout,
   userOTPGenerate,
@@ -93,5 +94,28 @@ export const useVerifyEmailToken = (token: string) => {
     queryFn: () => userVerifyEmailToken(token),
     retry: 1,
     enabled: !!token,
+  });
+};
+
+export const useGenerateApiKey = () => {
+  return useMutation({
+    mutationFn: () => userGenerateApiKey(),
+    onMutate: () => {
+      toast.loading("Generating API Key...", {
+        description: "Please wait...",
+      });
+    },
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success("API Key generated successfully", {
+        description: "You can now use it to access your data.",
+      });
+    },
+    onError: (error: any) => {
+      toast.dismiss();
+      toast.error("API Key generation failed", {
+        description: error?.response?.data?.message || "Something went wrong",
+      });
+    },
   });
 };

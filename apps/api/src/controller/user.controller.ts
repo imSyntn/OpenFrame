@@ -6,6 +6,7 @@ import {
 } from "@workspace/types";
 import {
   generateAccessToken,
+  generateApiKey,
   generateOtp,
   generateRefreshToken,
   generateVerificationToken,
@@ -18,7 +19,13 @@ import {
   signupSchema,
 } from "@workspace/schema/auth";
 import { ErrorWithStatus } from "@/middleware";
-import { createUser, deleteUser, getUser, updateUser } from "@/service";
+import {
+  createApiKey,
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "@/service";
 import bcrypt from "bcryptjs";
 import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
@@ -501,6 +508,7 @@ export const sendVerificationLinkController = async (
     next(error);
   }
 };
+
 export const verifyEmailTokenController = async (
   req: Request,
   res: Response,
@@ -539,4 +547,27 @@ export const logoutController = async (req: Request, res: Response) => {
   return res.status(200).json({
     message: "Logged out successfully",
   });
+};
+
+export const generateApiKeyController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.user?.id;
+
+    if (!id) {
+      return next(new ErrorWithStatus(401, "Unauthorized"));
+    }
+
+    const apiKey = await createApiKey(id);
+
+    return res.status(200).json({
+      message: "API key generated successfully",
+      data: { apiKey },
+    });
+  } catch (error) {
+    next(error);
+  }
 };

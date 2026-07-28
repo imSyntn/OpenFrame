@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import {
   deleteUserController,
+  generateApiKeyController,
   getUserController,
   googleAuthController,
   logoutController,
@@ -27,6 +28,13 @@ authRouter.post("/reset-password", authLimiter, resetPasswordController);
 authRouter.get("/refresh-token", authLimiter, refreshTokenController);
 authRouter.get("/logout", authLimiter, logoutController);
 authRouter.delete("/delete", authLimiter, authMiddleware, deleteUserController);
+
+authRouter.get(
+  "/generate-api-key",
+  authLimiter,
+  authMiddleware,
+  generateApiKeyController,
+);
 
 authRouter.get(
   "/google",
