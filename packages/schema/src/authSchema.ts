@@ -81,3 +81,10 @@ export const forgotPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const generateApiKeySchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(15, "Name must be at most 15 characters long"),
+});

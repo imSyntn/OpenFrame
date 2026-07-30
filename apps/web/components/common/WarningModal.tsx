@@ -12,9 +12,11 @@ import {
 } from "@workspace/ui/components/dialog";
 
 export function WarningModal({
+  title,
   onClick,
   children,
 }: {
+  title?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClick: (e?: any) => void;
   children: React.ReactNode;
@@ -23,7 +25,7 @@ export function WarningModal({
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Warning</DialogTitle>
+        <DialogTitle>{title || "Warning"}</DialogTitle>
         <DialogDescription>
           This action is irreversible. Are you sure you want to continue?
         </DialogDescription>

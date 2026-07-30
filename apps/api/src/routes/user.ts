@@ -2,7 +2,9 @@ import express from "express";
 import passport from "passport";
 import {
   deleteUserController,
+  disableApiKeyController,
   generateApiKeyController,
+  getApiKeysController,
   getUserController,
   googleAuthController,
   logoutController,
@@ -29,11 +31,20 @@ authRouter.get("/refresh-token", authLimiter, refreshTokenController);
 authRouter.get("/logout", authLimiter, logoutController);
 authRouter.delete("/delete", authLimiter, authMiddleware, deleteUserController);
 
-authRouter.get(
-  "/generate-api-key",
+authRouter.post(
+  "/api-keys",
   authLimiter,
   authMiddleware,
   generateApiKeyController,
+);
+
+authRouter.get("/api-keys", authLimiter, authMiddleware, getApiKeysController);
+
+authRouter.patch(
+  "/api-keys/:id",
+  authLimiter,
+  authMiddleware,
+  disableApiKeyController,
 );
 
 authRouter.get(
