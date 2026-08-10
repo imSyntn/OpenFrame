@@ -7,7 +7,7 @@ const VALID_SLUGS = [
   "copyright-policy",
   "license-details",
   "faq",
-  "api",
+  // "api",
   "roadmap",
 ] as const;
 
@@ -24,6 +24,10 @@ export default async function Page({
 }) {
   const { slug } = await params;
   if (!isValidSlug(slug)) notFound();
+
+  // if (slug === "api") {
+  //   return <div>Api docs</div>;
+  // }
 
   const { default: MDXContent } = await import(`@/markdown/${slug}.mdx`);
 

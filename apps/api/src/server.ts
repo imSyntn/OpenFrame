@@ -5,6 +5,7 @@ import express, {
   type Response,
 } from "express";
 import {
+  apiRouter,
   authRouter,
   collectionRouter,
   pictureRouter,
@@ -20,6 +21,7 @@ import {
   compressionMiddleware,
   errorMiddleware,
 } from "./middleware";
+import { handleApi } from "./middleware/apiHandler";
 
 const app: Application = express();
 
@@ -37,12 +39,14 @@ app.get("/api/health", (req: Request, res: Response) => {
 });
 
 app.use("/api", apiLimiter);
+app.use("/api", handleApi);
 
 app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
 app.use("/api/collection", collectionRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/report", reportRouter);
+app.use("/api/keys", apiRouter);
 
 app.use(errorMiddleware);
 

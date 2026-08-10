@@ -1,5 +1,13 @@
+@layer scalar-base, scalar-theme, scalar-config, theme, base, components, utilities;
+
 @import "@workspace/ui/globals.css";
 @plugin "@tailwindcss/typography";
+
+:root {
+  --scalar-background-1: var(--color-background);
+  --scalar-color-1: var(--color-foreground);
+  --scalar-color-accent: var(--color-primary);
+}
 
 ::selection {
     background-color: var(--foreground);

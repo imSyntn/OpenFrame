@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import { Field } from "@workspace/ui/components/field";
+import { Field, FieldError } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Copy } from "lucide-react";
@@ -77,11 +77,7 @@ export function APICreate({ children }: { children: ReactNode }) {
               disabled={isPending}
             />
 
-            {isError && (
-              <p className="mt-2 text-sm text-destructive">
-                {error?.response?.data?.message || "Something went wrong"}
-              </p>
-            )}
+            {isError && <FieldError errors={error?.response?.data?.errors || "Validation failed"} />} 
           </Field>
         )}
 

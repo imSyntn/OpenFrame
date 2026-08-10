@@ -1,8 +1,4 @@
-import {
-  ApiKeyType,
-  UserLoginType,
-  UserTypeUnregistered,
-} from "@workspace/types";
+import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
 import { api } from "../axios";
 
 export const userSignup = (data: UserTypeUnregistered) => {
@@ -45,25 +41,4 @@ export const userSendVerificationLink = async (email: string) => {
 export const userVerifyEmailToken = async (token: string) => {
   const res = await api.get(`/api/user/verify-email-token/${token}`);
   return res.data.message;
-};
-
-export const userGenerateApiKey = async (
-  name: string,
-): Promise<{ data: { apiKey: ApiKeyType }; message: string }> => {
-  const res = await api.post(`/api/user/api-keys`, { name });
-  return res.data;
-};
-
-export const userGetApiKeys = async (): Promise<{
-  data: { keys: ApiKeyType[] | [] };
-}> => {
-  const res = await api.get(`/api/user/api-keys`);
-  return res.data;
-};
-
-export const userDisableApiKey = async (
-  id: number,
-): Promise<{ message: string }> => {
-  const res = await api.patch(`/api/user/api-keys/${id}`);
-  return res.data;
 };

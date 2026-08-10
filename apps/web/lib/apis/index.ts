@@ -4,3 +4,4 @@ export * from "./picture";
 export * from "./collections";
 export * from "./search";
 export * from "./report";
+export * from "./apiKeyHandle";

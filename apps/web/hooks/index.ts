@@ -4,3 +4,4 @@ export * from "./usePicture";
 export * from "./useCollection";
 export * from "./useSearch";
 export * from "./useReport";
+export * from "./useApiKeyHandler";
