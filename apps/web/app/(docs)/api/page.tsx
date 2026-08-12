@@ -20,7 +20,7 @@ export default function ApiDocs() {
       <div className={cn(isLoading ? "invisible" : "visible")}>
         <ApiReferenceReact
           configuration={{
-            url: "https://registry.scalar.com/@default-team-hqyms/apis/openframe-api@1.0.0",
+            url: process.env.NEXT_PUBLIC_OPENAPI_SPEC_URL,
             theme: "default",
             agent: {
               disabled: true,

@@ -46,6 +46,7 @@ import {
 import { ErrorOccured } from "../common";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -218,7 +219,6 @@ export function HeroSection({ id }: { id: string }) {
                   className="h-8 w-full md:w-[144px]"
                   variant="outline"
                   size="sm"
-                  asChild
                 >
                   <Link href="keys">API Key</Link>
                 </Button>

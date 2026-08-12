@@ -2,6 +2,55 @@ import { Request, Response, NextFunction } from "express";
 import { getApiKeyData } from "@/service";
 import { ErrorWithStatus } from "./error";
 import { userApiKeyLimiter } from "./rateLimit";
+import crypto from "node:crypto";
+import cors from "cors";
+
+const allowedOrigins = [
+  "https://open-frame-web.vercel.app",
+  "http://localhost:3000",
+  "https://open-frame.sayantan.online",
+];
+
+export const handleInternalTokenCors = cors({
+  origin: allowedOrigins,
+  credentials: true,
+});
+
+const INTERNAL_TOKEN_TTL = 60_000;
+
+function isValidInternalToken(token: string): boolean {
+  const [timestamp, signature] = token.split(".");
+
+  if (!timestamp || !signature) {
+    return false;
+  }
+
+  const timestampNumber = Number(timestamp);
+
+  if (!Number.isFinite(timestampNumber)) {
+    return false;
+  }
+
+  const age = Date.now() - timestampNumber;
+
+  if (age < 0 || age > INTERNAL_TOKEN_TTL) {
+    return false;
+  }
+
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.INTERNAL_SECRET!)
+    .update(timestamp)
+    .digest("hex");
+
+  const providedBuffer = Buffer.from(signature, "hex");
+  const expectedBuffer = Buffer.from(expectedSignature, "hex");
+
+  if (providedBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(providedBuffer, expectedBuffer);
+}
 
 export const handleApi = async (
   req: Request,
@@ -9,15 +58,12 @@ export const handleApi = async (
   next: NextFunction,
 ) => {
   try {
-    const origin = req.get("origin");
+    if (req.path === "/user/google") {
+      return next();
+    }
+    const internalToken = req.get("x-internal-token");
 
-    const isMyWebsite = [
-      "https://open-frame.sayantan.online",
-      "https://open-frame-web.vercel.app",
-      "http://localhost:3000",
-    ].includes(origin ?? "");
-
-    if (isMyWebsite) {
+    if (internalToken && isValidInternalToken(internalToken)) {
       return next();
     }
 

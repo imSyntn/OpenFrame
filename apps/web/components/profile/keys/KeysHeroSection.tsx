@@ -9,6 +9,7 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { ApiKeyType } from "@workspace/types";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { useProfileStore } from "@/store";
 
 export function KeysHeroSection({
   loading,
@@ -18,6 +19,9 @@ export function KeysHeroSection({
   keys: ApiKeyType[] | [];
 }) {
   const activeKeys = keys.filter((key) => key.isActive);
+  const pictures = useProfileStore((state) => state._count?.pictures);
+
+  const disableApiCreation = activeKeys.length > 0 || (pictures ?? 0) < 5;
 
   return (
     <>
@@ -33,31 +37,54 @@ export function KeysHeroSection({
           <Skeleton className="h-8 w-28 rounded-lg" />
         ) : (
           <APICreate>
-            <Button disabled={activeKeys.length >= 1}>Create API Key</Button>
+            <Button disabled={disableApiCreation}>Create API Key</Button>
           </APICreate>
         )}
       </div>
 
-      <Alert className="border-yellow-500/30 bg-yellow-500/5">
-        <ShieldAlert className="mt-0.5 h-6! w-6! text-yellow-500!" />
-        <AlertTitle className="text-yellow-200">
-          Keep your keys secure
-        </AlertTitle>
-        <AlertDescription className="text-yellow-200">
-          <ul className="list-disc pl-3">
-            <li>
-              <em>Never share your API key.</em> Store it in a secure location.
-            </li>
-            <li>
-              <em>Only one active API key is allowed</em> per account at a time.
-            </li>
-            <li>
-              <em>
-                Creating a new API key requires disabling your current one.
-              </em>
-            </li>
-          </ul>
-        </AlertDescription>
+      <Alert className="overflow-hidden border-yellow-500/20 bg-gradient-to-br from-yellow-500/[0.08] via-background to-background p-5">
+        <div className="flex gap-4">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/10 ring-1 ring-yellow-500/20">
+            <ShieldAlert className="size-6 text-processing" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <AlertTitle className="text-base font-semibold text-processing">
+              Keep your keys secure
+            </AlertTitle>
+
+            <AlertDescription className="mt-3">
+              <div className="space-y-2">
+                <div className="rounded-lg border border-border/50 bg-background/50 px-3.5 py-3">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    <span className="font-medium text-foreground">
+                      Never share your API key.
+                    </span>{" "}
+                    Store it in a secure location.
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-border/50 bg-background/50 px-3.5 py-3">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    <span className="font-medium text-foreground">
+                      Only one active API key
+                    </span>{" "}
+                    is allowed per account at a time.
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-border/50 bg-background/50 px-3.5 py-3">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    <span className="font-medium text-foreground">
+                      Creating a new API key
+                    </span>{" "}
+                    requires disabling your current one.
+                  </p>
+                </div>
+              </div>
+            </AlertDescription>
+          </div>
+        </div>
       </Alert>
     </>
   );

@@ -21,13 +21,14 @@ import {
   compressionMiddleware,
   errorMiddleware,
 } from "./middleware";
-import { handleApi } from "./middleware/apiHandler";
+import { handleApi, handleInternalTokenCors } from "./middleware/apiHandler";
+import { generateInternalToken } from "./utils";
 
 const app: Application = express();
 
 app.set("trust proxy", 1);
 
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -39,6 +40,19 @@ app.get("/api/health", (req: Request, res: Response) => {
 });
 
 app.use("/api", apiLimiter);
+
+app.get(
+  "/api/internal-token",
+  handleInternalTokenCors,
+  (req: Request, res: Response) => {
+    const token = generateInternalToken();
+
+    return res.status(200).json({
+      token,
+    });
+  },
+);
+
 app.use("/api", handleApi);
 
 app.use("/api/user", authRouter);

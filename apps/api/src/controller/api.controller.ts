@@ -1,5 +1,11 @@
 import { ErrorWithStatus } from "@/middleware";
-import { createApiKey, disableApiKey, getUserApiKeys } from "@/service";
+import {
+  createApiKey,
+  disableApiKey,
+  getUser,
+  getUserApiKeys,
+} from "@/service";
+import { Prisma } from "@workspace/lib";
 import { generateApiKeySchema } from "@workspace/schema/auth";
 import { Request, Response, NextFunction } from "express";
 
@@ -13,6 +19,36 @@ export const generateApiKeyController = async (
 
     if (!id) {
       return next(new ErrorWithStatus(401, "Unauthorized"));
+    }
+
+    const include: Prisma.UserInclude = {
+      _count: {
+        select: {
+          pictures: true,
+        },
+      },
+    };
+
+    const user = await getUser({ id }, "profile", include);
+
+    console.log(user);
+
+    if (!user?.is_verified) {
+      return next(
+        new ErrorWithStatus(
+          403,
+          "You need to verify your email to get the API access.",
+        ),
+      );
+    }
+
+    if (user._count.pictures < 5) {
+      return next(
+        new ErrorWithStatus(
+          403,
+          "You need to upload 5 pictures to get the API access.",
+        ),
+      );
     }
 
     const { name } = generateApiKeySchema.parse(req.body);

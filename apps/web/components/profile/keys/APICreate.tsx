@@ -77,7 +77,15 @@ export function APICreate({ children }: { children: ReactNode }) {
               disabled={isPending}
             />
 
-            {isError && <FieldError errors={error?.response?.data?.errors || "Validation failed"} />} 
+            {isError && (
+              <FieldError
+                errors={
+                  error?.response?.data?.message
+                    ? [error.response.data.message]
+                    : error?.response?.data?.errors || ["Validation failed"]
+                }
+              />
+            )}
           </Field>
         )}
 
