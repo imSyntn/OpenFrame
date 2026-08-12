@@ -1,5 +1,10 @@
 import { Header } from "@/components/common";
-import { Feature } from "@/components/common/notice";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "API",
+  description: "OpenFrame API documentation",
+};
 
 export default function MainLayout({
   children,
@@ -9,7 +14,6 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <Feature />
       {children}
     </>
   );

@@ -501,6 +501,7 @@ export const sendVerificationLinkController = async (
     next(error);
   }
 };
+
 export const verifyEmailTokenController = async (
   req: Request,
   res: Response,

@@ -3,3 +3,4 @@ export * from "./picture.service";
 export * from "./collection.service";
 export * from "./indexing.service";
 export * from "./report.service";
+export * from "./api.service";

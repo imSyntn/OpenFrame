@@ -4,6 +4,7 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
+// import { MigrationNotice } from "@/components/common/notice";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -87,6 +88,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Providers>
+          {/* Migration Notice */}
+          {/* <MigrationNotice /> */}
+
           {children}
           <Toaster richColors />
           <ImageModal />

@@ -49,3 +49,12 @@ export interface UserTypeDB {
   is_verified: boolean;
   location?: string;
 }
+
+export interface ApiKeyType {
+  id: number;
+  name: string;
+  key: string;
+  isActive: boolean;
+  created_at: Date;
+  updated_at: Date;
+}

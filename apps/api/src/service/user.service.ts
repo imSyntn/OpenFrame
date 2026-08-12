@@ -95,6 +95,7 @@ interface UpdateUserPayload {
     name: string;
     url: string;
   }[];
+  api_key?: string;
 }
 
 export const updateUser = async (

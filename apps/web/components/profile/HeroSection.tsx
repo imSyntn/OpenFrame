@@ -24,6 +24,8 @@ import {
   LucideIcon,
   SettingsIcon,
   BadgeCheck,
+  Loader2Icon,
+  Check,
 } from "lucide-react";
 import { useProfileStore, useUserStore } from "@/store";
 import {
@@ -42,6 +44,9 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { ErrorOccured } from "../common";
+import { Button } from "@workspace/ui/components/button";
+import Link from "next/link";
+import { toast } from "sonner";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -209,12 +214,15 @@ export function HeroSection({ id }: { id: string }) {
             </>
           ) : (
             <>
-              {/* <Button
-                className="w-full md:w-auto px-6"
-                disabled={isOwner || !isLoggedIn}
-              >
-                Follow
-              </Button> */}
+              {isOwner && (
+                <Button
+                  className="h-8 w-full md:w-[144px]"
+                  variant="outline"
+                  size="sm"
+                >
+                  <Link href="keys">API Key</Link>
+                </Button>
+              )}
 
               <ul className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Tooltip>

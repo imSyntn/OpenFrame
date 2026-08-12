@@ -5,6 +5,7 @@ import express, {
   type Response,
 } from "express";
 import {
+  apiRouter,
   authRouter,
   collectionRouter,
   pictureRouter,
@@ -20,28 +21,14 @@ import {
   compressionMiddleware,
   errorMiddleware,
 } from "./middleware";
+import { handleApi, handleInternalTokenCors } from "./middleware/apiHandler";
+import { generateInternalToken } from "./utils";
 
 const app: Application = express();
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = [
-  "https://open-frame-web.vercel.app",
-  "http://localhost:3000",
-  "https://open-frame.sayantan.online"
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS blocked"));
-    }
-  },
-  credentials: true
-}));
-
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -54,11 +41,26 @@ app.get("/api/health", (req: Request, res: Response) => {
 
 app.use("/api", apiLimiter);
 
+app.get(
+  "/api/internal-token",
+  handleInternalTokenCors,
+  (req: Request, res: Response) => {
+    const token = generateInternalToken();
+
+    return res.status(200).json({
+      token,
+    });
+  },
+);
+
+app.use("/api", handleApi);
+
 app.use("/api/user", authRouter);
 app.use("/api/picture", pictureRouter);
 app.use("/api/collection", collectionRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/report", reportRouter);
+app.use("/api/keys", apiRouter);
 
 app.use(errorMiddleware);
 
