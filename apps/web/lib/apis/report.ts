@@ -10,7 +10,7 @@ export const reportImage = async ({
   title: string;
   reason: string;
 }): Promise<{ message: string; data: { reportId: string } }> => {
-  const res = await api.post(`/api/report/${picId}`, {
+  const res = await api.post(`/report/${picId}`, {
     title,
     reason,
   });
@@ -18,14 +18,14 @@ export const reportImage = async ({
 };
 
 export const getReports = async (): Promise<{ data: ReportType[] }> => {
-  const res = await api.get(`/api/report`);
+  const res = await api.get(`/report`);
   return res.data;
 };
 
 export const getReportById = async (
   reportId: string,
 ): Promise<{ data: ReportType }> => {
-  const res = await api.get(`/api/report/status/${reportId}`);
+  const res = await api.get(`/report/status/${reportId}`);
   return res.data;
 };
 
@@ -38,7 +38,7 @@ export const updateReport = async ({
   note?: string;
   reportId: string;
 }): Promise<{ message: string; data: { reportId: string } }> => {
-  const res = await api.patch(`/api/report/status/${reportId}`, {
+  const res = await api.patch(`/report/status/${reportId}`, {
     status,
     note,
   });

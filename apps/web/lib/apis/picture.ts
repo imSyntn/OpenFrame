@@ -6,7 +6,7 @@ export const getUserPictures = async (
   id: string,
   nextCursor: string,
 ): Promise<{ data: PictureType[]; nextCursor?: string }> => {
-  const res = await api.get(`/api/picture/user/${id}`, {
+  const res = await api.get(`/picture/user/${id}`, {
     params: { nextCursor },
   });
   return res.data;
@@ -16,7 +16,7 @@ export const getUserLikedPictures = async (
   userId: string,
   nextCursor?: string,
 ): Promise<{ data: PictureType[]; nextCursor?: string }> => {
-  const res = await api.get(`/api/picture/user/liked/${userId}`, {
+  const res = await api.get(`/picture/user/liked/${userId}`, {
     params: { nextCursor },
   });
   return res.data;
@@ -27,7 +27,7 @@ export const getPictureUploadUrl = async (
   size: number,
   isAvatar?: boolean,
 ) => {
-  const res = await api.post("/api/picture/upload-url", {
+  const res = await api.post("/picture/upload-url", {
     type,
     size,
     isAvatar,
@@ -36,7 +36,7 @@ export const getPictureUploadUrl = async (
 };
 
 export const getPictureTags = async () => {
-  const res = await api.get("/api/picture/tags");
+  const res = await api.get("/picture/tags");
   return res.data.data;
 };
 
@@ -44,7 +44,7 @@ export const getExplorePictures = async (
   tag?: string,
   nextCursor?: string,
 ): Promise<{ data: PictureType[]; nextCursor?: string }> => {
-  const res = await api.get("/api/picture/explore", {
+  const res = await api.get("/picture/explore", {
     params: { tag, nextCursor },
   });
   return res.data;
@@ -58,19 +58,19 @@ export const createPictureUpload = async (payload: {
   pictureId: string;
   license: string;
 }) => {
-  const res = await api.post("/api/picture/create", payload);
+  const res = await api.post("/picture/create", payload);
   return res.data.message;
 };
 
 export const getAllUploadsStatus = async (): Promise<
   UnderProcessingPictureType[]
 > => {
-  const res = await api.get("/api/picture/status");
+  const res = await api.get("/picture/status");
   return res.data.data;
 };
 
 export const getPictureStatus = async (pictureID: string) => {
-  const res = await api.get(`/api/picture/status/${pictureID}`);
+  const res = await api.get(`/picture/status/${pictureID}`);
   return res.data.data;
 };
 
@@ -81,7 +81,7 @@ export const incrementViewCount = async ({
   id: string;
   ownerId: string;
 }): Promise<{ message: string }> => {
-  const res = await api.post(`/api/picture/view/${id}`, {
+  const res = await api.post(`/picture/view/${id}`, {
     ownerId,
   });
   return res.data;
@@ -94,7 +94,7 @@ export const incrementDownloadCount = async ({
   id: string;
   ownerId: string;
 }): Promise<{ message: string }> => {
-  const res = await api.post(`/api/picture/download/${id}`, {
+  const res = await api.post(`/picture/download/${id}`, {
     ownerId,
   });
   return res.data;
@@ -103,20 +103,20 @@ export const incrementDownloadCount = async ({
 export const incrementLikeCount = async (
   id: string,
 ): Promise<{ message: string }> => {
-  const res = await api.post(`/api/picture/like/${id}`);
+  const res = await api.post(`/picture/like/${id}`);
   return res.data;
 };
 
 export const getPictureById = async (
   id: string,
 ): Promise<{ data: PictureType }> => {
-  const res = await api.get(`/api/picture/${id}`);
+  const res = await api.get(`/picture/${id}`);
   return res.data;
 };
 
 export const deletePicture = async (
   id: string,
 ): Promise<{ message: string }> => {
-  const res = await api.delete(`/api/picture/${id}`);
+  const res = await api.delete(`/picture/${id}`);
   return res.data.message;
 };

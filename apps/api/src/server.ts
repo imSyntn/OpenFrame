@@ -35,14 +35,14 @@ app.use(passport.initialize());
 
 app.use(compressionMiddleware);
 
-app.get("/api/health", (req: Request, res: Response) => {
+app.get("/health", (req: Request, res: Response) => {
   return res.status(200).json({ message: "OK" });
 });
 
-app.use("/api", apiLimiter);
+app.use(apiLimiter);
 
 app.get(
-  "/api/internal-token",
+  "/internal-token",
   handleInternalTokenCors,
   (req: Request, res: Response) => {
     const token = generateInternalToken();
@@ -53,14 +53,14 @@ app.get(
   },
 );
 
-app.use("/api", handleApi);
+app.use(handleApi);
 
-app.use("/api/user", authRouter);
-app.use("/api/picture", pictureRouter);
-app.use("/api/collection", collectionRouter);
-app.use("/api/search", searchRouter);
-app.use("/api/report", reportRouter);
-app.use("/api/keys", apiRouter);
+app.use("/user", authRouter);
+app.use("/picture", pictureRouter);
+app.use("/collection", collectionRouter);
+app.use("/search", searchRouter);
+app.use("/report", reportRouter);
+app.use("/keys", apiRouter);
 
 app.use(errorMiddleware);
 

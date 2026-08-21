@@ -15,7 +15,7 @@ const getInternalToken = async () => {
   if (internalToken && Date.now() < internalTokenExpiresAt) {
     return internalToken;
   }
-  const response = await tokenClient.get("/api/internal-token");
+  const response = await tokenClient.get("/internal-token");
   internalToken = response.data.token;
   internalTokenExpiresAt = Date.now() + INTERNAL_TOKEN_TTL;
   return internalToken;
@@ -55,7 +55,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const response = await api.get("/api/user/refresh-token");
+        const response = await api.get("/user/refresh-token");
         const newToken = response.data.data.accessToken;
         useUserStore.getState().setUser({ accessToken: newToken });
         originalRequest.headers.set("Authorization", `Bearer ${newToken}`);

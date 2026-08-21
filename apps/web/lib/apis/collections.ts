@@ -7,7 +7,7 @@ export const getCollections = async (
   data: Collection[];
   nextCursor?: string;
 }> => {
-  const res = await api.get(`/api/collection`, {
+  const res = await api.get(`/collection`, {
     params: {
       nextCursor,
     },
@@ -20,7 +20,7 @@ export const getUserCollections = async (
 ): Promise<{
   data: Collection[];
 }> => {
-  const res = await api.get(`/api/collection/user/${userId}`);
+  const res = await api.get(`/collection/user/${userId}`);
   return res.data;
 };
 
@@ -29,7 +29,7 @@ export const getCollectionById = async (
 ): Promise<{
   data: Collection;
 }> => {
-  const res = await api.get(`/api/collection/${id}`);
+  const res = await api.get(`/collection/${id}`);
   return res.data;
 };
 
@@ -40,7 +40,7 @@ export const createCollection = async (data: {
 }): Promise<{
   data: Collection;
 }> => {
-  const res = await api.post(`/api/collection`, data);
+  const res = await api.post(`/collection`, data);
   return res.data;
 };
 
@@ -52,24 +52,24 @@ export const updateCollection = async (
     visibility?: string;
   },
 ) => {
-  const res = await api.patch(`/api/collection/${id}`, data);
+  const res = await api.patch(`/collection/${id}`, data);
   return res.data;
 };
 
 export const deleteCollection = async (id: string) => {
-  const res = await api.delete(`/api/collection/${id}`);
+  const res = await api.delete(`/collection/${id}`);
   return res.data;
 };
 
 export const addCollectionItems = async (id: string, items: string[]) => {
-  const res = await api.post(`/api/collection/${id}/items`, {
+  const res = await api.post(`/collection/${id}/items`, {
     items,
   });
   return res.data;
 };
 
 export const removeCollectionItems = async (id: string, items: string[]) => {
-  const res = await api.delete(`/api/collection/${id}/items`, {
+  const res = await api.delete(`/collection/${id}/items`, {
     data: { items },
   });
   return res.data;

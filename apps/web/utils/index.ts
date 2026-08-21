@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export const googleLoginHandler = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
-  window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/google`;
+  window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/google`;
 };
 
 export const copyToClipboard = async (

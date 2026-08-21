@@ -12,7 +12,7 @@ export async function generateMetadata({
   const { pictureId } = await params;
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/picture/${pictureId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/picture/${pictureId}`,
     );
     if (!res.ok) return {};
     const { data } = (await res.json()) as { data: PictureType };

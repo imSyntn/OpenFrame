@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { id } = await params;
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/${id}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${id}`,
     );
     if (!res.ok) return {};
     const { data } = (await res.json()) as { data: ProfileType };

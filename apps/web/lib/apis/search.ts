@@ -6,7 +6,7 @@ export const search = async (
   type?: string,
   signal?: AbortSignal,
 ): Promise<{ data: SearchResultType }> => {
-  const res = await api.get(`/api/search`, {
+  const res = await api.get(`/search`, {
     params: { q, type },
     signal,
   });

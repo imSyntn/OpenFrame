@@ -25,11 +25,9 @@
     }
   ],
   "paths": {
-    "/api/picture/{picID}": {
+    "/picture/{picID}": {
       "get": {
-        "tags": [
-          "Pictures"
-        ],
+        "tags": ["Pictures"],
         "summary": "Get picture details",
         "parameters": [
           {
@@ -150,11 +148,9 @@
         }
       }
     },
-    "/api/picture/explore": {
+    "/picture/explore": {
       "get": {
-        "tags": [
-          "Pictures"
-        ],
+        "tags": ["Pictures"],
         "summary": "Explore pictures",
         "parameters": [
           {
@@ -1491,12 +1487,7 @@
                           "Model": "iPhone 6",
                           "FNumber": 2.2,
                           "GPSSpeed": 0,
-                          "LensInfo": [
-                            4.15,
-                            4.15,
-                            2.2,
-                            2.2
-                          ],
+                          "LensInfo": [4.15, 4.15, 2.2, 2.2],
                           "LensMake": "Apple",
                           "Software": "8.3",
                           "latitude": 40.44697222222222,
@@ -1509,11 +1500,7 @@
                           "ExifVersion": "2.2.1",
                           "FocalLength": 4.15,
                           "GPSAltitude": 639.5878787878788,
-                          "GPSLatitude": [
-                            40,
-                            26,
-                            49.1
-                          ],
+                          "GPSLatitude": [40, 26, 49.1],
                           "GPSSpeedRef": "K",
                           "Orientation": "Horizontal (normal)",
                           "SubjectArea": {
@@ -1527,11 +1514,7 @@
                           "ExposureMode": "Auto",
                           "ExposureTime": 0.025,
                           "GPSDateStamp": "2015:04:10",
-                          "GPSLongitude": [
-                            3,
-                            43,
-                            29.11
-                          ],
+                          "GPSLongitude": [3, 43, 29.11],
                           "GPSTimeStamp": "18:12:22.06",
                           "MeteringMode": "Spot",
                           "WhiteBalance": "Auto",
@@ -2182,11 +2165,7 @@
                           "Saturation": "Normal",
                           "ExifVersion": "2.2",
                           "FocalLength": 24,
-                          "GPSLatitude": [
-                            43,
-                            28,
-                            2.11799999
-                          ],
+                          "GPSLatitude": [43, 28, 2.11799999],
                           "GPSMapDatum": "WGS-84",
                           "GainControl": "Low gain up",
                           "LightSource": "Unknown",
@@ -2196,11 +2175,7 @@
                           "ExposureMode": "Auto",
                           "ExposureTime": 0.01555209,
                           "GPSDateStamp": "2008:10:23",
-                          "GPSLongitude": [
-                            11,
-                            52,
-                            45.168
-                          ],
+                          "GPSLongitude": [11, 52, 45.168],
                           "GPSTimeStamp": "14:50:40.9",
                           "MeteringMode": "Pattern",
                           "WhiteBalance": "Auto",
@@ -2262,11 +2237,9 @@
         }
       }
     },
-    "/api/picture/tags": {
+    "/picture/tags": {
       "get": {
-        "tags": [
-          "Pictures"
-        ],
+        "tags": ["Pictures"],
         "summary": "Get picture tags",
         "responses": {
           "200": {
@@ -2386,11 +2359,9 @@
         }
       }
     },
-    "/api/picture/user/liked/{userID}": {
+    "/picture/user/liked/{userID}": {
       "get": {
-        "tags": [
-          "Pictures"
-        ],
+        "tags": ["Pictures"],
         "summary": "Get pictures liked by a user",
         "parameters": [
           {
@@ -4164,12 +4135,7 @@
                           "Model": "iPhone 6",
                           "FNumber": 2.2,
                           "GPSSpeed": 0,
-                          "LensInfo": [
-                            4.15,
-                            4.15,
-                            2.2,
-                            2.2
-                          ],
+                          "LensInfo": [4.15, 4.15, 2.2, 2.2],
                           "LensMake": "Apple",
                           "Software": "8.3",
                           "latitude": 40.44697222222222,
@@ -4182,11 +4148,7 @@
                           "ExifVersion": "2.2.1",
                           "FocalLength": 4.15,
                           "GPSAltitude": 639.5878787878788,
-                          "GPSLatitude": [
-                            40,
-                            26,
-                            49.1
-                          ],
+                          "GPSLatitude": [40, 26, 49.1],
                           "GPSSpeedRef": "K",
                           "Orientation": "Horizontal (normal)",
                           "SubjectArea": {
@@ -4200,11 +4162,7 @@
                           "ExposureMode": "Auto",
                           "ExposureTime": 0.025,
                           "GPSDateStamp": "2015:04:10",
-                          "GPSLongitude": [
-                            3,
-                            43,
-                            29.11
-                          ],
+                          "GPSLongitude": [3, 43, 29.11],
                           "GPSTimeStamp": "18:12:22.06",
                           "MeteringMode": "Spot",
                           "WhiteBalance": "Auto",
@@ -4499,11 +4457,9 @@
         }
       }
     },
-    "/api/picture/user/{userID}": {
+    "/picture/user/{userID}": {
       "get": {
-        "tags": [
-          "Pictures"
-        ],
+        "tags": ["Pictures"],
         "summary": "Get pictures uploaded by a user",
         "parameters": [
           {
@@ -4585,11 +4541,7 @@
                           "Saturation": "Normal",
                           "ExifVersion": "2.2",
                           "FocalLength": 24,
-                          "GPSLatitude": [
-                            43,
-                            28,
-                            2.11799999
-                          ],
+                          "GPSLatitude": [43, 28, 2.11799999],
                           "GPSMapDatum": "WGS-84",
                           "GainControl": "Low gain up",
                           "LightSource": "Unknown",
@@ -4599,11 +4551,7 @@
                           "ExposureMode": "Auto",
                           "ExposureTime": 0.01555209,
                           "GPSDateStamp": "2008:10:23",
-                          "GPSLongitude": [
-                            11,
-                            52,
-                            45.168
-                          ],
+                          "GPSLongitude": [11, 52, 45.168],
                           "GPSTimeStamp": "14:50:40.9",
                           "MeteringMode": "Pattern",
                           "WhiteBalance": "Auto",
@@ -4882,11 +4830,9 @@
         }
       }
     },
-    "/api/search": {
+    "/search": {
       "get": {
-        "tags": [
-          "Search"
-        ],
+        "tags": ["Search"],
         "summary": "Search OpenFrame",
         "description": "Search across pictures, users, and tags. By default, the endpoint returns matching results across all supported resource types. Use the optional `type` parameter to restrict the search to a specific resource type.",
         "parameters": [
@@ -4907,11 +4853,7 @@
             "description": "Restrict the search to a specific resource type.",
             "schema": {
               "type": "string",
-              "enum": [
-                "pictures",
-                "users",
-                "tags"
-              ]
+              "enum": ["pictures", "users", "tags"]
             },
             "example": "users"
           }
@@ -4952,11 +4894,9 @@
         }
       }
     },
-    "/api/user/{userID}": {
+    "/user/{userID}": {
       "get": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Get user details",
         "parameters": [
           {
@@ -5030,11 +4970,9 @@
         }
       }
     },
-    "/api/collection": {
+    "/collection": {
       "get": {
-        "tags": [
-          "Collections"
-        ],
+        "tags": ["Collections"],
         "summary": "Explore collections",
         "parameters": [
           {
@@ -6328,11 +6266,9 @@
         }
       }
     },
-    "/api/collection/user/{userID}": {
+    "/collection/user/{userID}": {
       "get": {
-        "tags": [
-          "Collections"
-        ],
+        "tags": ["Collections"],
         "summary": "Get collections created by a user",
         "parameters": [
           {
@@ -6672,11 +6608,9 @@
         }
       }
     },
-    "/api/collection/{collectionID}": {
+    "/collection/{collectionID}": {
       "get": {
-        "tags": [
-          "Collections"
-        ],
+        "tags": ["Collections"],
         "summary": "Get collection pictures",
         "parameters": [
           {
@@ -7064,9 +6998,7 @@
       },
       "SearchResponse": {
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "properties": {
           "data": {
             "type": "object",
@@ -7095,11 +7027,7 @@
       },
       "SearchUser": {
         "type": "object",
-        "required": [
-          "id",
-          "content",
-          "score"
-        ],
+        "required": ["id", "content", "score"],
         "properties": {
           "id": {
             "type": "string",
@@ -7128,12 +7056,7 @@
       },
       "SearchPicture": {
         "type": "object",
-        "required": [
-          "id",
-          "content",
-          "metadata",
-          "score"
-        ],
+        "required": ["id", "content", "metadata", "score"],
         "properties": {
           "id": {
             "type": "string",
@@ -7185,11 +7108,7 @@
       },
       "SearchTag": {
         "type": "object",
-        "required": [
-          "id",
-          "content",
-          "score"
-        ],
+        "required": ["id", "content", "score"],
         "properties": {
           "id": {
             "type": "string",

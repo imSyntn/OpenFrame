@@ -231,7 +231,7 @@ pnpm start
 Once all services are running:
 
 - Frontend: http://localhost:3000
-- Backend: http://localhost:4000/api/health
+- Backend: http://localhost:4000/health
 
 ## Scripts
 
