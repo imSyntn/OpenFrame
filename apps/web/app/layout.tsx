@@ -4,8 +4,8 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
-// import { MigrationNotice } from "@/components/common/notice";
 import { Metadata } from "next";
+import { Feature } from "@/components/common/notice";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -88,8 +88,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Providers>
-          {/* Migration Notice */}
-          {/* <MigrationNotice /> */}
+          <Feature
+            storageKey="notice:api-added"
+            title="API Added"
+            description="The OpenFrame API is now available. You can use your API key to access the API."
+          />
 
           {children}
           <Toaster richColors />

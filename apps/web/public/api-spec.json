@@ -10,6 +10,11 @@
       "url": "http://localhost:4000"
     }
   ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Pictures",
@@ -6827,6 +6832,14 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key required to access the OpenFrame API."
+      }
+    },
     "schemas": {
       "PictureSource": {
         "type": "object",

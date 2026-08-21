@@ -16,7 +16,7 @@ export default function KeysPage() {
   const userId = useUserStore((state) => state.id);
   const userProfileLoading = useProfileStore((state) => state.isLoading);
   const pictures = useProfileStore((state) => state._count?.pictures);
-  const { data, isLoading } = useGetApiKeys(
+  const { data, isLoading, isError, error } = useGetApiKeys(
     isLoggedIn && !userProfileLoading && !!pictures,
   );
 
@@ -37,7 +37,12 @@ export default function KeysPage() {
       {!!pictures && pictures >= 5 ? (
         <>
           <KeyDetails loading={isLoading} keys={keys || []} />
-          <ActiveKeys keys={keys} loading={isLoading} />
+          <ActiveKeys
+            keys={keys}
+            loading={isLoading}
+            isError={isError}
+            error={error}
+          />
         </>
       ) : (
         <NotEligible pictures={pictures ?? 0} />

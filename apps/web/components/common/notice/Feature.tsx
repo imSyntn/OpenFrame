@@ -1,27 +1,50 @@
 "use client";
 
-import { toast } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { X, Sparkles } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
 
-export function Feature() {
+type FeatureNoticeProps = {
+  storageKey: string;
+  title: string;
+  description: string;
+};
+
+export function Feature({
+  storageKey,
+  title,
+  description,
+}: FeatureNoticeProps) {
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    const isViewed = localStorage.getItem("notice:migration-completed");
+    setVisible(!localStorage.getItem(storageKey));
+  }, [storageKey]);
 
-    if (isViewed) {
-      return;
-    }
+  if (!visible) return null;
 
-    localStorage.setItem("notice:migration-completed", "true");
-    toast.success("Migration Complete", {
-      description:
-        "All services are operational and the platform is now running normally.",
-      duration: 10000,
-      action: {
-        label: "Close",
-        onClick: () => console.log("Close"),
-      },
-    });
-  }, []);
+  const handleClose = () => {
+    localStorage.setItem(storageKey, "true");
+    setVisible(false);
+  };
 
-  return null;
+  return (
+    <div className="relative border-b bg-muted/50">
+      <div className="mx-auto flex min-h-10 max-w-screen-xl items-center justify-center gap-2 px-10 py-2 text-center text-sm">
+        <Sparkles className="size-4 shrink-0 text-emerald-500" />
+
+        <span className="font-medium">{title}</span>
+
+        <span className="text-muted-foreground">{description}</span>
+      </div>
+
+      <Button
+        variant="ghost"
+        onClick={handleClose}
+        className="absolute right-3 top-1/2 -translate-y-1/2"
+      >
+        <X className="size-4" />
+      </Button>
+    </div>
+  );
 }

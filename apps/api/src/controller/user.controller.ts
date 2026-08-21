@@ -24,14 +24,25 @@ import { OTP_VALIDATION_TIME_LIMIT } from "@workspace/constants";
 import { otpStore } from "@/lib";
 import { Prisma, kafkaProduceMessage, logger } from "@workspace/lib";
 
+function getRootDomain(url: string) {
+  const hostname = new URL(url).hostname;
+
+  if (hostname === "localhost" || !hostname.includes(".")) {
+    return hostname;
+  }
+
+  return "." + hostname.split(".").slice(-2).join(".");
+}
+
 const isProduction = process.env.NODE_ENV === "production";
+const backendURL = getRootDomain(process.env.BACKEND_URL as string);
 
 const refreshCookieOptions: CookieOptions = {
   httpOnly: true,
   sameSite: isProduction ? "none" : "lax",
   secure: isProduction,
   path: "/",
-  domain: ".sayantan.online",
+  domain: backendURL,
   maxAge: 1000 * 60 * 60 * 24 * 7,
 };
 

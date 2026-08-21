@@ -11,7 +11,7 @@ export const apiLimiter = rateLimit({
 export const authLimiter = rateLimit({
   store: RateLimitStore("rl:auth"),
   windowMs: 60 * 1000,
-  max: 15,
+  max: 20,
   skipSuccessfulRequests: true,
   message: { message: "Too many login attempts" },
 });
@@ -19,7 +19,7 @@ export const authLimiter = rateLimit({
 export const apiKeyHandlerLimiter = rateLimit({
   store: RateLimitStore("rl:api-handler"),
   windowMs: 60 * 1000,
-  max: 3,
+  max: 20,
   skipSuccessfulRequests: false,
   message: { message: "Too many API key handler attempts" },
 });

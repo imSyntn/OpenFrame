@@ -114,10 +114,15 @@ function RowSkeleton() {
 export function ActiveKeys({
   keys,
   loading,
+  isError,
+  error,
 }: {
   keys: ApiKeyType[] | [];
   loading: boolean;
+  isError: boolean;
+  error: any;
 }) {
+  console.log(error);
   return (
     <Card>
       <CardHeader>
@@ -142,11 +147,23 @@ export function ActiveKeys({
           </TableHeader>
 
           <TableBody>
-            {loading ? (
+            {loading &&
               Array.from({ length: 5 }).map((_, index) => (
                 <RowSkeleton key={index} />
-              ))
-            ) : keys.length === 0 ? (
+              ))}
+
+            {!loading && isError && (
+              <TableRow>
+                <TableCell
+                  colSpan={7}
+                  className="h-24 text-center text-destructive"
+                >
+                  {error?.response?.data?.message || "Something went wrong"}
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!loading && !isError && keys.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-24 text-center">
                   No API keys found.

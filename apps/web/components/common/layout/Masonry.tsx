@@ -16,9 +16,11 @@ export function MasonryLayout({ photos }: { photos: GalleryPhoto[] }) {
       }}
     >
       <Masonry>
-        {photos.map((photo) => (
-          <PhotoWithBlurHash key={photo.key} photo={photo} />
-        ))}
+        {Array.isArray(photos) &&
+          !!photos.length &&
+          photos.map((photo) => (
+            <PhotoWithBlurHash key={photo.key} photo={photo} />
+          ))}
       </Masonry>
     </ResponsiveMasonry>
   );

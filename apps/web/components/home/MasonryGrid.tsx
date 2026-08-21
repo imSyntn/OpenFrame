@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { ErrorOccured, MasonryLayout, NotFound } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore } from "@/store";
 import { useGetExplorePictures } from "@/hooks";
-import { Button } from "@workspace/ui/components/button";
+// import { Button } from "@workspace/ui/components/button";
 import { CameraOff, Loader2 } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
@@ -34,6 +34,29 @@ export function MasonryGrid() {
     () => data?.pages.flatMap((page) => page.data) ?? [],
     [data],
   );
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = loadMoreRef.current;
+
+    if (!element || !hasNextPage) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        rootMargin: "500px",
+      },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const photos: GalleryPhoto[] = useMemo(
     () =>
@@ -100,10 +123,11 @@ export function MasonryGrid() {
         </div>
       )}
       {hasNextPage && (
-        <div className="flex w-full justify-center my-3">
-          <Button onClick={handleLoadMore} disabled={isFetchingNextPage}>
-            {isFetchingNextPage ? "Loading..." : "More"}
-          </Button>
+        <div
+          ref={loadMoreRef}
+          className="flex h-16 w-full items-center justify-center"
+        >
+          {isFetchingNextPage && <Loader2 className="size-5 animate-spin" />}
         </div>
       )}
     </div>
