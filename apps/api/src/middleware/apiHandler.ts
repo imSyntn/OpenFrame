@@ -5,11 +5,7 @@ import { userApiKeyLimiter } from "./rateLimit";
 import crypto from "node:crypto";
 import cors from "cors";
 
-const allowedOrigins = [
-  "https://open-frame-web.vercel.app",
-  "http://localhost:3000",
-  "https://open-frame.sayantan.online",
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [];
 
 export const handleInternalTokenCors = cors({
   origin: allowedOrigins,
