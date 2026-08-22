@@ -54,7 +54,7 @@ export const handleApi = async (
   next: NextFunction,
 ) => {
   try {
-    if (req.path === "/user/google") {
+    if (req.path === "/user/google" || req.path === "/user/google/callback") {
       return next();
     }
     const internalToken = req.get("x-internal-token");
