@@ -1,5 +1,6 @@
-export * from "./AboutCard";
 export * from "./HeroSection";
-export * from "./TechStackCard";
-export * from "./FeatureCard";
-export * from "./BuiltByCard";
+export * from "./BuiltBy";
+export * from "./Philosophy";
+export * from "./Features";
+export * from "./Sponsor";
+

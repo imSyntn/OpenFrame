@@ -32,8 +32,12 @@
 </p>
 
 <p align="center">
-  <a href="https://open-frame.sayantan.online">
-    <strong>🚀 Try it Live</strong>
+  <a href="https://openframe.page">
+    <strong>🌐 Live Demo</strong>
+  </a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="https://openframe.page/api">
+    <strong>⚡ API Docs</strong>
   </a>
 </p>
 
@@ -55,6 +59,15 @@
 - High-performance image upload and delivery
 - Direct-to-S3 uploads using presigned URLs
 
+### Developer API
+
+- RESTful API built with Node.js and Express
+- API key-based authentication using `x-api-key`
+- Per-key rate limiting
+- Secure internal service authentication using HMAC-SHA256 tokens (`x-internal-token`)
+- API endpoints for images, users, collections, search and metadata
+- Designed for programmatic access and third-party integrations
+
 ### Architecture & Scalability
 
 - Event-driven architecture powered by Kafka
@@ -63,7 +76,6 @@
 - Scalable PostgreSQL database with Prisma ORM
 - Search functionality powered by Upstash Search
 - Email queue processing
-- Modular REST API built with Node.js and Express
 - Optimized frontend built with Next.js
 - Monorepo architecture with Turborepo
 
@@ -79,7 +91,7 @@ The project is organized as a Turborepo monorepo with:
 ```text
 apps/
   web/ # Frontend
-  api/ # REST API
+  api/ # REST API & Developer API Service
   worker-image-processor/ # Generates variants for an image
   worker-image-metadata/ # Extracts metadata,blurhash and colors from an image
   worker-image-finalize/ # Finalizes an image for DB write
@@ -170,6 +182,47 @@ Kafka workers handle:
 
 ![Architecture](./docs/images/architecture.png)
 
+## Developer API & Authentication
+
+OpenFrame includes a public Developer API for third-party integrations alongside secure internal token-based authentication for the web application.
+
+### 1. Developer API Key Authentication (`x-api-key`)
+
+External developers can make `GET` requests to public endpoints using an API key header.
+
+- **Header:** `x-api-key: <your_api_key>`
+- **Rate Limit:** 100 requests per minute per API key.
+- **Allowed Methods:** `GET` requests only.
+
+#### API Key Management Endpoints (`/keys`)
+
+Authenticated users can create and manage their developer API keys:
+
+- `POST /keys` — Generate a new API key _(Rate limit: 20 req/min)_
+- `GET /keys` — List active API keys for the user _(Rate limit: 20 req/min)_
+- `PATCH /keys/:id` — Revoke/disable an API key _(Rate limit: 20 req/min)_
+
+### 2. Internal Token Authentication (`x-internal-token`)
+
+For web application requests, short-lived HMAC-SHA256 signed internal tokens are generated via `/internal-token` and validated by the backend middleware using `INTERNAL_SECRET`.
+
+- **Header:** `x-internal-token: <timestamp>.<signature>`
+
+### Public API Endpoints (`GET`)
+
+| Endpoint                          | Description                                                     | Auth Required                    |
+| --------------------------------- | --------------------------------------------------------------- | -------------------------------- |
+| `GET /picture/explore`            | Fetch explore pictures with search, tag, and pagination support | `x-api-key` / `x-internal-token` |
+| `GET /picture/tags`               | List popular picture tags                                       | `x-api-key` / `x-internal-token` |
+| `GET /picture/:id`                | Retrieve picture details by ID                                  | `x-api-key` / `x-internal-token` |
+| `GET /picture/user/:id`           | List pictures uploaded by a user                                | `x-api-key` / `x-internal-token` |
+| `GET /picture/user/liked/:userId` | List pictures liked by a user                                   | `x-api-key` / `x-internal-token` |
+| `GET /collection`                 | Browse public collections                                       | `x-api-key` / `x-internal-token` |
+| `GET /collection/:id`             | Retrieve collection details and photo items                     | `x-api-key` / `x-internal-token` |
+| `GET /collection/user/:userId`    | List collections created by a user                              | `x-api-key` / `x-internal-token` |
+| `GET /user/:id`                   | Get public user profile                                         | `x-api-key` / `x-internal-token` |
+| `GET /search?q=:query&type=:type` | Search across photos, users, and collections                    | `x-api-key` / `x-internal-token` |
+
 ## Prerequisites
 
 - Node.js 20+
@@ -198,7 +251,7 @@ _⚠️ No credit card required_
 
 ### 1. Setup Environment Variables
 
-Rename `.env.example` to `.env` and update values.
+Rename `.env.example` to `.env` and update configuration values (including database URLs, Redis instances, Kafka broker/certificates, S3 credentials, Google OAuth keys, `INTERNAL_SECRET`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `ALLOWED_ORIGINS`, and search keys).
 
 ### 2. Run the Application
 
@@ -231,7 +284,8 @@ pnpm start
 Once all services are running:
 
 - Frontend: http://localhost:3000
-- Backend: http://localhost:4000/health
+- Backend Health Check: http://localhost:4000/health
+- Developer API Base URL: http://localhost:4000
 
 ## Scripts
 

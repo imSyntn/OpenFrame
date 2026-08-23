@@ -23,6 +23,11 @@ const resourceLinks = [
   { label: "API Docs", href: "/api" },
   { label: "FAQ", href: "/faq" },
   { label: "Roadmap", href: "/roadmap" },
+  {
+    label: "Sponsor Project",
+    href: "https://github.com/sponsors/imSyntn",
+    isExternal: true,
+  },
 ];
 
 export function Footer() {
@@ -38,18 +43,34 @@ export function Footer() {
             Free high-resolution photos for creators.
           </p>
 
-          <a
-            href="https://github.com/imSyntn/OpenFrame"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="OpenFrame GitHub Repository"
-            className="group mt-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-secondary/80 text-secondary-foreground shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-primary hover:text-primary-foreground hover:shadow-xl hover:shadow-primary/25"
-          >
-            <Github
-              size={20}
-              className="transition-transform duration-300 group-hover:scale-110"
-            />
-          </a>
+          <div className="mt-4 flex items-center gap-2">
+            <a
+              href="https://github.com/imSyntn/OpenFrame"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="OpenFrame GitHub Repository"
+              className="group inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-secondary/80 text-secondary-foreground shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-primary hover:text-primary-foreground hover:shadow-xl hover:shadow-primary/25"
+            >
+              <Github
+                size={20}
+                className="transition-transform duration-300 group-hover:scale-110"
+              />
+            </a>
+
+            <a
+              href="https://github.com/sponsors/imSyntn"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Sponsor OpenFrame on GitHub"
+              className="group inline-flex h-10 px-3.5 items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-500 text-xs font-semibold shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-rose-500 hover:text-white hover:shadow-xl hover:shadow-rose-500/25"
+            >
+              <Heart
+                size={16}
+                className="fill-current transition-transform duration-300 group-hover:scale-110"
+              />
+              <span>Sponsor</span>
+            </a>
+          </div>
         </div>
 
         <div className="col-span-1">
@@ -83,9 +104,21 @@ export function Footer() {
           <ul className="space-y-2">
             {resourceLinks.map((link) => (
               <li key={link.label}>
-                <LinkWithActiveState href={link.href}>
-                  {link.label}
-                </LinkWithActiveState>
+                {link.isExternal ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-rose-500 inline-flex items-center gap-1.5"
+                  >
+                    {link.label}
+                    <Heart className="h-3 w-3 fill-rose-500 text-rose-500" />
+                  </a>
+                ) : (
+                  <LinkWithActiveState href={link.href}>
+                    {link.label}
+                  </LinkWithActiveState>
+                )}
               </li>
             ))}
           </ul>
