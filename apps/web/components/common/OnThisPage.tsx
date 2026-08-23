@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { cn } from "@workspace/ui/lib/utils";
 
 interface Heading {
   id: string;
@@ -52,28 +53,35 @@ export function OnThisPage() {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-16 max-h-[calc(100dvh-4rem)] overflow-auto">
-      <p className="mb-3 text-sm font-semibold text-foreground">On This Page</p>
-      <ul className="space-y-1.5 text-sm">
-        {headings.map((heading) => (
-          <li
-            key={heading.id}
-            style={{ paddingLeft: heading.level === 3 ? "0.75rem" : "0" }}
-          >
+    <nav className="w-full text-xs">
+      <p className="mb-3 font-semibold text-muted-foreground tracking-wide uppercase text-[11px]">
+        On This Page
+      </p>
+
+      <div className="relative border-l border-border/40 pl-3 space-y-2">
+        {headings.map((heading) => {
+          const isActive = activeId === heading.id;
+          return (
             <a
+              key={heading.id}
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block transition-colors hover:text-foreground ${
-                activeId === heading.id
+              className={cn(
+                "group relative block leading-relaxed transition-colors duration-150",
+                heading.level === 3 ? "pl-3 text-[11px]" : "font-normal",
+                isActive
                   ? "text-foreground font-medium"
-                  : "text-muted-foreground"
-              }`}
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
-              {heading.text}
+              {isActive && (
+                <span className="absolute -left-[13px] top-1/2 -translate-y-1/2 h-3.5 w-[2px] bg-foreground rounded-full transition-all duration-200" />
+              )}
+              <span className="line-clamp-2">{heading.text}</span>
             </a>
-          </li>
-        ))}
-      </ul>
+          );
+        })}
+      </div>
     </nav>
   );
 }
