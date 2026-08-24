@@ -80,7 +80,7 @@ export function HeaderRight() {
     return (
       <div className="flex items-center gap-2 md:gap-3">
         <Skeleton className="w-16 h-10 rounded-md" />
-        <Skeleton className="w-10 h-10 rounded-md" />
+        <ThemeToggle />
         <Skeleton className="w-10 h-10 rounded-full" />
       </div>
     );

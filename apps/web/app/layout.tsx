@@ -80,6 +80,14 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link
+          rel="preconnect"
+          href="https://open-frame.t3.tigrisfiles.io"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >

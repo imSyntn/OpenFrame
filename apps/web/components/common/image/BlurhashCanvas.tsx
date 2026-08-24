@@ -3,7 +3,7 @@
 import { tagsType } from "@workspace/types";
 import { cn } from "@workspace/ui/lib/utils";
 import { decode } from "blurhash";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { TransparentTag } from "./modal";
 import { formatDistanceToNow } from "date-fns";
@@ -32,23 +32,21 @@ export function BlurHashCanvasComponent({
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const decodeWidth = 32;
+  const decodeHeight = useMemo(
+    () => Math.round((height / width) * decodeWidth),
+    [height, width],
+  );
+
+  const pixels = useMemo(() => {
+    try {
+      return decode(hash, decodeWidth, decodeHeight);
+    } catch {
+      return decode("LKO2?U%2Tw=w]~RBVZRi};RPxuwH", decodeWidth, decodeHeight);
+    }
+  }, [hash, decodeHeight, decodeWidth]);
 
   useEffect(() => {
-    const decodeWidth = 32;
-    const decodeHeight = Math.round((height / width) * 32);
-
-    let pixels;
-
-    try {
-      pixels = decode(hash, decodeWidth, decodeHeight);
-    } catch {
-      pixels = decode(
-        "LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
-        decodeWidth,
-        decodeHeight,
-      );
-    }
-
     const canvas = ref.current;
     if (!canvas) return;
 
@@ -99,13 +97,21 @@ function PhotoWithBlurHashComponent({
 }: Props) {
   const [loaded, setLoaded] = useState(false);
 
-  const tags: tagsType[] = photo.tags?.map(
-    (item: { tag: tagsType }) => item.tag,
+  const tags: tagsType[] = useMemo(
+    () => photo.tags?.map((item: { tag: tagsType }) => item.tag),
+    [photo.tags],
   );
+
+  const formattedDate = useMemo(() => {
+    if (!photo.created_at) return "";
+    return formatDistanceToNow(new Date(photo.created_at), {
+      addSuffix: true,
+    });
+  }, [photo.created_at]);
 
   return (
     <div
-      className="relative flex items-center justify-center group overflow-hidden rounded-xl"
+      className="relative flex items-center justify-center group overflow-hidden rounded-xl [content-visibility:auto] [contain-intrinsic-size:300px]"
       style={{
         aspectRatio: `${photo.width} / ${photo.height}`,
         width: "100%",
@@ -156,11 +162,9 @@ function PhotoWithBlurHashComponent({
               )}
 
               <div className="flex items-center gap-2">
-                {photo.created_at && (
+                {formattedDate && (
                   <p className="text-[11px] font-medium tracking-[0.15em] text-white/65 uppercase">
-                    {formatDistanceToNow(new Date(photo.created_at), {
-                      addSuffix: true,
-                    })}
+                    {formattedDate}
                   </p>
                 )}
                 <div className="h-1 w-1 rounded-full bg-white/40" />

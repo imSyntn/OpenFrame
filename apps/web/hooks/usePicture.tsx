@@ -121,7 +121,7 @@ export const useIncrementDownloadCount = () => {
 export const useIncrementLikeCount = () => {
   return useMutation({
     mutationFn: (id: string) => incrementLikeCount(id),
-    onSuccess: () => {
+    onMutate: () => {
       toast.success("Liked successfully.", {
         description: "It may take some time to show on profile.",
       });
