@@ -126,9 +126,7 @@ export function MasonryGrid() {
         <div
           ref={loadMoreRef}
           className="flex h-16 w-full items-center justify-center"
-        >
-          {isFetchingNextPage && <Loader2 className="size-5 animate-spin" />}
-        </div>
+        />
       )}
     </div>
   );

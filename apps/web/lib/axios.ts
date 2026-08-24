@@ -5,20 +5,34 @@ const INTERNAL_TOKEN_TTL = 55_000;
 
 let internalToken: string | null = null;
 let internalTokenExpiresAt = 0;
+let internalTokenPromise: Promise<string | null> | null = null;
 
 const tokenClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
 });
 
-const getInternalToken = async () => {
+const getInternalToken = async (): Promise<string | null> => {
   if (internalToken && Date.now() < internalTokenExpiresAt) {
     return internalToken;
   }
-  const response = await tokenClient.get("/internal-token");
-  internalToken = response.data.token;
-  internalTokenExpiresAt = Date.now() + INTERNAL_TOKEN_TTL;
-  return internalToken;
+
+  if (!internalTokenPromise) {
+    internalTokenPromise = (async () => {
+      try {
+        const response = await tokenClient.get("/internal-token");
+        internalToken = response.data.token ?? null;
+        internalTokenExpiresAt = Date.now() + INTERNAL_TOKEN_TTL;
+        return internalToken;
+      } catch {
+        internalToken = null;
+        return null;
+      } finally {
+        internalTokenPromise = null;
+      }
+    })();
+  }
+  return internalTokenPromise;
 };
 
 export const api = axios.create({
@@ -31,7 +45,9 @@ export const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const internalToken = await getInternalToken();
-  config.headers.set("x-internal-token", internalToken);
+  if (internalToken) {
+    config.headers.set("x-internal-token", internalToken);
+  }
 
   const accessToken = useUserStore.getState().accessToken;
   if (accessToken) {
