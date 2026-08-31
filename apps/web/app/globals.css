@@ -90,3 +90,13 @@
         transform: scale(1);
     }
 }
+
+@keyframes dots {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 28px 28px;
+  }
+}

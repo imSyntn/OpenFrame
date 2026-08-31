@@ -7,6 +7,7 @@ export default defineConfig({
     "src/pictureSchema.ts",
     "src/collectionSchema.ts",
     "src/reportSchema.ts",
+    "src/ImageGenerateSchema.ts",
   ],
   format: ["esm"],
   target: "node20",

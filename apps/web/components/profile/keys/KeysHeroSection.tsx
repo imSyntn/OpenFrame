@@ -9,7 +9,7 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { ApiKeyType } from "@workspace/types";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { useProfileStore } from "@/store";
+import { useProfileStore } from "@/components/Provider";
 
 export function KeysHeroSection({
   loading,

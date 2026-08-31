@@ -13,6 +13,7 @@
     "./picture": "./dist/pictureSchema.js",
     "./collection": "./dist/collectionSchema.js",
     "./report": "./dist/reportSchema.js",
+    "./generate": "./dist/generateSchema.js",
     "./index": "./dist/index.js"
   },
   "author": "",

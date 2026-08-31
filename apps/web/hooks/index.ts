@@ -5,3 +5,4 @@ export * from "./useCollection";
 export * from "./useSearch";
 export * from "./useReport";
 export * from "./useApiKeyHandler";
+export * from "./useTextToImage";

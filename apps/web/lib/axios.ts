@@ -1,7 +1,7 @@
 import { useUserStore } from "@/store";
 import axios from "axios";
 
-const INTERNAL_TOKEN_TTL = 55_000;
+const INTERNAL_TOKEN_TTL = 60_000;
 
 let internalToken: string | null = null;
 let internalTokenExpiresAt = 0;

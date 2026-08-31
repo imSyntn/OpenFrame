@@ -1,4 +1,5 @@
 import {
+  classifyImage,
   createPictureUpload,
   deletePicture,
   getAllUploadsStatus,
@@ -19,6 +20,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { da } from "date-fns/locale";
 import { toast } from "sonner";
 
 export const useGetPictures = (id: string) => {
@@ -63,6 +65,37 @@ export const useGetUploadUrl = () => {
       size: number;
       isAvatar?: boolean;
     }) => getPictureUploadUrl(type, size, isAvatar),
+  });
+};
+
+export const useClassifyImage = () => {
+  return useMutation({
+    mutationFn: ({ fileUrl }: { fileUrl: string }) => classifyImage(fileUrl),
+    onMutate: () => {
+      const toastId = toast.loading("Checking for NSFW content...");
+      return { toastId };
+    },
+    onSuccess: ({ data }, _, context) => {
+      const toastId = context?.toastId;
+      if (data?.isNsfw) {
+        toast.error("Image contains NSFW content", {
+          id: toastId,
+        });
+      } else {
+        toast.success("Image classified successfully", {
+          id: toastId,
+        });
+      }
+    },
+    onError: (error: any, _, context) => {
+      const toastId = context?.toastId;
+      toast.error(
+        error?.response?.data?.message || "Failed to classify image",
+        {
+          id: toastId,
+        },
+      );
+    },
   });
 };
 

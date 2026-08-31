@@ -35,6 +35,15 @@ export const getPictureUploadUrl = async (
   return res.data.data;
 };
 
+export const classifyImage = async (
+  fileUrl: string,
+): Promise<{ data: { isNsfw: boolean } }> => {
+  const res = await api.post("/picture/classify", {
+    fileUrl,
+  });
+  return res.data;
+};
+
 export const getPictureTags = async () => {
   const res = await api.get("/picture/tags");
   return res.data.data;

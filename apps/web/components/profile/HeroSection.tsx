@@ -27,7 +27,7 @@ import {
   Loader2Icon,
   Check,
 } from "lucide-react";
-import { useProfileStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import {
   Tooltip,
   TooltipContent,
@@ -47,6 +47,7 @@ import { ErrorOccured } from "../common";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useProfileStore } from "../Provider";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -84,7 +85,7 @@ export function HeroSection({ id }: { id: string }) {
     email,
     is_verified,
     metrics,
-  } = useProfileStore();
+  } = useProfileStore((state) => state);
   const { data, isLoading, error, isError, refetch } = useUserDetails(id);
 
   const isOwner = loggedInUserID === id;

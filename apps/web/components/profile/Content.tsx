@@ -8,7 +8,6 @@ import {
 import React from "react";
 import { Gallery } from "./gallery/Gallery";
 import { Statistics } from "./statistics/Statistics";
-import { useProfileStore } from "@/store";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 import { useUserStore } from "@/store";
@@ -17,6 +16,7 @@ import { ShowUserCollections } from "../collection";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Liked } from "./liked/Liked";
 import { ReportContent } from "./reports/ReportContent";
+import { useProfileStore } from "../Provider";
 
 export function Content() {
   const isLoading = useProfileStore((state) => state.isLoading);

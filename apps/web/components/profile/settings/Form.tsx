@@ -1,5 +1,4 @@
 import React from "react";
-import { useProfileStore } from "@/store";
 import {
   Avatar,
   AvatarFallback,
@@ -18,10 +17,11 @@ import { Field, FieldLabel, FieldSet } from "@workspace/ui/components/field";
 import { ChangeAvatar } from "./ChangeAvatar";
 import { useRouter } from "next/navigation";
 import { WarningModal } from "@/components/common";
+import { useProfileStore } from "@/components/Provider";
 
 export function Form({ handleClose }: { handleClose: () => void }) {
   const { name, avatar, bio, location, email, joined_at, links, id, setData } =
-    useProfileStore();
+    useProfileStore((state) => state);
   const { mutateAsync, isPending } = useUpdateUserDetails(id);
   const { mutateAsync: deleteUser, isPending: isDeleting } = useDeleteUser();
   const router = useRouter();

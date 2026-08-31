@@ -6,8 +6,9 @@ import {
   KeysHeroSection,
   NotEligible,
 } from "@/components/profile";
+import { useProfileStore } from "@/components/Provider";
 import { useGetApiKeys } from "@/hooks";
-import { useProfileStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 

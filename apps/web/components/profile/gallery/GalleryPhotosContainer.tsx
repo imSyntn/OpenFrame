@@ -1,10 +1,11 @@
 import { GalleryPhoto } from "@/@types";
-import { useGlobalStateStore, useProfileStore } from "@/store";
+import { useGlobalStateStore } from "@/store";
 import React, { useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetPictures } from "@/hooks";
 import { ImageOff, Loader2 } from "lucide-react";
+import { useProfileStore } from "@/components/Provider";
 
 export function GalleryPhotosContainer() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);

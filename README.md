@@ -4,25 +4,29 @@
 
 <p align="center">
 
-**An Unsplash-style image-sharing platform featuring event-driven processing via Kafka, direct-to-S3 uploads, BlurHash previews, NSFW detection and dominant color extraction - built as a full-stack monorepo**
+**An image-sharing platform with event-driven processing powered by Kafka, direct-to-S3 uploads, BlurHash previews, NSFW detection, dominant color extraction, AI image generation, image exploration, and a developer API - all built as a full-stack monorepo.**
 
 </p>
 
 <p align="center">
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js&logoColor=white" /></a>
   <a href="https://zustand-demo.pmnd.rs/"><img src="https://img.shields.io/badge/Zustand-443E38?style=flat-square&logo=react&logoColor=white" /></a>
+  <a href="https://tanstack.com/query"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=flat-square&logo=reactquery&logoColor=white" /></a>
   <a href="https://mdxjs.com/"><img src="https://img.shields.io/badge/MDX-fcb32c?style=flat-square&logo=mdxjs&logoColor=black" /></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" /></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white" /></a>
   <a href="https://expressjs.com/"><img src="https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white" /></a>
+  <a href="https://zod.dev/"><img src="https://img.shields.io/badge/Zod-3E67B1?style=flat-square&logo=zod&logoColor=white" /></a>
   <a href="https://jwt.io/"><img src="https://img.shields.io/badge/JWT-000000?style=flat-square" alt="JWT" /></a>
   <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white" /></a>
   <a href="https://www.prisma.io/"><img src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" /></a>
   <a href="https://redis.io/"><img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" /></a>
   <a href="https://kafka.apache.org/"><img src="https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apachekafka&logoColor=white" /></a>
+  <a href="https://sharp.pixelplumbing.com/"><img src="https://img.shields.io/badge/Sharp-99CC00?style=flat-square&logo=sharp&logoColor=white" /></a>
   <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" /></a>
   <a href="https://upstash.com/"><img src="https://img.shields.io/badge/Upstash%20Search-000000?style=flat-square&logo=upstash&logoColor=white" /></a>
   <a href="https://aws.amazon.com/s3/"><img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=flat-square&logo=amazons3&logoColor=white" alt="Amazon S3"/></a>
+  <a href="https://aws.amazon.com/s3/"><img src="https://img.shields.io/badge/Cloudflare%20AI-FF9900?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare AI"/></a>
 </p>
 
 ---
@@ -43,17 +47,19 @@
 
 ## What Makes It Interesting
 
-### Image Processing
+### Image Processing & Intelligence
 
+- AI Text-to-Image generation
 - EXIF metadata extraction
 - BlurHash generation for fast image previews
-- Dominant color and palette extraction
-- NSFW content detection
+- Dominant color and palette extraction using Sharp & Node Vibrant
+- NSFW content detection powered by NSFWJS
 - Image optimization and processing pipeline
 
 ### User Experience
 
 - User authentication and customizable profiles
+- AI artwork & prompt-based image generation studio
 - Advanced search across photos, tags, and creators
 - Curated collections and creator profiles
 - High-performance image upload and delivery
@@ -62,6 +68,7 @@
 ### Developer API
 
 - RESTful API built with Node.js and Express
+- Interactive API reference documentation powered by Scalar
 - API key-based authentication using `x-api-key`
 - Per-key rate limiting
 - Secure internal service authentication using HMAC-SHA256 tokens (`x-internal-token`)
@@ -96,7 +103,7 @@ apps/
   worker-image-metadata/ # Extracts metadata,blurhash and colors from an image
   worker-image-finalize/ # Finalizes an image for DB write
   worker-db-write/ # Writes an image and engagement to DB
-  worker-email-queue/ # Sends emails
+  worker-email-queue/ # Manages email delivery
 
 packages/
   lib/ # shared utilities (Prisma, Redis, Kafka etc.)
@@ -232,6 +239,7 @@ For web application requests, short-lived HMAC-SHA256 signed internal tokens are
 - Redis
 - S3 compatible storage
 - Upstash Search keys _(for search functionality)_
+- Cloudflare Workers AI endpoint _(for AI image genaration)_
 - Google OAuth keys _(for google login)_
 - SMTP server _(for password reset and verification emails)_
 
@@ -286,6 +294,62 @@ Once all services are running:
 - Frontend: http://localhost:3000
 - Backend Health Check: http://localhost:4000/health
 - Developer API Base URL: http://localhost:4000
+
+## Enable AI image generation ( optional )
+
+### 1. Get a Cloudflare Account
+
+- Sign up at [Cloudflare](https://dash.cloudflare.com/sign-up) if you don't have one
+
+### 2. Create a New Worker
+
+- Go to the [Home](https://dash.cloudflare.com)
+- On the left sidebar, click on [Compute] and then [Workers & Pages]
+- Click **"Create application"**
+- Choose **"Start with Hello World!"**
+- Give it a name like `text-to-image-api`
+- Click **"Deploy"** to create a Hello World worker
+
+### 3. Replace the Worker Code
+
+- On the top right click on **"Edit Code"** button
+- In the worker editor, replace the default Hello World code with the [worker.js](./docs/images/worker.js) code
+- Click **"Save and Deploy"**
+
+### 4. Set Up Environment Variables
+
+- In your worker dashboard, go to **"Settings"** > **"Runtime variables and secrets"**
+- Under **"Environment Variables"**, click **"Add variable"**
+- Name: `API_KEY`
+- Value: `your-secret-api-key` (replace with a strong secret key)
+
+### 5. Enable Workers AI
+
+- In the Cloudflare dashboard, go to **"Workers & Pages"** > **"AI"**
+- Enable Workers AI for your account
+
+### 6. Add AI Binding to Your Worker
+
+- Go back to your worker's dashboard
+- Click on **"binding"**
+- Select **"Workers AI"**
+- Click **"Add binding"**
+- Variable Name: `AI`
+- Click **"Add binding"**
+
+> **Important:** Without this AI binding, your worker won't be able to access Cloudflare's AI models!
+
+### 7. Get Your Worker URL
+
+- Your worker will be available at: `https://<your-worker-name>.<your-subdomain>.workers.dev`
+- You can find the exact URL in your worker's dashboard
+
+### 8. Save it to .env file
+
+```bash
+IMAGE_GEN_URL="https://<your-worker-name>.<your-subdomain>.workers.dev/v1/images/generations"
+IMAGE_GEN_API_KEY="<your-secret-api-key>"
+```
 
 ## Scripts
 

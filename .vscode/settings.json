@@ -1,6 +1,0 @@
-{
-  "tailwindCSS.experimental.configFile": "packages/ui/src/styles/globals.css",
-  "typescript.experimental.useTsgo": true,
-  "editor.minimap.enabled": false,
-  "editor.stickyScroll.enabled": false
-}

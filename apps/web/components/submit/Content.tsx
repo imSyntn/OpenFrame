@@ -10,86 +10,85 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { Form } from "./Form";
 import { MAX_PICTURE_SIZE } from "@workspace/constants";
-import { useGetUploadUrl } from "@/hooks";
+import { useClassifyImage, useGetUploadUrl } from "@/hooks";
 import { toast } from "sonner";
 import axios from "axios";
-import { isNSFW } from "@/lib";
 
 export function Content() {
   const [file, setFile] = useState<File | null>(null);
+  const [allowUpload, setAllowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [uploadedUrl, setUploadedUrl] = useState("");
   const [pictureId, setPictureId] = useState("");
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
+  const { mutateAsync: classifyImage } = useClassifyImage();
   const controllerRef = useRef<AbortController | null>(null);
 
-  const checkNFSWContent = async () => {
-    if (!file) return;
-
-    let toastId: string | number | undefined;
-
-    try {
-      toastId = toast.loading("Checking NSFW content");
-      const result = await isNSFW(file);
-
-      if (result) {
-        toast.error("Image contains NSFW content", { id: toastId });
-        setFile(null);
-        return;
-      }
-      toast.dismiss(toastId);
-      uploadImage();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to check NSFW", { id: toastId });
-    }
-  };
-
   useEffect(() => {
-    checkNFSWContent();
+    const uploadImage = async () => {
+      if (!file) return;
+      setIsUploading(true);
+      controllerRef.current = new AbortController();
+      try {
+        const { type, size } = file;
+
+        const { uploadUrl, fileUrl, id } = await getUploadUrl({
+          type,
+          size,
+        });
+
+        if (!uploadUrl) {
+          toast.error("Failed to get upload url");
+          return;
+        }
+
+        await axios.put(uploadUrl, file, {
+          headers: {
+            "Content-Type": type,
+          },
+          signal: controllerRef.current.signal,
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / (progressEvent.total || 1),
+            );
+
+            setProgress(percentCompleted);
+          },
+        });
+        setUploadedUrl(fileUrl);
+        setPictureId(id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error?.response?.data?.message || "Failed to upload image");
+      } finally {
+        setIsUploading(false);
+      }
+    };
+    uploadImage();
   }, [file]);
 
-  const uploadImage = async () => {
-    if (!file) return;
-    setIsUploading(true);
-    controllerRef.current = new AbortController();
-    try {
-      const { type, size } = file;
-
-      const { uploadUrl, fileUrl, id } = await getUploadUrl({
-        type,
-        size,
-      });
-
-      if (!uploadUrl) {
-        toast.error("Failed to get upload url");
-        return;
-      }
-
-      await axios.put(uploadUrl, file, {
-        headers: {
-          "Content-Type": type,
-        },
-        signal: controllerRef.current.signal,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent.total || 1),
-          );
-
-          setProgress(percentCompleted);
-        },
-      });
-      setUploadedUrl(fileUrl);
-      setPictureId(id);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error?.response?.data?.message || "Failed to upload image");
-    } finally {
-      setIsUploading(false);
+  useEffect(() => {
+    if (uploadedUrl) {
+      const handleClassification = async () => {
+        try {
+          const { data } = await classifyImage({ fileUrl: uploadedUrl });
+          if (data?.isNsfw) {
+            setFile(null);
+            setProgress(0);
+            setUploadedUrl("");
+            setPictureId("");
+          } else {
+            setAllowUpload(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      handleClassification();
     }
-  };
+  }, [uploadedUrl]);
 
   const cancelUpload = () => {
     setFile(null);
@@ -144,7 +143,11 @@ export function Content() {
         )}
       </div>
 
-      <Form uploadedUrl={uploadedUrl} pictureId={pictureId} />
+      <Form
+        uploadedUrl={uploadedUrl}
+        pictureId={pictureId}
+        allowUpload={allowUpload}
+      />
     </main>
   );
 }

@@ -11,6 +11,7 @@ import {
   pictureRouter,
   reportRouter,
   searchRouter,
+  textToImageRouter,
 } from "@/routes";
 import passport from "passport";
 import "./utils/passport";
@@ -57,6 +58,7 @@ app.use(handleApi);
 
 app.use("/user", authRouter);
 app.use("/picture", pictureRouter);
+app.use("/text-to-image", textToImageRouter);
 app.use("/collection", collectionRouter);
 app.use("/search", searchRouter);
 app.use("/report", reportRouter);

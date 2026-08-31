@@ -65,3 +65,12 @@ export const reportLimiter = rateLimit({
   skipSuccessfulRequests: true,
   message: { message: "Too many report requests" },
 });
+
+export const imageGenLimiter = rateLimit({
+  store: RateLimitStore("rl:image-gen"),
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 20,
+  message: {
+    message: "Too many image generation requests. Please try again tomorrow.",
+  },
+});

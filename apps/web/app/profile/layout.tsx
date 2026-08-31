@@ -1,4 +1,5 @@
 import { Header } from "@/components/common";
+import { ProfileProvider } from "@/components/Provider";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export default function ProfileLayout({
   return (
     <>
       <Header />
-      {children}
+      <ProfileProvider>{children}</ProfileProvider>
     </>
   );
 }

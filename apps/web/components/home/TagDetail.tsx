@@ -48,13 +48,14 @@ export function TagDetail({
       <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-48 w-96 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 right-1/4 -z-10 h-40 w-80 rounded-full bg-indigo-500/15 blur-3xl" />
 
-      <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary backdrop-blur-md shadow-sm">
+      <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {tagData ? (
-          <TagIcon className="size-3.5" />
+          <TagIcon className="size-3.5 text-primary" />
         ) : (
-          <Sparkles className="size-3.5" />
+          <Sparkles className="size-3.5 text-primary" />
         )}
-        <span>{tagData ? "Category Collection" : "Curated Feed"}</span>
+
+        <span>{tagData ? "Category" : "Explore photos"}</span>
       </div>
 
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground drop-shadow-sm capitalize">

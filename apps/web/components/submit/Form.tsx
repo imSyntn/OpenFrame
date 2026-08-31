@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { pictureSchema } from "@workspace/schema/picture";
@@ -33,12 +33,14 @@ import { useUserStore } from "@/store";
 import { Licenses, LICENSES_MAP } from "@workspace/constants";
 import { LicenseSelector } from "./LicenseSelector";
 
-export function Form({
+function FormComponent({
   uploadedUrl,
   pictureId,
+  allowUpload,
 }: {
   uploadedUrl: string;
   pictureId: string;
+  allowUpload: boolean;
 }) {
   const { data: tags, isLoading, error } = useGetTags();
   const userId = useUserStore((state) => state.id);
@@ -88,7 +90,6 @@ export function Form({
   }
 
   const availableLicenses = Object.values(LICENSES_MAP);
-  console.log(getValues("url"));
 
   return (
     <form
@@ -226,7 +227,7 @@ export function Form({
 
         <Button
           className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]"
-          disabled={isPending}
+          disabled={!allowUpload || isPending}
         >
           {isPending ? "Uploading..." : "Upload Image"}
         </Button>
@@ -234,3 +235,5 @@ export function Form({
     </form>
   );
 }
+
+export const Form = memo(FormComponent);

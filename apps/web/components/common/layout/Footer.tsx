@@ -8,6 +8,7 @@ const navigationLinks = [
   { label: "Explore Photos", href: "/explore" },
   { label: "Search Photos", href: "/search" },
   { label: "Collections", href: "/collections" },
+  { label: "Generate", href: "/generate", badge: "New" },
   { label: "About", href: "/about" },
 ];
 
@@ -20,7 +21,7 @@ const legalLinks = [
 ];
 
 const resourceLinks = [
-  { label: "API Docs", href: "/api" },
+  { label: "API Docs", href: "/api", badge: "New" },
   { label: "FAQ", href: "/faq" },
   { label: "Roadmap", href: "/roadmap" },
   {
@@ -78,7 +79,7 @@ export function Footer() {
           <ul className="space-y-2">
             {navigationLinks.map((link) => (
               <li key={link.label}>
-                <LinkWithActiveState href={link.href}>
+                <LinkWithActiveState href={link.href} badge={link.badge}>
                   {link.label}
                 </LinkWithActiveState>
               </li>
@@ -115,7 +116,7 @@ export function Footer() {
                     <Heart className="h-3 w-3 fill-rose-500 text-rose-500" />
                   </a>
                 ) : (
-                  <LinkWithActiveState href={link.href}>
+                  <LinkWithActiveState href={link.href} badge={link.badge}>
                     {link.label}
                   </LinkWithActiveState>
                 )}

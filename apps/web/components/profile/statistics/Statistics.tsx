@@ -1,6 +1,6 @@
 "use client";
 
-import { useProfileStore } from "@/store";
+import { useProfileStore } from "@/components/Provider";
 import { StatCard } from "../StatCard";
 
 export function Statistics() {

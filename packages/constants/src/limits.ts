@@ -23,3 +23,7 @@ export const PIC_PER_PAGE = 20;
 export const EXPLORE_PIC_PER_PAGE = 20;
 export const MAX_AVATAR_SIZE = 2 * 1024 * 1024;
 export const MAX_PICTURE_SIZE = 10 * 1024 * 1024;
+
+export const MAX_PROMPT_SIZE = 1000;
+export const MIN_PROMPT_SIZE = 100;
+export const MAX_NEG_PROMPT_SIZE = 100;

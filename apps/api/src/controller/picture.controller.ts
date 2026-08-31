@@ -1,6 +1,7 @@
 import { ErrorWithStatus } from "@/middleware";
 import { pictureSchema } from "@workspace/schema/picture";
 import {
+  classifyPicture,
   createPicture,
   deletePicture,
   getAllPictureStatus,
@@ -93,6 +94,38 @@ export const getPictureUploadUrlController = async (
     const urlData = await getPictureUploadUrl(type, size, !!isAvatar);
 
     return res.status(200).json({ data: urlData });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const classifyPictureController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { fileUrl } = req.body;
+
+    if (!fileUrl) {
+      return next(new ErrorWithStatus(400, "Invalid file url"));
+    }
+
+    const predictions = await classifyPicture(fileUrl);
+
+    const pornProbability =
+      predictions.find((item) => item.className === "Porn")?.probability ?? 0;
+    const hentaiProbability =
+      predictions.find((item) => item.className === "Hentai")?.probability ?? 0;
+    const sexyProbability =
+      predictions.find((item) => item.className === "Sexy")?.probability ?? 0;
+
+    const isNsfw =
+      pornProbability > 0.7 ||
+      hentaiProbability > 0.7 ||
+      sexyProbability > 0.85;
+
+    return res.status(200).json({ data: { isNsfw } });
   } catch (error) {
     next(error);
   }

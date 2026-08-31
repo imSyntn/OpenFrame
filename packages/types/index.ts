@@ -5,3 +5,4 @@ export * from "./engagement.type";
 export * from "./collection.type";
 export * from "./search.type";
 export * from "./report.type";
+export * from "./imageGenerate.type";

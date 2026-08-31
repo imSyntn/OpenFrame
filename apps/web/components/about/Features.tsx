@@ -2,6 +2,7 @@ import { Zap, Sparkles, Globe, Code2 } from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import React from "react";
 import { ArrowRightIcon, Database, Github } from "lucide-react";
+import { AnimatedSection } from "../common";
 
 const FEATURE_GROUPS = [
   {
@@ -64,20 +65,40 @@ const TECHSTACKS = [
     name: "Zustand",
     img: "https://github.com/pmndrs/zustand/raw/main/docs/favicon.ico",
   },
+  {
+    name: "TanStack Query",
+    img: "https://avatars.githubusercontent.com/u/72518640?s=200&v=4",
+  },
   { name: "MDX", img: "https://svgl.app/library/markdown-dark.svg" },
   { name: "Tailwind CSS", img: "https://skillicons.dev/icons?i=tailwind" },
   { name: "Node.js", img: "https://skillicons.dev/icons?i=nodejs" },
   { name: "Express.js", img: "https://skillicons.dev/icons?i=express" },
+  {
+    name: "Zod",
+    img: "https://raw.githubusercontent.com/colinhacks/zod/main/logo.svg",
+  },
   { name: "PostgreSQL", img: "https://skillicons.dev/icons?i=postgresql" },
   { name: "Prisma ORM", img: "https://skillicons.dev/icons?i=prisma" },
   { name: "Redis", img: "https://skillicons.dev/icons?i=redis" },
   { name: "Apache Kafka", img: "https://skillicons.dev/icons?i=kafka" },
+  {
+    name: "Sharp",
+    img: "https://sharp.pixelplumbing.com/_astro/sharp-logo.D4gYpHdD.svg",
+  },
+  {
+    name: "NSFWJS",
+    img: "https://github.com/infinitered/nsfwjs/raw/master/_art/nsfwjs_logo.jpg",
+  },
   {
     name: "Turborepo",
     img: "https://svgl.app/library/turborepo-icon-dark.svg",
   },
   { name: "Upstash Search", img: "https://svgl.app/library/upstash.svg" },
   { name: "Amazon S3", img: "https://svgl.app/library/aws_dark.svg" },
+  {
+    name: "Cloudflare AI",
+    img: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg",
+  },
 ];
 
 interface FeatureCardProps {
@@ -112,7 +133,7 @@ export function TechStackCard() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-5  gap-3">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-5 gap-3">
           {TECHSTACKS.map((tech) => (
             <div
               key={tech.name}
@@ -187,27 +208,40 @@ export function Features() {
   return (
     <div className="container mx-auto px-6 mt-40 max-w-6xl">
       <div className="grid gap-20 lg:grid-cols-2 items-start">
-        <div>
-          <span className="inline-block text-sm font-semibold tracking-widest uppercase text-muted-foreground/60 mb-4">
-            Under the Hood
-          </span>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            Powerful Features
-          </h2>
-          <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
-            Built with modern tooling and intelligent image processing
-            capabilities.
-          </p>
+        <div className="flex flex-col">
+          <AnimatedSection direction="up" delay={0.1}>
+            <div className="flex flex-col items-center lg:items-start">
+              <span className="inline-block text-sm font-semibold tracking-widest uppercase text-muted-foreground/60 mb-4">
+                Under the Hood
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+                Powerful Features
+              </h2>
+              <p className="text-muted-foreground text-lg mb-10 leading-relaxed text-center lg:text-start">
+                Built with modern tooling and intelligent image processing
+                capabilities.
+              </p>
+            </div>
+          </AnimatedSection>
 
           <div className="space-y-4">
-            {FEATURE_GROUPS.map((group) => (
-              <FeatureCard key={group.title} group={group} />
+            {FEATURE_GROUPS.map((group, idx) => (
+              <AnimatedSection
+                key={group.title}
+                direction="up"
+                delay={0.1 + idx * 0.1}
+                scale
+              >
+                <FeatureCard group={group} />
+              </AnimatedSection>
             ))}
           </div>
         </div>
 
         <div className="lg:sticky lg:top-24">
-          <TechStackCard />
+          <AnimatedSection direction="up" delay={0.2} scale>
+            <TechStackCard />
+          </AnimatedSection>
         </div>
       </div>
     </div>
