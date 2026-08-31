@@ -5,7 +5,7 @@ import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
 import { Metadata } from "next";
-import { Feature } from "@/components/common/notice";
+import { Feature, MigrationNotice } from "@/components/common/notice";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -96,6 +96,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Providers>
+          <MigrationNotice />
           <Feature
             storageKey="notice:api-added"
             title="API Added"
