@@ -9,13 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import { cn } from "@workspace/ui/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 const ThemeToggle = () => {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -23,56 +22,19 @@ const ThemeToggle = () => {
 
   if (!mounted) return null;
 
-  const changeTheme = (newTheme: string) => {
+  const changeTheme = async (newTheme: string) => {
     if (newTheme === theme) return;
 
-    const doc = document as Document & {
-      startViewTransition?: (callback: () => void | Promise<void>) => {
-        ready: Promise<void>;
-      };
-    };
-
     if (
-      !doc.startViewTransition ||
+      !document.startViewTransition ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       setTheme(newTheme);
       return;
     }
 
-    const button = buttonRef.current;
-
-    if (!button) {
+    document.startViewTransition(() => {
       setTheme(newTheme);
-      return;
-    }
-
-    const { left, top, width, height } = button.getBoundingClientRect();
-    const x = left + width / 2;
-    const y = top + height / 2;
-
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    );
-
-    const transition = doc.startViewTransition(() => {
-      setTheme(newTheme);
-    });
-
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`,
-          ],
-        },
-        {
-          duration: 300,
-          pseudoElement: "::view-transition-new(root)",
-        },
-      );
     });
   };
 
@@ -80,7 +42,6 @@ const ThemeToggle = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          ref={buttonRef}
           variant="outline"
           size="icon"
           className={cn(
