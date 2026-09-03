@@ -6,6 +6,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:migrate": "pnpm --filter @workspace/lib run db:migrate",
     "db:deploy": "pnpm --filter @workspace/lib run db:deploy",

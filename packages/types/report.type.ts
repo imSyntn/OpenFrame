@@ -1,4 +1,4 @@
-import { SrcType } from "./picture.type";
+import type { SrcType } from "./picture.type";
 
 export interface ReportType {
   id: string;
