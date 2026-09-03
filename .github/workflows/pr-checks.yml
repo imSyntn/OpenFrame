@@ -1,8 +1,8 @@
 name: Pull Request Checks
 on:
+  workflow_dispatch:
   push:
     branches: ["pre-prod"]
-  workflow_dispatch:
 
 jobs:
   checks:
@@ -18,8 +18,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Install dependencies
         run: pnpm install
