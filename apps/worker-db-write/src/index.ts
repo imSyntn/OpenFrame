@@ -86,9 +86,9 @@ const run = async () => {
             await updateTagsSearchData(pictureMessages);
 
             logger.info("Picture write completed");
-          } catch (err: any) {
+          } catch (err: unknown) {
             logger.error("picture-write-failed", err);
-            throw new WriteError(err.message);
+            throw new WriteError((err as { message: string }).message);
           }
         }
 
@@ -124,7 +124,7 @@ const run = async () => {
 
         await commitOffsetsIfNecessary();
         logger.info("Batch processed successfully");
-      } catch (err: any) {
+      } catch (err: unknown) {
         logger.error("Batch failed", err);
         const pipeline = cache.pipeline();
         if (err instanceof WriteError) {

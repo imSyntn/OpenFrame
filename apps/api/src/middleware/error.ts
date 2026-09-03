@@ -16,9 +16,14 @@ export const errorMiddleware = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
-  logger.error(err);
+  logger.error(err.message, {
+    error: err,
+    stack: err.stack,
+    method: req.method,
+    path: req.originalUrl,
+  });
 
   if (err instanceof ZodError) {
     return res.status(400).json({

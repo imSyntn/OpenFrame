@@ -9,7 +9,7 @@ import {
   userSignup,
   userVerifyEmailToken,
 } from "@/lib/apis";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { UserLoginType, UserTypeUnregistered } from "@workspace/types";
 import { toast } from "sonner";
 

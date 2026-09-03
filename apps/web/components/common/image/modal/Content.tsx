@@ -119,7 +119,7 @@ export function Content() {
         console.error,
       );
     }
-  }, [image]);
+  }, [image, viewPicture]);
 
   if (!image) return null;
 

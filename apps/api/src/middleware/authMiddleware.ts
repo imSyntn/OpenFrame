@@ -25,7 +25,7 @@ export const authMiddleware = (
     req.user = decoded;
 
     next();
-  } catch (error) {
+  } catch {
     return next(new ErrorWithStatus(401, "Invalid or expired token"));
   }
 };
@@ -52,11 +52,11 @@ export const getIfUserIsLoggedIn = (
       const decoded = accessTokenVerify(token);
       req.user = decoded;
       return next();
-    } catch (error) {
+    } catch {
       logger.info("User not logged in.");
       return next();
     }
-  } catch (error) {
+  } catch {
     return next(new ErrorWithStatus(401, "Invalid or expired token"));
   }
 };

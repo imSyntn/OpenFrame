@@ -18,13 +18,15 @@ export function OnThisPage() {
       document.querySelectorAll("article h2, article h3"),
     );
 
-    setHeadings(
-      elements.map((el) => ({
-        id: el.id,
-        text: el.textContent ?? "",
-        level: Number(el.tagName.charAt(1)),
-      })),
-    );
+    const items = elements.map((el) => ({
+      id: el.id,
+      text: el.textContent ?? "",
+      level: Number(el.tagName.charAt(1)),
+    }));
+
+    const animId = requestAnimationFrame(() => {
+      setHeadings(items);
+    });
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -38,7 +40,10 @@ export function OnThisPage() {
     );
 
     elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(animId);
+      observer.disconnect();
+    };
   }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

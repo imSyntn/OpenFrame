@@ -9,7 +9,6 @@ import React, { useMemo } from "react";
 export function Liked() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
   const userId = useUserStore((state) => state.id);
-  const name = useUserStore((state) => state.name);
   const {
     data: picturesData,
     isLoading,
@@ -47,7 +46,7 @@ export function Liked() {
           },
         };
       }),
-    [pictures],
+    [pictures, setOpen],
   );
 
   if (isLoading) {
@@ -65,8 +64,8 @@ export function Liked() {
         title="Error occured"
         className="min-h-fit"
         description={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (error as any).response?.data?.message || "Something went wrong"
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "Something went wrong"
         }
       />
     );

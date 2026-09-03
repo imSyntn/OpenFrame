@@ -16,11 +16,7 @@ import {
   incrementLikeCount,
   incrementViewCount,
 } from "@/service";
-import {
-  MAX_AVATAR_SIZE,
-  MAX_PICTURE_SIZE,
-  Licenses,
-} from "@workspace/constants";
+import { MAX_AVATAR_SIZE, MAX_PICTURE_SIZE } from "@workspace/constants";
 import { Request, Response, NextFunction } from "express";
 
 export const getUserPicturesController = async (

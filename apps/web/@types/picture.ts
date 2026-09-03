@@ -49,5 +49,5 @@ export type GalleryPhoto = {
   height: number;
   blurhash: string;
   key: string;
-  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+  // onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 };

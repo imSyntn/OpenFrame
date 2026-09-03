@@ -1,5 +1,5 @@
 import { PIC_PER_PAGE } from "@workspace/constants";
-import { cache, CollectionItem, logger } from "@workspace/lib";
+import { cache, CollectionItem } from "@workspace/lib";
 import type { Collection } from "@workspace/types";
 import { prisma } from "@workspace/lib/prisma";
 
@@ -58,13 +58,15 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
   const cacheItemsKey = `${cacheKey}:items`;
 
   let cachedCollections = await cache.get(cacheKey);
-  let cachedItems = await cache.get(cacheItemsKey);
+  const cachedItems = await cache.get(cacheItemsKey);
 
   if (cachedCollections && cachedItems && isOwner) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cachedCollections = JSON.parse(cachedCollections).map((collection: any) => {
       return {
         ...collection,
         items: JSON.parse(cachedItems).filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (item: any) => item.collection_id === collection.id,
         ),
       };
@@ -76,11 +78,12 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
     const publicCollections = JSON.parse(cachedCollections).filter(
       (collection: Collection) => collection.visibility === "PUBLIC",
     );
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const collections = publicCollections.map((collection: any) => {
       return {
         ...collection,
         items: JSON.parse(cachedItems).filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (item: any) =>
             item.collection_id === collection.id &&
             collection.visibility === "PUBLIC",
@@ -122,6 +125,7 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
     : await prisma.collectionItem.findMany({
         where: {
           collection_id: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             in: collections.map((collection: any) => collection.id),
           },
         },
@@ -138,14 +142,15 @@ export const getUserCollections = async (userId: string, isOwner: boolean) => {
           },
         },
       });
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   collections = collections.map((collection: any) => ({
-    ...collection,
+    ...collection, // eslint-disable-next-line @typescript-eslint/no-explicit-any
     items: items.filter((item: any) => item.collection_id === collection.id),
   }));
 
   if (!isOwner) {
     collections = collections.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (collection: any) => collection.visibility === "PUBLIC",
     );
   }
@@ -301,7 +306,7 @@ export const updateCollection = async (
   const cachedCollections = await cache.get(cacheKeyUser);
 
   if (cachedCollections) {
-    const parsedCollections = JSON.parse(cachedCollections);
+    const parsedCollections = JSON.parse(cachedCollections); // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updatedCollections = parsedCollections.map((collection: any) => {
       if (collection.id === id) {
         return updated;
@@ -356,6 +361,7 @@ export const removeCollectionItems = async (
   if (cachedItems) {
     const parsedItems = JSON.parse(cachedItems);
     const updatedItems = parsedItems.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (item: any) => !pic_ids.includes(item.pic_id),
     );
     await cache.set(cacheKey, JSON.stringify(updatedItems), "EX", 60 * 60 * 6);

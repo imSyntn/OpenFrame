@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 
 export default function ReportPage() {
-  const { isLoggedIn } = useUserStore();
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const params = useSearchParams();
   const imageId = params.get("imageId");
 

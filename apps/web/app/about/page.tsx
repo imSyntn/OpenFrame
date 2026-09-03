@@ -1,4 +1,10 @@
-import { BuiltBy, Features, HeroSection, Philosophy, Sponsor } from "@/components/about";
+import {
+  BuiltBy,
+  Features,
+  HeroSection,
+  Philosophy,
+  Sponsor,
+} from "@/components/about";
 
 export default function AboutPage() {
   return (

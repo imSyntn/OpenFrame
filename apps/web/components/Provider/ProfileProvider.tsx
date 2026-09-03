@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useRef } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 import { useStore } from "zustand";
 import { ProfileStore } from "@/@types";
@@ -19,23 +19,19 @@ export function ProfileProvider({
   children,
   initialData,
 }: ProfileProviderProps) {
-  const storeRef = useRef<ProfileStoreApi | null>(null);
-
-  if (!storeRef.current) {
-    storeRef.current = createProfileStore();
-
+  const [store] = useState(() => {
+    const s = createProfileStore();
     if (initialData) {
-      storeRef.current.setState({
+      s.setState({
         ...initialData,
         isLoading: false,
       });
     }
-  }
+    return s;
+  });
 
   return (
-    <ProfileContext.Provider value={storeRef.current}>
-      {children}
-    </ProfileContext.Provider>
+    <ProfileContext.Provider value={store}>{children}</ProfileContext.Provider>
   );
 }
 

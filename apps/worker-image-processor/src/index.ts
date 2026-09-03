@@ -25,6 +25,7 @@ const run = async () => {
           topic,
           partition,
           value: message.value?.toString(),
+          err,
         });
         return;
       }
@@ -63,10 +64,10 @@ const run = async () => {
           "processing-complete",
           JSON.stringify({ id: data.id, userId: data.userId }),
         );
-      } catch (err: any) {
+      } catch (err: unknown) {
         logger.error("Processing failed", {
           id: data?.id,
-          error: err.message,
+          error: (err as Error).message,
         });
 
         try {
@@ -82,7 +83,7 @@ const run = async () => {
         } catch (cacheErr) {
           logger.error("Failed to update metadata failure in cache", {
             id: data?.id,
-            error: (cacheErr as any).message,
+            error: (cacheErr as Error).message,
           });
         }
         throw err;

@@ -1,5 +1,6 @@
 import { generateApiKey } from "@/utils";
 import { prisma, cache } from "@workspace/lib";
+import { ApiKeyType } from "@workspace/types";
 
 export const createApiKey = async (payload: {
   userId: string;
@@ -38,7 +39,7 @@ export const getUserApiKeys = async (
 
   if (apiKeysInCache) {
     const res = JSON.parse(apiKeysInCache);
-    return res.filter((key: any) => {
+    return res.filter((key: ApiKeyType) => {
       if (options?.isActive) {
         return key.isActive;
       }

@@ -120,7 +120,7 @@ export function ActiveKeys({
   keys: ApiKeyType[] | [];
   loading: boolean;
   isError: boolean;
-  error: any;
+  error: unknown;
 }) {
   console.log(error);
   return (
@@ -158,7 +158,8 @@ export function ActiveKeys({
                   colSpan={7}
                   className="h-24 text-center text-destructive"
                 >
-                  {error?.response?.data?.message || "Something went wrong"}
+                  {(error as { response?: { data?: { message?: string } } })
+                    ?.response?.data?.message || "Something went wrong"}
                 </TableCell>
               </TableRow>
             )}

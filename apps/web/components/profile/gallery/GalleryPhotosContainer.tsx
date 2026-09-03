@@ -47,7 +47,7 @@ export function GalleryPhotosContainer() {
           },
         };
       }),
-    [pictures],
+    [pictures, setOpen],
   );
 
   if (isLoading) {
@@ -62,8 +62,8 @@ export function GalleryPhotosContainer() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p className="text-destructive">
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {(error as any).response?.data?.message || "Something went wrong"}
+          {(error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "Something went wrong"}
         </p>
       </div>
     );

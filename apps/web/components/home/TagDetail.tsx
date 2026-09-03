@@ -36,6 +36,7 @@ export function TagDetail({
     <div className="relative flex min-h-[18rem] md:min-h-[20rem] w-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-border/40 bg-card/40 px-6 py-10 mb-10 text-center shadow-xl backdrop-blur-xl">
       {bgImage && (
         <div className="absolute inset-0 -z-10 overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={bgImage}
             alt={tagName}

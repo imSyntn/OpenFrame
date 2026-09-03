@@ -15,7 +15,6 @@ import {
   collectionUpdateSchema,
 } from "@workspace/schema/collection";
 import { ErrorWithStatus } from "@/middleware";
-import { logger } from "@workspace/lib";
 
 export const getCollectionController = async (
   req: Request,

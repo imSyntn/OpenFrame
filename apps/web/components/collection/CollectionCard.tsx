@@ -55,6 +55,7 @@ export function CollectionCard({
       onClick={() => setOpenCollectionModal(collection)}
     >
       <div className="relative h-40 w-full overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cover}
           alt={collection.title}
@@ -63,6 +64,7 @@ export function CollectionCard({
 
         <div className="absolute bottom-2 right-2 flex items-center h-8 w-8">
           {previewImages.slice(0, 3).map((img, i) => (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               key={i}
               src={img}

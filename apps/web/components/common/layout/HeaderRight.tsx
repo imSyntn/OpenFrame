@@ -21,28 +21,34 @@ import { LogIn, Upload, UserPlus } from "lucide-react";
 import { useLogout, useRefreshToken } from "@/hooks";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useShallow } from "zustand/react/shallow";
 
 export function HeaderRight() {
   const { data, isLoading, isError } = useRefreshToken();
   const { mutate: logoutHandler, isPending: isLogoutPending } = useLogout();
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const id = useUserStore((state) => state.id);
-  const avatar = useUserStore((state) => state.avatar);
-  const name = useUserStore((state) => state.name);
-  const setUser = useUserStore((state) => state.setUser);
+  const { isLoggedIn, id, avatar, name, setUser } = useUserStore(
+    useShallow((state) => ({
+      isLoggedIn: state.isLoggedIn,
+      id: state.id,
+      avatar: state.avatar,
+      name: state.name,
+      setUser: state.setUser,
+    })),
+  );
 
   const router = useRouter();
   const params = useSearchParams();
 
-  const idParam = params.get("id");
-  const nameParam = params.get("name");
-  const emailParam = params.get("email");
-  const avatarParam = params.get("avatar");
-  const accessToken = params.get("accessToken");
-
   useEffect(() => {
-    if (!isLoggedIn && idParam && emailParam && nameParam && accessToken) {
-      console.log(idParam, nameParam, emailParam);
+    if (isLoggedIn) return;
+
+    const idParam = params.get("id");
+    const nameParam = params.get("name");
+    const emailParam = params.get("email");
+    const avatarParam = params.get("avatar");
+    const accessToken = params.get("accessToken");
+
+    if (idParam && emailParam && nameParam && accessToken) {
       setUser({
         id: idParam,
         name: nameParam,
@@ -57,15 +63,7 @@ export function HeaderRight() {
       );
       router.replace(`?${newParams.toString()}`);
     }
-  }, [
-    isLoggedIn,
-    idParam,
-    nameParam,
-    emailParam,
-    avatarParam,
-    accessToken,
-    avatar,
-  ]);
+  }, [isLoggedIn, params, router, setUser, avatar]);
 
   useEffect(() => {
     if (data && !isLoading && !isError && !isLoggedIn) {
@@ -74,7 +72,7 @@ export function HeaderRight() {
         isLoggedIn: true,
       });
     }
-  }, [data, isLoading, isError, isLoggedIn]);
+  }, [data, isLoading, isError, isLoggedIn, setUser]);
 
   if (isLoading) {
     return (

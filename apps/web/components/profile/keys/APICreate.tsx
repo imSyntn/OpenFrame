@@ -58,7 +58,7 @@ export function APICreate({ children }: { children: ReactNode }) {
               <Button
                 size="icon"
                 variant="outline"
-                onClick={() => copyToClipboard(data?.data?.apiKey.key!)}
+                onClick={() => copyToClipboard(String(data?.data?.apiKey.key))}
               >
                 <Copy className="size-4" />
               </Button>
@@ -79,11 +79,22 @@ export function APICreate({ children }: { children: ReactNode }) {
 
             {isError && (
               <FieldError
-                errors={
-                  error?.response?.data?.message
-                    ? [error.response.data.message]
-                    : error?.response?.data?.errors || ["Validation failed"]
-                }
+                errors={(() => {
+                  const err = error as {
+                    response?: {
+                      data?: { message?: string; errors?: string[] };
+                    };
+                  };
+                  if (err?.response?.data?.message) {
+                    return [{ message: err.response.data.message }];
+                  }
+                  if (err?.response?.data?.errors?.length) {
+                    return err.response.data.errors.map((msg) => ({
+                      message: msg,
+                    }));
+                  }
+                  return [{ message: "Validation failed" }];
+                })()}
               />
             )}
           </Field>

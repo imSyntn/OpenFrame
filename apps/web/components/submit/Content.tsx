@@ -58,16 +58,16 @@ export function Content() {
         });
         setUploadedUrl(fileUrl);
         setPictureId(id);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
-        toast.error(error?.response?.data?.message || "Failed to upload image");
+        const err = error as { response?: { data?: { message?: string } } };
+        toast.error(err?.response?.data?.message || "Failed to upload image");
       } finally {
         setIsUploading(false);
       }
     };
     uploadImage();
-  }, [file]);
+  }, [file, getUploadUrl]);
 
   useEffect(() => {
     if (uploadedUrl) {
@@ -88,7 +88,7 @@ export function Content() {
       };
       handleClassification();
     }
-  }, [uploadedUrl]);
+  }, [classifyImage, uploadedUrl]);
 
   const cancelUpload = () => {
     setFile(null);
@@ -102,6 +102,7 @@ export function Content() {
       <div className="w-full max-w-4xl border rounded-xl overflow-hidden bg-muted/10">
         {file ? (
           <div className="relative flex flex-col items-center p-4 group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={URL.createObjectURL(file)}
               alt="preview"

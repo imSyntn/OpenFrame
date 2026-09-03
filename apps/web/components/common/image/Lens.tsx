@@ -44,10 +44,6 @@ export function Lens({
     throw new Error("lensSize must be greater than 0");
   }
 
-  if (!show) {
-    return <>{children}</>;
-  }
-
   const currentPosition = useMemo(() => {
     if (isStatic) return position;
     if (defaultPosition && !isHovering) return defaultPosition;
@@ -113,6 +109,10 @@ export function Lens({
     zoomFactor,
     children,
   ]);
+
+  if (!show) {
+    return <>{children}</>;
+  }
 
   return (
     <div

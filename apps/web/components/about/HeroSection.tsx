@@ -76,6 +76,7 @@ export function HeroSection() {
 
             <div className="relative overflow-hidden rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent z-10 pointer-events-none" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://res.cloudinary.com/dqn1hcl8c/image/upload/v1778582808/about_jxwp6r.jpg"
                 alt="OpenFrame Hero Showcase"

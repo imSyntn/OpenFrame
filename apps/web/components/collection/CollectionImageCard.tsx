@@ -50,6 +50,7 @@ export function CollectionImageCard({
     <div className="group relative rounded-xl overflow-hidden border bg-muted shadow-sm hover:shadow-lg transition-all duration-300">
       <Link href={`/picture/${item.pic_id}`} onClick={handleViewPicture}>
         <div className="relative aspect-square overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={img?.url}
             alt={item.picture.title}

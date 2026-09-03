@@ -25,7 +25,7 @@ export function AnimatedImage({
 }: AnimatedImageProps) {
   return (
     <motion.img
-      initial={{ scale: initialScale, opacity: 0 }}
+      initial={{ scale: initialScale, opacity: 0.3 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{
         duration,

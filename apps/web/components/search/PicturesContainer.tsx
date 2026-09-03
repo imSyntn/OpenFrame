@@ -17,12 +17,25 @@ export function PicturesContainer({ pictures }: { pictures: PictureMatch[] }) {
         blurhash: pic.content.blurhash,
         // user: pic.user,
         key: pic.id.toString(),
-        onClick: () => {
-          router.push(`/picture/${pic.id}`);
-        },
+        // onClick: () => {
+        //   router.push(`/picture/${pic.id}`);
+        // },
       })),
     [pictures],
   );
 
-  return <MasonryLayout photos={photos} />;
+  const handleDelagation = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const element = target.closest<HTMLElement>("[data-id]");
+    if (!element) return;
+    const id = element?.dataset.id;
+    if (!id) return;
+    router.push(`/picture/${id}`);
+  };
+
+  return (
+    <div onClick={handleDelagation}>
+      <MasonryLayout photos={photos} />
+    </div>
+  );
 }

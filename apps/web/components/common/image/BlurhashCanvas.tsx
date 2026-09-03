@@ -20,6 +20,8 @@ import { copyToClipboard } from "@/utils";
 import { Button } from "@workspace/ui/components/button";
 import { Copy } from "lucide-react";
 
+const decodeWidth = 32;
+
 export function BlurHashCanvasComponent({
   hash,
   width,
@@ -32,7 +34,6 @@ export function BlurHashCanvasComponent({
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const decodeWidth = 32;
   const decodeHeight = useMemo(
     () => Math.round((height / width) * decodeWidth),
     [height, width],
@@ -44,7 +45,7 @@ export function BlurHashCanvasComponent({
     } catch {
       return decode("LKO2?U%2Tw=w]~RBVZRi};RPxuwH", decodeWidth, decodeHeight);
     }
-  }, [hash, decodeHeight, decodeWidth]);
+  }, [hash, decodeHeight]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -59,7 +60,7 @@ export function BlurHashCanvasComponent({
     const imageData = ctx.createImageData(decodeWidth, decodeHeight);
     imageData.data.set(pixels);
     ctx.putImageData(imageData, 0, 0);
-  }, [hash, width, height]);
+  }, [decodeHeight, pixels]);
 
   return (
     <div
@@ -140,13 +141,14 @@ function PhotoWithBlurHashComponent({
         <LazyLoadImage
           src={photo.src}
           alt={photo.alt ?? ""}
+          data-id={photo.key}
           onLoad={() => setLoaded(true)}
           className={cn(
             "w-full h-full object-contain  transition-all duration-500",
             loaded ? "opacity-100 cursor-pointer" : "opacity-0",
             hoverEffect && "group-hover:scale-105",
           )}
-          onClick={photo.onClick}
+          // onClick={photo.onClick}
         />
       </Lens>
       {hoverEffect && (

@@ -3,7 +3,7 @@ import { GenerationResult } from "@/@types";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent, CardHeader } from "@workspace/ui/components/card";
-import { Check, Copy, Dot, Download } from "lucide-react";
+import { Check, Copy, Download } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { useImageDownloader } from "use_image_downloader";
@@ -27,12 +27,14 @@ export function Result({ result }: { result: GenerationResult }) {
       await downloadImage(URL, fileName);
       toast.success("Image downloaded successfully", { id: toastID });
     } catch (error) {
+      console.error(error);
       toast.error("Failed to download image", { id: toastID });
     }
   };
 
   return (
     <div className="group relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`data:image/png;base64,${result.image}`}
         alt={result.prompt}
@@ -44,7 +46,7 @@ export function Result({ result }: { result: GenerationResult }) {
 
         <div className="space-y-2">
           <p className="text-xs text-white/90 line-clamp-2 font-medium drop-shadow">
-            "{result.prompt}"
+            &quot;{result.prompt}&quot;
           </p>
 
           <div className="flex items-center gap-2 pt-1">

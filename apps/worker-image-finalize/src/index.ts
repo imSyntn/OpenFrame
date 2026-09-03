@@ -8,7 +8,7 @@ import type {
   VariantsCacheType,
 } from "@workspace/types";
 
-const REQUIRED_STEPS = ["metadata", "blurhash", "dominant_color", "variants"];
+// const REQUIRED_STEPS = ["metadata", "blurhash", "dominant_color", "variants"];
 
 const consumer = kafka.consumer({ groupId: "worker-image-finalize" });
 
@@ -21,6 +21,7 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ message, topic, partition }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let data: any;
 
       try {
@@ -30,6 +31,7 @@ const run = async () => {
           topic,
           partition,
           value: message.value?.toString(),
+          err,
         });
         return;
       }

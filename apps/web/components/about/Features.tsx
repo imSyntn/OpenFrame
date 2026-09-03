@@ -140,6 +140,7 @@ export function TechStackCard() {
               className="group flex flex-col items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 p-1.5 transition-all duration-300 hover:bg-secondary/60 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 cursor-default"
             >
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#171717]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={tech.img} alt={tech.name} />
               </div>
               <span className="text-[11px] font-semibold text-center leading-tight text-muted-foreground group-hover:text-foreground transition-colors">

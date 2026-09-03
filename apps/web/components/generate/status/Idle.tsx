@@ -31,15 +31,15 @@ export function Idle() {
         <Card className="text-left p-3 gap-2">
           <CardHeader className="text-[11px] p-0">Pro Tip #1</CardHeader>
           <CardDescription className="text-[11px]">
-            Use "Enhance" to automatically expand your prompt with camera &
-            lighting details.
+            Use &quot;Enhance&quot; to automatically expand your prompt with
+            camera & lighting details.
           </CardDescription>
         </Card>
         <Card className="text-left p-2 gap-2">
           <CardHeader className="text-[11px] p-0">Pro Tip #2</CardHeader>
           <CardDescription className="text-[11px]">
-            Click "Surprise Me" for curated prompts ready to render with styles
-            and settings.
+            Click &quot;Surprise Me&quot; for curated prompts ready to render
+            with styles and settings.
           </CardDescription>
         </Card>
       </div>

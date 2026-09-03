@@ -24,9 +24,10 @@ export function AnimatedSection({
   ...props
 }: AnimatedSectionProps) {
   const getInitial = () => {
-    const initial: { opacity: number; x?: number; y?: number; scale?: number } = {
-      opacity: 0,
-    };
+    const initial: { opacity: number; x?: number; y?: number; scale?: number } =
+      {
+        opacity: 0,
+      };
     if (direction === "up") initial.y = 35;
     if (direction === "down") initial.y = -35;
     if (direction === "left") initial.x = 35;
@@ -39,7 +40,7 @@ export function AnimatedSection({
     <motion.div
       initial={getInitial()}
       whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: viewportMargin as any }}
+      viewport={{ once: true, margin: viewportMargin }}
       transition={{
         duration,
         delay,

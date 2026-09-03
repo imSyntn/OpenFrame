@@ -21,10 +21,11 @@ export function useGenerateImage() {
       setStatus("success");
       setCurrentResult(result.data);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       setStatus("error");
+      const err = error as { response?: { data?: { message?: string } } };
       setError(
-        error?.response?.data?.message ||
+        err?.response?.data?.message ||
           "We encountered an issue creating your image. Please check your settings or try again in a moment.",
       );
     },

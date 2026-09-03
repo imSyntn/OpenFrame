@@ -1,4 +1,3 @@
-import { logger } from "@workspace/lib/logger";
 import { prisma } from "@workspace/lib/prisma";
 import type { EngagementEventType } from "@workspace/types";
 
@@ -32,7 +31,7 @@ function aggregateWithUserID(
   return Array.from(map.entries());
 }
 
-async function runBulk(
+async function runBulk( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tx: any,
   entries: [string, number][],
   column: "views" | "downloads" | "likes",

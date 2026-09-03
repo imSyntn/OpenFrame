@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsup",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +25,7 @@
     "@types/node": "^25.3.5",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
+    "@workspace/eslint-config": "workspace:^",
     "@workspace/types": "workspace:*",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

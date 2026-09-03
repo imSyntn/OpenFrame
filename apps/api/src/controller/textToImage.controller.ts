@@ -2,7 +2,6 @@ import { createImage, createPicture, getPictureUploadUrl } from "@/service";
 import { extractTitleAndTagsFromPrompt } from "@/utils";
 import { ImageGenerateSchema } from "@workspace/schema/index";
 import type { NextFunction, Request, Response } from "express";
-import { string } from "zod/v4";
 
 export const createImageController = async (
   req: Request,

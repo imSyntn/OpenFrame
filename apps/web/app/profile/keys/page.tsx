@@ -28,7 +28,7 @@ export default function KeysPage() {
     if (isLoggedIn && userProfileLoading && userId) {
       redirect(`/profile/${userId}`);
     }
-  }, [isLoggedIn, userProfileLoading]);
+  }, [isLoggedIn, userProfileLoading, userId]);
 
   const keys = data?.data?.keys ?? [];
 

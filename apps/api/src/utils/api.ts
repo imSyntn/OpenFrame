@@ -1,4 +1,3 @@
-import { logger } from "@workspace/lib";
 import crypto from "crypto";
 
 export const generateApiKey = () => {

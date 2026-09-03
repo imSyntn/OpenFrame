@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { ImageResultViewport } from "./ImageResultViewport";
 import { Card } from "@workspace/ui/components/card";
 import { ImageGenerateForm } from "./ImageGenerateForm";

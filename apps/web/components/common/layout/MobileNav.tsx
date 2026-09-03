@@ -36,6 +36,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 export function MobileNav({ items }: { items: NavItem[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const navContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,9 +54,10 @@ export function MobileNav({ items }: { items: NavItem[] }) {
     };
   }, []);
 
-  useEffect(() => {
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileMenuOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (mobileMenuOpen) {

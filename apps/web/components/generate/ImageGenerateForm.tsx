@@ -7,27 +7,15 @@ import {
   Dices,
   ChevronUp,
   ChevronDown,
-  Ratio,
-  SlidersHorizontal,
   Eye,
   EyeOff,
   Zap,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
-  ASPECT_RATIOS,
-  DEAFULT_ASPECT_RATIO,
-  DEFAULT_FORMAT,
   DEFAULT_MODEL,
   MODELS,
   DEFAULT_STYLE,
-  FORMATS,
-  DEFAULT_CFG,
-  DEFAULT_STEPS,
-  MAX_CFG,
-  MIN_CFG,
-  MAX_STEPS,
-  MIN_STEPS,
   SAMPLE_PROMPTS,
   ENHANCERS,
 } from "@workspace/constants";
@@ -37,7 +25,7 @@ import { STYLES } from "@workspace/constants";
 import { cn } from "@workspace/ui/lib/utils";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Switch } from "@workspace/ui/components/switch";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FieldDescription,
@@ -54,7 +42,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import { Slider } from "@workspace/ui/components/slider";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -80,10 +67,8 @@ function GroupHeader({
 export function ImageGenerateForm() {
   const [showNegative, setShowNegative] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const {
     register,
-    watch,
     handleSubmit,
     control,
     setValue,
@@ -101,9 +86,9 @@ export function ImageGenerateForm() {
   const { mutateAsync, isPending } = useGenerateImage();
   const status = useImageGenerationStore((state) => state.status);
 
-  const prompt = watch("prompt");
-  const selectedStyleId = watch("artStyle");
-  const isPublic = watch("public");
+  const prompt = useWatch({ control, name: "prompt" }) || "";
+  const selectedStyleId = useWatch({ control, name: "artStyle" });
+  const isPublic = useWatch({ control, name: "public" });
 
   const handleSurpriseMe = useCallback(() => {
     const randomPrompt =
@@ -132,13 +117,14 @@ export function ImageGenerateForm() {
 
   const onSubmit = handleSubmit(async (e) => {
     try {
-    } catch (error: any) {
-      const message = error?.response?.data?.message;
+      await mutateAsync(e);
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      const message = err?.response?.data?.message;
       if (message) {
         setError("root", { type: "manual", message });
       }
     }
-    await mutateAsync(e);
   });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

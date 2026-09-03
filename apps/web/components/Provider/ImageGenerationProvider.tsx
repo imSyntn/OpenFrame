@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { useStore } from "zustand";
 import {
   createImageGenerationStore,
@@ -14,14 +14,10 @@ const ImageGenerationContext = createContext<ImageGenerationStoreApi | null>(
 );
 
 export function ImageGenerationProvider({ children }: { children: ReactNode }) {
-  const storeRef = useRef<ImageGenerationStoreApi>(null);
-
-  if (!storeRef.current) {
-    storeRef.current = createImageGenerationStore();
-  }
+  const [store] = useState(() => createImageGenerationStore());
 
   return (
-    <ImageGenerationContext.Provider value={storeRef.current}>
+    <ImageGenerationContext.Provider value={store}>
       {children}
     </ImageGenerationContext.Provider>
   );

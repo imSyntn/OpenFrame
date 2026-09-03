@@ -3,7 +3,7 @@ import { searchPictures, searchTags, searchUsers } from "@/service";
 import { cache } from "@workspace/lib/redis";
 import { NextFunction, Request, Response } from "express";
 
-const setCache = async (key: string, prefixKey: string, value: any) => {
+const setCache = async (key: string, prefixKey: string, value: unknown) => {
   await cache.set(key, JSON.stringify(value), "EX", 60 * 60 * 24);
   await cache.set(prefixKey, JSON.stringify(value), "EX", 60 * 60 * 24);
 };

@@ -44,8 +44,8 @@ export function HeroSection() {
 
       <AnimatedSection direction="up" delay={0.25}>
         <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-          The internet's source of freely usable images. Powered by creators
-          everywhere.
+          The internet&apos;s source of freely usable images. Powered by
+          creators everywhere.
         </p>
       </AnimatedSection>
 

@@ -24,8 +24,6 @@ import {
   LucideIcon,
   SettingsIcon,
   BadgeCheck,
-  Loader2Icon,
-  Check,
 } from "lucide-react";
 import { useUserStore } from "@/store";
 import {
@@ -46,8 +44,8 @@ import {
 import { ErrorOccured } from "../common";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
-import { toast } from "sonner";
 import { useProfileStore } from "../Provider";
+import { useShallow } from "zustand/react/shallow";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -85,7 +83,19 @@ export function HeroSection({ id }: { id: string }) {
     email,
     is_verified,
     metrics,
-  } = useProfileStore((state) => state);
+  } = useProfileStore(
+    useShallow((state) => ({
+      setData: state.setData,
+      avatar: state.avatar,
+      name: state.name,
+      location: state.location,
+      bio: state.bio,
+      links: state.links,
+      email: state.email,
+      is_verified: state.is_verified,
+      metrics: state.metrics,
+    })),
+  );
   const { data, isLoading, error, isError, refetch } = useUserDetails(id);
 
   const isOwner = loggedInUserID === id;
@@ -97,17 +107,18 @@ export function HeroSection({ id }: { id: string }) {
         isLoading: false,
       });
     }
-  }, [isLoading, isError, data]);
+  }, [isLoading, isError, data, setData]);
 
   if (isError) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((error as any)?.response?.status === 404) {
+    const err = error as {
+      response?: { status?: number; data?: { message?: string } };
+    };
+    if (err?.response?.status === 404) {
       return notFound();
     }
     return (
       <ErrorOccured
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        title={(error as any)?.response?.data?.message}
+        title={err?.response?.data?.message}
         onClick={() => refetch()}
       />
     );

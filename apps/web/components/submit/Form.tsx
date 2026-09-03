@@ -1,4 +1,5 @@
 import React, { memo, useEffect } from "react";
+import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { pictureSchema } from "@workspace/schema/picture";
@@ -51,7 +52,6 @@ function FormComponent({
     handleSubmit,
     control,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(pictureSchema),
@@ -68,20 +68,19 @@ function FormComponent({
       setValue("url", uploadedUrl, { shouldValidate: true });
       setValue("pictureId", pictureId, { shouldValidate: true });
     }
-  }, [uploadedUrl, pictureId]);
+  }, [uploadedUrl, pictureId, setValue]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const submit = async (data: any) => {
+  const submit = async (data: z.infer<typeof pictureSchema>) => {
     try {
       await createPictureUpload(data);
       toast.success("Picture uploaded successfully", {
         description: "Picture is being processed. It will take a few minutes.",
       });
       router.push(`/profile/${userId}`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Failed to upload image");
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err?.response?.data?.message || "Failed to upload image");
     }
   };
 

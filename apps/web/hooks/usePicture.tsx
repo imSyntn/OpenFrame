@@ -20,7 +20,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { da } from "date-fns/locale";
 import { toast } from "sonner";
 
 export const useGetPictures = (id: string) => {
@@ -87,14 +86,12 @@ export const useClassifyImage = () => {
         });
       }
     },
-    onError: (error: any, _, context) => {
+    onError: (error: unknown, _, context) => {
       const toastId = context?.toastId;
-      toast.error(
-        error?.response?.data?.message || "Failed to classify image",
-        {
-          id: toastId,
-        },
-      );
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err?.response?.data?.message || "Failed to classify image", {
+        id: toastId,
+      });
     },
   });
 };

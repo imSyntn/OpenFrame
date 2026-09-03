@@ -31,7 +31,7 @@ const uploadImage = async (buffer: Buffer, key: string) => {
   await s3.send(command);
   return `https://${process.env.AWS_BUCKET_NAME}.${process.env.AWS_ENDPOINT_URL_S3?.split("https://")[1]}/${key}`;
 };
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const uploadVariants = async (imageId: string, variants: any[]) => {
   return Promise.all(
     variants.map(async (v) => {
