@@ -5,7 +5,7 @@ export type LicenseType =
   | "CC_BY_NC_4_0"
   | "CC0_1_0";
 
-enum Resolution {
+export enum Resolution {
   ORIGINAL = "ORIGINAL",
   LARGE = "LARGE",
   MEDIUM = "MEDIUM",

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface UserStore {
+export interface UserStore {
   isLoggedIn: boolean;
   email: string;
   id: string;
