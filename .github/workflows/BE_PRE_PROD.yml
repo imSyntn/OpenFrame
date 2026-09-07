@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build packages
+        run: |
+          pnpm --filter @workspace/schema run build
+          pnpm --filter @workspace/lib run build
+          pnpm --filter @workspace/constants run build
+
       - name: Run linter
         run: pnpm --filter backend run lint
 
