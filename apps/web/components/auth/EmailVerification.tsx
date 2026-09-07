@@ -7,6 +7,21 @@ export function EmailVerification() {
   const params = useSearchParams();
   const token = params.get("token");
   const { isLoading, isError } = useVerifyEmailToken(token!);
+
+  if (!token) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center space-y-6 py-10">
+        <XCircle className="h-14 w-14 text-destructive" />
+        <div className="space-y-2">
+          <h1 className="text-xl font-semibold">No token provided</h1>
+          <p className="text-sm text-muted-foreground">
+            Please provide a token to verify your email address.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center text-center space-y-6 py-10">
       {isLoading && (

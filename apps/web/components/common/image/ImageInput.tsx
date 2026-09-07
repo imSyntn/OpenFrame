@@ -71,6 +71,7 @@ export function ImageInput({
           accept=".png,.jpeg,.jpg"
           onChange={handleImageChange}
           className="hidden"
+          name="Choose Image"
           ref={inputRef}
         />
 

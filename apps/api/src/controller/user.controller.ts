@@ -1,9 +1,5 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import {
-  GoogleUserType,
-  UserTypeDB,
-  UserTypeUnregistered,
-} from "@workspace/types";
+import { UserTypeDB, UserTypeUnregistered } from "@workspace/types";
 import {
   generateAccessToken,
   generateOtp,

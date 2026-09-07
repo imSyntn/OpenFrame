@@ -65,7 +65,7 @@ export function OwnerInfo({ id }: { id: string }) {
             >
               <Avatar className="w-10 h-10">
                 <AvatarImage src={data?.avatar} alt={data?.name} />
-                <AvatarFallback>{data?.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{data?.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
                 <p className="font-semibold flex items-center gap-1">
@@ -85,7 +85,7 @@ export function OwnerInfo({ id }: { id: string }) {
               <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12">
                   <AvatarImage src={data?.avatar} alt={data?.name} />
-                  <AvatarFallback>{data?.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback>{data?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
 
                 <div>

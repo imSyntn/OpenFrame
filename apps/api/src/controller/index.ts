@@ -4,3 +4,4 @@ export * from "./collection.controller";
 export * from "./search.controller";
 export * from "./report.controller";
 export * from "./api.controller";
+export * from "./textToImage.controller";

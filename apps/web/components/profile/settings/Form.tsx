@@ -1,5 +1,4 @@
 import React from "react";
-import { useProfileStore } from "@/store";
 import {
   Avatar,
   AvatarFallback,
@@ -8,7 +7,7 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { settingSchema } from "@/schema";
 import { useDeleteUser, useUpdateUserDetails } from "@/hooks";
@@ -18,10 +17,11 @@ import { Field, FieldLabel, FieldSet } from "@workspace/ui/components/field";
 import { ChangeAvatar } from "./ChangeAvatar";
 import { useRouter } from "next/navigation";
 import { WarningModal } from "@/components/common";
+import { useProfileStore } from "@/components/Provider";
 
 export function Form({ handleClose }: { handleClose: () => void }) {
   const { name, avatar, bio, location, email, joined_at, links, id, setData } =
-    useProfileStore();
+    useProfileStore((state) => state);
   const { mutateAsync, isPending } = useUpdateUserDetails(id);
   const { mutateAsync: deleteUser, isPending: isDeleting } = useDeleteUser();
   const router = useRouter();
@@ -29,7 +29,6 @@ export function Form({ handleClose }: { handleClose: () => void }) {
     register,
     handleSubmit,
     control,
-    watch,
     setValue,
     formState: { errors },
   } = useForm({
@@ -86,7 +85,8 @@ export function Form({ handleClose }: { handleClose: () => void }) {
     setValue("avatar", avatar);
   };
 
-  const avatarSrc = watch("avatar") || avatar;
+  const avatarWatch = useWatch({ control, name: "avatar" });
+  const avatarSrc = avatarWatch || avatar;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

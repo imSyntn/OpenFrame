@@ -12,6 +12,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3client";
 import { UnderProcessingPictureType } from "@workspace/types";
 import { deletePictureIndex } from "./indexing.service";
+import { getModel, tfjs } from "@/utils";
 
 export const getUserPictures = async (id: string, lastId: string | null) => {
   const cacheKey = `user:pictures:${id}:${lastId || "-1"}`;
@@ -180,11 +181,15 @@ export const getPictureUploadUrl = async (
   type: string,
   size: number,
   isAvatar: boolean,
+  folder?: string,
+  idPrefix?: string,
 ) => {
-  const id = nanoid();
+  const id = idPrefix ? `${idPrefix}-${nanoid()}` : nanoid();
   const Key = isAvatar
     ? `avatars/${id}.${type.split("/")[1]}`
-    : `pictures/${id}.${type.split("/")[1]}`;
+    : folder
+      ? `${folder}/${id}.${type.split("/")[1]}`
+      : `pictures/${id}.${type.split("/")[1]}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,
@@ -201,15 +206,44 @@ export const getPictureUploadUrl = async (
   return { uploadUrl, fileUrl, id };
 };
 
-export const getPictureTags = async () => {
-  const availableInCache = await cache.get("pictures:tags");
+export const classifyPicture = async (fileUrl: string) => {
+  const model = await getModel();
+
+  const response = await fetch(fileUrl);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const imageBuffer = Buffer.from(arrayBuffer);
+
+  const image = tfjs.node.decodeImage(imageBuffer, 3);
+
+  try {
+    const predictions = await model.classify(image);
+
+    return predictions;
+  } finally {
+    image.dispose();
+  }
+};
+
+export const getPictureTags = async (getAllTags: boolean = false) => {
+  const key = `pictures:tags${getAllTags ? ":all" : ""}`;
+  const availableInCache = await cache.get(key);
 
   if (availableInCache) {
     return JSON.parse(availableInCache);
   }
 
   const tags = await prisma.tag.findMany({
-    take: 20,
+    take: getAllTags ? undefined : 20,
+    orderBy: {
+      pictures: {
+        _count: "desc",
+      },
+    },
     include: {
       pictures: {
         take: 1,
@@ -232,7 +266,7 @@ export const getPictureTags = async () => {
       "https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718348/7b334c62-d5bc-4fa4-9eaa-db2232c57fd6_kgtvdp.jpg",
   }));
 
-  await cache.set("tags", JSON.stringify(formattedTags), "EX", 60 * 60 * 24);
+  await cache.set(key, JSON.stringify(formattedTags), "EX", 60 * 60 * 24);
 
   return formattedTags;
 };
@@ -300,7 +334,7 @@ export const createPicture = async (
   url: string,
   userId: string,
   pictureId: string,
-  license: Licenses,
+  license?: Licenses,
 ) => {
   const newPicture: UnderProcessingPictureType = {
     id: pictureId,
@@ -312,7 +346,7 @@ export const createPicture = async (
     stepsCompleted: [],
     created_at: new Date().toISOString(),
     userId,
-    license,
+    license: license || "CC0_1_0",
   };
 
   await cache.hset(

@@ -10,86 +10,85 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { Form } from "./Form";
 import { MAX_PICTURE_SIZE } from "@workspace/constants";
-import { useGetUploadUrl } from "@/hooks";
+import { useClassifyImage, useGetUploadUrl } from "@/hooks";
 import { toast } from "sonner";
 import axios from "axios";
-import { isNSFW } from "@/lib";
 
 export function Content() {
   const [file, setFile] = useState<File | null>(null);
+  const [allowUpload, setAllowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [uploadedUrl, setUploadedUrl] = useState("");
   const [pictureId, setPictureId] = useState("");
   const { mutateAsync: getUploadUrl } = useGetUploadUrl();
+  const { mutateAsync: classifyImage } = useClassifyImage();
   const controllerRef = useRef<AbortController | null>(null);
 
-  const checkNFSWContent = async () => {
-    if (!file) return;
+  useEffect(() => {
+    const uploadImage = async () => {
+      if (!file) return;
+      setIsUploading(true);
+      controllerRef.current = new AbortController();
+      try {
+        const { type, size } = file;
 
-    let toastId: string | number | undefined;
+        const { uploadUrl, fileUrl, id } = await getUploadUrl({
+          type,
+          size,
+        });
 
-    try {
-      toastId = toast.loading("Checking NSFW content");
-      const result = await isNSFW(file);
+        if (!uploadUrl) {
+          toast.error("Failed to get upload url");
+          return;
+        }
 
-      if (result) {
-        toast.error("Image contains NSFW content", { id: toastId });
-        setFile(null);
-        return;
+        await axios.put(uploadUrl, file, {
+          headers: {
+            "Content-Type": type,
+          },
+          signal: controllerRef.current.signal,
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / (progressEvent.total || 1),
+            );
+
+            setProgress(percentCompleted);
+          },
+        });
+        setUploadedUrl(fileUrl);
+        setPictureId(id);
+      } catch (error) {
+        console.log(error);
+        const err = error as { response?: { data?: { message?: string } } };
+        toast.error(err?.response?.data?.message || "Failed to upload image");
+      } finally {
+        setIsUploading(false);
       }
-      toast.dismiss(toastId);
-      uploadImage();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to check NSFW", { id: toastId });
-    }
-  };
+    };
+    uploadImage();
+  }, [file, getUploadUrl]);
 
   useEffect(() => {
-    checkNFSWContent();
-  }, [file]);
-
-  const uploadImage = async () => {
-    if (!file) return;
-    setIsUploading(true);
-    controllerRef.current = new AbortController();
-    try {
-      const { type, size } = file;
-
-      const { uploadUrl, fileUrl, id } = await getUploadUrl({
-        type,
-        size,
-      });
-
-      if (!uploadUrl) {
-        toast.error("Failed to get upload url");
-        return;
-      }
-
-      await axios.put(uploadUrl, file, {
-        headers: {
-          "Content-Type": type,
-        },
-        signal: controllerRef.current.signal,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent.total || 1),
-          );
-
-          setProgress(percentCompleted);
-        },
-      });
-      setUploadedUrl(fileUrl);
-      setPictureId(id);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error?.response?.data?.message || "Failed to upload image");
-    } finally {
-      setIsUploading(false);
+    if (uploadedUrl) {
+      const handleClassification = async () => {
+        try {
+          const { data } = await classifyImage({ fileUrl: uploadedUrl });
+          if (data?.isNsfw) {
+            setFile(null);
+            setProgress(0);
+            setUploadedUrl("");
+            setPictureId("");
+          } else {
+            setAllowUpload(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      handleClassification();
     }
-  };
+  }, [classifyImage, uploadedUrl]);
 
   const cancelUpload = () => {
     setFile(null);
@@ -103,6 +102,7 @@ export function Content() {
       <div className="w-full max-w-4xl border rounded-xl overflow-hidden bg-muted/10">
         {file ? (
           <div className="relative flex flex-col items-center p-4 group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
@@ -144,7 +144,11 @@ export function Content() {
         )}
       </div>
 
-      <Form uploadedUrl={uploadedUrl} pictureId={pictureId} />
+      <Form
+        uploadedUrl={uploadedUrl}
+        pictureId={pictureId}
+        allowUpload={allowUpload}
+      />
     </main>
   );
 }

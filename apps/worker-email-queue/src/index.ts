@@ -17,11 +17,12 @@ const run = async () => {
       let emailPayload: EmailTemplateGenerateType;
       try {
         emailPayload = JSON.parse(message.value?.toString() || "{}");
-      } catch (error) {
+      } catch (error: unknown) {
         logger.error("Invalid JSON", {
           topic,
           partition,
           value: message.value?.toString(),
+          error,
         });
         return;
       }

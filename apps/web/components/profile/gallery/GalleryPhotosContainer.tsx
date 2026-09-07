@@ -1,10 +1,11 @@
 import { GalleryPhoto } from "@/@types";
-import { useGlobalStateStore, useProfileStore } from "@/store";
+import { useGlobalStateStore } from "@/store";
 import React, { useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { MasonryLayout, NotFound } from "@/components/common";
 import { useGetPictures } from "@/hooks";
 import { ImageOff, Loader2 } from "lucide-react";
+import { useProfileStore } from "@/components/Provider";
 
 export function GalleryPhotosContainer() {
   const setOpen = useGlobalStateStore((state) => state.setOpen);
@@ -46,7 +47,7 @@ export function GalleryPhotosContainer() {
           },
         };
       }),
-    [pictures],
+    [pictures, setOpen],
   );
 
   if (isLoading) {
@@ -61,8 +62,8 @@ export function GalleryPhotosContainer() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <p className="text-destructive">
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {(error as any).response?.data?.message || "Something went wrong"}
+          {(error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "Something went wrong"}
         </p>
       </div>
     );

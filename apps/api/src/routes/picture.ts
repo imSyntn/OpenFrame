@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  classifyPictureController,
   createPictureController,
   deletePictureController,
   downloadPictureController,
@@ -53,6 +54,7 @@ pictureRouter.post(
   authMiddleware,
   getPictureUploadUrlController,
 );
+pictureRouter.post("/classify", authMiddleware, classifyPictureController);
 
 pictureRouter.post("/view/:id", viewPictureController);
 pictureRouter.post("/download/:id", downloadPictureController);

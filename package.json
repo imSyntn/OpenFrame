@@ -6,6 +6,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:migrate": "pnpm --filter @workspace/lib run db:migrate",
     "db:deploy": "pnpm --filter @workspace/lib run db:deploy",
@@ -20,6 +21,7 @@
     "@types/ioredis": "^5.0.0",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "eslint": "^10.9.1",
     "prettier": "^3.8.1",
     "tsup": "^8.5.1",
     "turbo": "^2.8.1",
@@ -33,5 +35,13 @@
     "dotenv": "^17.3.1",
     "ioredis": "^5.10.0",
     "tsx": "^4.21.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@tensorflow/tfjs-node"
+    ],
+    "onlyBuiltDependencies": [
+      "@tensorflow/tfjs-node"
+    ]
   }
 }
