@@ -36,7 +36,6 @@ jobs:
       - name: Build packages
         run: |
           pnpm --filter @workspace/schema run build
-          pnpm --filter @workspace/lib run build
           pnpm --filter @workspace/constants run build
 
       - name: Run linter
