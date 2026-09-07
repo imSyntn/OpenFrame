@@ -31,6 +31,7 @@ jobs:
 
       - name: Build packages
         run: |
+          pnpm db:generate
           pnpm --filter @workspace/schema run build
           pnpm --filter @workspace/lib run build
           pnpm --filter @workspace/constants run build
