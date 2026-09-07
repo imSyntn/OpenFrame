@@ -90,11 +90,11 @@ jobs:
           pnpm --filter @workspace/constants run build
 
       - name: Pull Vercel environment
-        working-directory: apps/web
+        # working-directory: apps/web
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Vercel artifacts
-        working-directory: apps/web
+        # working-directory: apps/web
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Preview
