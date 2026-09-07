@@ -59,15 +59,24 @@ jobs:
           script: |
             cd /root/OpenFrame
 
+            echo "Pulling latest code..."
             git pull origin pre-prod
 
+            echo "Installing dependencies..."
             pnpm install --frozen-lockfile
 
+            echo "Generating database..."
             pnpm db:generate
 
+            echo "Building packages..."
+            pnpm --filter @workspace/schema run build
+            pnpm --filter @workspace/lib run build
+            pnpm --filter @workspace/constants run build
             pnpm --filter backend run build
 
+            echo "Resetting tmux..."
             tmux kill-session -t backend || true
 
+            echo "Starting server..."
             tmux new-session -d -s backend \
               'pnpm --filter backend run start'
