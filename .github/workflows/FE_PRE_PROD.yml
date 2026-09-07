@@ -98,5 +98,4 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Preview
-        working-directory: apps/web
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
