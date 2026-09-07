@@ -1,4 +1,5 @@
 import {
+  classifyImage,
   createPictureUpload,
   deletePicture,
   getAllUploadsStatus,
@@ -63,6 +64,35 @@ export const useGetUploadUrl = () => {
       size: number;
       isAvatar?: boolean;
     }) => getPictureUploadUrl(type, size, isAvatar),
+  });
+};
+
+export const useClassifyImage = () => {
+  return useMutation({
+    mutationFn: ({ fileUrl }: { fileUrl: string }) => classifyImage(fileUrl),
+    onMutate: () => {
+      const toastId = toast.loading("Checking for NSFW content...");
+      return { toastId };
+    },
+    onSuccess: ({ data }, _, context) => {
+      const toastId = context?.toastId;
+      if (data?.isNsfw) {
+        toast.error("Image contains NSFW content", {
+          id: toastId,
+        });
+      } else {
+        toast.success("Image classified successfully", {
+          id: toastId,
+        });
+      }
+    },
+    onError: (error: unknown, _, context) => {
+      const toastId = context?.toastId;
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err?.response?.data?.message || "Failed to classify image", {
+        id: toastId,
+      });
+    },
   });
 };
 

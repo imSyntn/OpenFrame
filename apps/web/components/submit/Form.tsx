@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
+import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { pictureSchema } from "@workspace/schema/picture";
@@ -33,12 +34,14 @@ import { useUserStore } from "@/store";
 import { Licenses, LICENSES_MAP } from "@workspace/constants";
 import { LicenseSelector } from "./LicenseSelector";
 
-export function Form({
+function FormComponent({
   uploadedUrl,
   pictureId,
+  allowUpload,
 }: {
   uploadedUrl: string;
   pictureId: string;
+  allowUpload: boolean;
 }) {
   const { data: tags, isLoading, error } = useGetTags();
   const userId = useUserStore((state) => state.id);
@@ -49,7 +52,6 @@ export function Form({
     handleSubmit,
     control,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(pictureSchema),
@@ -66,20 +68,19 @@ export function Form({
       setValue("url", uploadedUrl, { shouldValidate: true });
       setValue("pictureId", pictureId, { shouldValidate: true });
     }
-  }, [uploadedUrl, pictureId]);
+  }, [uploadedUrl, pictureId, setValue]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const submit = async (data: any) => {
+  const submit = async (data: z.infer<typeof pictureSchema>) => {
     try {
       await createPictureUpload(data);
       toast.success("Picture uploaded successfully", {
         description: "Picture is being processed. It will take a few minutes.",
       });
       router.push(`/profile/${userId}`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Failed to upload image");
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err?.response?.data?.message || "Failed to upload image");
     }
   };
 
@@ -88,7 +89,6 @@ export function Form({
   }
 
   const availableLicenses = Object.values(LICENSES_MAP);
-  console.log(getValues("url"));
 
   return (
     <form
@@ -226,7 +226,7 @@ export function Form({
 
         <Button
           className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-medium transition hover:opacity-90 active:scale-[0.99]"
-          disabled={isPending}
+          disabled={!allowUpload || isPending}
         >
           {isPending ? "Uploading..." : "Upload Image"}
         </Button>
@@ -234,3 +234,5 @@ export function Form({
     </form>
   );
 }
+
+export const Form = memo(FormComponent);

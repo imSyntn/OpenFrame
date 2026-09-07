@@ -2,7 +2,7 @@
 
 import { AuthWrapper, LoginForm } from "@/components/auth";
 
-export default async function LoginPage() {
+export default function LoginPage() {
   return (
     <AuthWrapper>
       <LoginForm />

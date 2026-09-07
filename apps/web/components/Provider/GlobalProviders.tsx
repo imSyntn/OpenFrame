@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function GlobalProviders({ children }: { children: React.ReactNode }) {
   return (
     <NextThemesProvider
       attribute="class"

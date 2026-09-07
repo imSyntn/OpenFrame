@@ -5,15 +5,12 @@ import { ErrorOccured, MasonryLayout, NotFound } from "../common";
 import { GalleryPhoto } from "@/@types";
 import { useGlobalStateStore } from "@/store";
 import { useGetExplorePictures } from "@/hooks";
-// import { Button } from "@workspace/ui/components/button";
 import { CameraOff, Loader2 } from "lucide-react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { ImageSkeleton } from "./ImageSkeleton";
 
 export function MasonryGrid() {
-  const router = useRouter();
-  const pathname = usePathname();
   const params = useSearchParams();
   const setOpen = useGlobalStateStore((state) => state.setOpen);
 
@@ -73,9 +70,9 @@ export function MasonryGrid() {
           title: pic.title,
           created_at: pic.created_at,
           tags: pic.tags,
-          onClick: () => {
-            setOpen(true, pic);
-          },
+          // onClick: () => {
+          //   setOpen(true, pic);
+          // },
         };
       }),
     [pictures],
@@ -87,9 +84,8 @@ export function MasonryGrid() {
         Icon={CameraOff}
         title="No pictures found"
         description={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (error as any)?.response?.data?.message ||
-          "No pictures found matching your criteria."
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "No pictures found matching your criteria."
         }
       />
     );
@@ -98,24 +94,30 @@ export function MasonryGrid() {
   if (isError) {
     return (
       <ErrorOccured
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        title={(error as any)?.response?.data?.message}
+        title={
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message
+        }
         description="Failed to load pictures. Please try again."
         onClick={() => refetch()}
       />
     );
   }
 
-  const handleLoadMore = () => {
-    if (pathname === "/explore") {
-      fetchNextPage();
-    } else {
-      router.push("/explore");
-    }
+  const handleDelagation = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const element = target.closest<HTMLElement>("[data-id]");
+    const id = element?.dataset.id;
+    const pic = pictures.find((p) => p.id === id);
+    if (!pic) return;
+    setOpen(true, pic);
   };
 
   return (
-    <div className={cn("w-full", isLoading && "opacity-50")}>
+    <div
+      className={cn("w-full", isLoading && "opacity-50")}
+      onClick={handleDelagation}
+    >
       {isLoading ? <ImageSkeleton /> : <MasonryLayout photos={photos} />}
       {isFetchingNextPage && (
         <div className="flex w-full justify-center my-3">

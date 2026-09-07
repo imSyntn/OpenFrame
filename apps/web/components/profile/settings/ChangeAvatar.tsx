@@ -85,6 +85,7 @@ export function ChangeAvatar({
           <ImageInput MAX_SIZE={MAX_AVATAR_SIZE} setImageFile={setImageFile} />
         ) : (
           <div className="flex flex-col items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={URL.createObjectURL(imageFile)}
               alt="new avatar"

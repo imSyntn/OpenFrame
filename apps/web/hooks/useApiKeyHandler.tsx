@@ -1,4 +1,8 @@
-import { userDisableApiKey, userGenerateApiKey, userGetApiKeys } from "@/lib/apis";
+import {
+  userDisableApiKey,
+  userGenerateApiKey,
+  userGetApiKeys,
+} from "@/lib/apis";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -18,10 +22,11 @@ export const useGenerateApiKey = () => {
         description: "You can now use it to access your data.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.dismiss();
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error("API Key generation failed", {
-        description: error?.response?.data?.message || "Something went wrong",
+        description: err?.response?.data?.message || "Something went wrong",
       });
     },
   });
@@ -51,10 +56,11 @@ export const useDisableApiKey = () => {
         description: "You can no longer use it to access your data.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.dismiss();
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error("API Key disabling failed", {
-        description: error?.response?.data?.message || "Something went wrong",
+        description: err?.response?.data?.message || "Something went wrong",
       });
     },
   });

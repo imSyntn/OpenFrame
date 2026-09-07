@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useSearch } from "@/hooks";
@@ -41,11 +41,14 @@ export function Content({ query, type }: { query: string; type?: string }) {
     return "tags";
   }, [pictures.length, users.length]);
 
-  const [activeTab, setActiveTab] = useState(type || computedDefaultTab);
+  const targetTab = type || computedDefaultTab;
+  const [prevTargetTab, setPrevTargetTab] = useState(targetTab);
+  const [activeTab, setActiveTab] = useState(targetTab);
 
-  useEffect(() => {
-    setActiveTab(type || computedDefaultTab);
-  }, [type, computedDefaultTab]);
+  if (prevTargetTab !== targetTab) {
+    setPrevTargetTab(targetTab);
+    setActiveTab(targetTab);
+  }
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -123,9 +126,9 @@ export function Content({ query, type }: { query: string; type?: string }) {
     return (
       <Container>
         <ErrorOccured
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           title={
-            (error as any)?.response?.data?.message || "Something went wrong"
+            (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || "Something went wrong"
           }
           className="min-h-[calc(100dvh-200px)]"
           onClick={() => refetch()}

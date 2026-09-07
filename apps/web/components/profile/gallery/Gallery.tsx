@@ -1,8 +1,8 @@
 import React from "react";
-import { useProfileStore } from "@/store";
 import { StatCard } from "../StatCard";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { GalleryPhotosContainer } from "./GalleryPhotosContainer";
+import { useProfileStore } from "@/components/Provider";
 
 export function Gallery() {
   const count = useProfileStore((state) => state._count);

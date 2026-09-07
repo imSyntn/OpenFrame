@@ -1,11 +1,11 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
 import { Metadata } from "next";
 import { Feature } from "@/components/common/notice";
+import { GlobalProviders } from "@/components/Provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -95,11 +95,16 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Providers>
+        <GlobalProviders>
           <Feature
             storageKey="notice:api-added"
             title="API Added"
             description="The OpenFrame API is now available. You can use your API key to access the API."
+          />
+          <Feature
+            storageKey="notice:ai-image-generation-added"
+            title="AI Image Generation Added"
+            description="Create stunning images with AI using simple text prompts. Choose a style, generate your image, and share it with the community gallery."
           />
 
           {children}
@@ -107,7 +112,7 @@ export default function RootLayout({
           <ImageModal />
           <ViewCollectionModal />
           <Footer />
-        </Providers>
+        </GlobalProviders>
       </body>
     </html>
   );

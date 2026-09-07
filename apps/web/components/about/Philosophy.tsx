@@ -2,6 +2,7 @@ import { Heart, ShieldCheck, Code2 } from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import { cn } from "@workspace/ui/lib/utils";
 import React from "react";
+import { AnimatedSection } from "../common";
 
 export function AboutCard({
   title,
@@ -45,44 +46,52 @@ export function AboutCard({
 export function Philosophy() {
   return (
     <div className="container mx-auto px-6 mt-24 max-w-6xl">
-      <div className="text-center mb-20">
-        <span className="inline-block text-sm font-semibold tracking-widest uppercase text-muted-foreground/60 mb-4">
-          Our Philosophy
-        </span>
-        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-          Why OpenFrame?
-        </h2>
-        <p className="mt-6 text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-          Many photo platforms are cluttered with ads, paywalls and tracking
-          scripts but this platform with a radically different philosophy.
-        </p>
-        <div className="mt-8 h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-primary to-chart-2" />
-      </div>
+      <AnimatedSection direction="up" delay={0.1}>
+        <div className="text-center mb-20">
+          <span className="inline-block text-sm font-semibold tracking-widest uppercase text-muted-foreground/60 mb-4">
+            Our Philosophy
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+            Why OpenFrame?
+          </h2>
+          <p className="mt-6 text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+            Many photo platforms are cluttered with ads, paywalls and tracking
+            scripts but this platform with a radically different philosophy.
+          </p>
+          <div className="mt-8 h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-primary to-chart-2" />
+        </div>
+      </AnimatedSection>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <AboutCard
-          title="Privacy First"
-          description="No advertising trackers, no analytics cookies, and absolutely no sale of personal data. We use only essential cookies for authentication."
-          Icon={<ShieldCheck className="h-7 w-7" />}
-          IconClassName="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-          index={0}
-        />
+        <AnimatedSection direction="up" delay={0.15} scale>
+          <AboutCard
+            title="Privacy First"
+            description="No advertising trackers, no analytics cookies, and absolutely no sale of personal data. We use only essential cookies for authentication."
+            Icon={<ShieldCheck className="h-7 w-7" />}
+            IconClassName="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+            index={0}
+          />
+        </AnimatedSection>
 
-        <AboutCard
-          title="100% Open Source"
-          description="Built in public. Anyone can view the source code, report issues, or contribute to making the platform better for everyone."
-          Icon={<Code2 className="h-7 w-7" />}
-          IconClassName="bg-chart-2/10 text-chart-2 group-hover:bg-chart-2 group-hover:text-white"
-          index={1}
-        />
+        <AnimatedSection direction="up" delay={0.25} scale>
+          <AboutCard
+            title="100% Open Source"
+            description="Built in public. Anyone can view the source code, report issues, or contribute to making the platform better for everyone."
+            Icon={<Code2 className="h-7 w-7" />}
+            IconClassName="bg-chart-2/10 text-chart-2 group-hover:bg-chart-2 group-hover:text-white"
+            index={1}
+          />
+        </AnimatedSection>
 
-        <AboutCard
-          title="Creator Ownership"
-          description="Photographers retain full ownership and copyright of every image they upload. We never claim ownership of your creative work."
-          Icon={<Heart className="h-7 w-7" />}
-          IconClassName="bg-destructive/10 text-destructive group-hover:bg-destructive group-hover:text-white"
-          index={2}
-        />
+        <AnimatedSection direction="up" delay={0.35} scale>
+          <AboutCard
+            title="Creator Ownership"
+            description="Photographers retain full ownership and copyright of every image they upload. We never claim ownership of your creative work."
+            Icon={<Heart className="h-7 w-7" />}
+            IconClassName="bg-destructive/10 text-destructive group-hover:bg-destructive group-hover:text-white"
+            index={2}
+          />
+        </AnimatedSection>
       </div>
     </div>
   );
