@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { copyToClipboard, getBlurImage, googleLoginHandler } from "./index";
+import { copyToClipboard, googleLoginHandler } from "./index";
 import { toast } from "sonner";
 import type { MouseEvent } from "react";
 
