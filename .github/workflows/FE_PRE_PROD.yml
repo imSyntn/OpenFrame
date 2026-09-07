@@ -38,6 +38,14 @@ jobs:
           pnpm --filter @workspace/schema run build
           pnpm --filter @workspace/constants run build
 
+      - name: Upload package builds
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-package-builds
+          path: |
+            packages/schema/dist
+            packages/constants/dist
+
       - name: Run linter
         run: pnpm --filter frontend run lint
 
@@ -53,6 +61,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download package builds
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-package-builds
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
