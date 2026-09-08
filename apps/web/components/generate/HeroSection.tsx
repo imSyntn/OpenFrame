@@ -11,6 +11,7 @@ export function HeroSection() {
         <AnimatedImage
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/q_auto/f_auto/v1787827914/Contemplative_Statue_with_Headphones_ufyhwg.jpg"
           alt="hero image"
+          blurDataURL="data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAwAgCdASoEAAIAAUAmJZgCdEcAZIACzay8LAD+82f/nPAh1/KbSR9xd5GwHhkjp948DJ+Pva/NazFzujf/QsAA"
         />
 
         <div className="absolute inset-0 bg-white/60 dark:bg-black/60" />

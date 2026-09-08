@@ -13,6 +13,7 @@ export function HeroSection({
         <AnimatedImage
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/q_auto/f_auto/v1775388042/hero-search_akai93.png"
           alt="hero image"
+          blurDataURL="data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoEAAIAAUAmJYgCdAEO9qIgAP7Svf+P/kJisY6IKg9AQtDl857GF094jX6iszwcyUDbWcAA"
         />
 
         <div className="absolute inset-0 bg-white/60 dark:bg-black/40" />

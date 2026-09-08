@@ -1,5 +1,6 @@
 import { useUserStore } from "@/store";
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import * as Sentry from "@sentry/nextjs";
 
 const INTERNAL_TOKEN_TTL = 60_000;
 
@@ -58,9 +59,13 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
     if (!originalRequest) {
+      Sentry.captureException(error);
       return Promise.reject(error);
     }
 
@@ -68,18 +73,80 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const status = error.response?.status;
+    const url = originalRequest.url ?? "unknown";
+    const method = originalRequest.method?.toUpperCase() ?? "UNKNOWN";
+
+    if (
+      status === 401 &&
+      !url.includes("/refresh-token") &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
+
       try {
         const response = await api.get("/user/refresh-token");
+
         const newToken = response.data.data.accessToken;
+
         useUserStore.getState().setUser({ accessToken: newToken });
+
         originalRequest.headers.set("Authorization", `Bearer ${newToken}`);
+
         return api(originalRequest);
       } catch (refreshError) {
+        Sentry.withScope((scope) => {
+          scope.setTag("error.type", "token_refresh");
+          scope.setTag("http.method", "GET");
+          scope.setTag("http.status_code", "401");
+
+          scope.setContext("api", {
+            endpoint: "/user/refresh-token",
+          });
+
+          Sentry.captureException(refreshError);
+        });
+
         return Promise.reject(refreshError);
       }
     }
+
+    if (status === 401) {
+      return Promise.reject(error);
+    }
+
+    if (status && status >= 500) {
+      Sentry.withScope((scope) => {
+        scope.setTag("error.type", "api");
+        scope.setTag("http.method", method);
+        scope.setTag("http.status_code", String(status));
+
+        scope.setContext("api", {
+          url,
+          method,
+          status,
+          statusText: error.response?.statusText,
+        });
+
+        Sentry.captureException(error);
+      });
+    }
+
+    if (!error.response) {
+      Sentry.withScope((scope) => {
+        scope.setTag("error.type", "network");
+
+        scope.setContext("api", {
+          url,
+          method,
+          message: error.message,
+          code: error.code,
+        });
+
+        Sentry.captureException(error);
+      });
+    }
+
     return Promise.reject(error);
   },
 );

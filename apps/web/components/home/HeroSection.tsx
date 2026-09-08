@@ -7,11 +7,12 @@ import { SearchField } from "./SearchField";
 
 export function HeroSection() {
   return (
-    <div className="relative flex h-[70dvh] min-h-[500px] flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <div className="relative flex h-[70dvh] min-h-[500px] flex-col items-center justify-center overflow-visible px-6 text-center">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <AnimatedImage
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718349/20f41277-2043-4f0f-83b8-f1bc4eb31181_rykctm.webp"
           alt="Hero background"
+          blurDataURL="data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoEAAIAAUAmJZACdLoAAwj3jHAA/tKV+tnuv/8NMxX7Ei068KH6khs0g7BGu0Rmf9wZn1df4AA="
         />
 
         <div className="absolute inset-0 bg-white/60 dark:bg-black/40" />

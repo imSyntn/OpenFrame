@@ -1,21 +1,32 @@
 "use client";
 
-import { motion, type HTMLMotionProps, type Easing } from "motion/react";
+import { motion, type Easing } from "motion/react";
+import Image, { ImageProps } from "next/image";
 import React from "react";
 
-export interface AnimatedImageProps extends HTMLMotionProps<"img"> {
-  src: string;
-  alt: string;
+export interface AnimatedImageProps extends Omit<
+  ImageProps,
+  | "onAnimationStart"
+  | "onAnimationEnd"
+  | "onAnimationIteration"
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+  | "layout"
+> {
   initialScale?: number;
   duration?: number;
   delay?: number;
   ease?: Easing | Easing[];
-  className?: string;
 }
+
+const MotionImage = motion(Image);
 
 export function AnimatedImage({
   src,
   alt,
+  blurDataURL,
+  quality = 50,
   initialScale = 1.15,
   duration = 1.4,
   delay = 0,
@@ -24,8 +35,8 @@ export function AnimatedImage({
   ...props
 }: AnimatedImageProps) {
   return (
-    <motion.img
-      initial={{ scale: initialScale, opacity: 0.3 }}
+    <MotionImage
+      initial={{ scale: initialScale, opacity: 0.5 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{
         duration,
@@ -34,6 +45,11 @@ export function AnimatedImage({
       }}
       src={src}
       alt={alt}
+      fill
+      quality={quality}
+      preload={true}
+      placeholder="blur"
+      blurDataURL={blurDataURL}
       className={className}
       {...props}
     />
