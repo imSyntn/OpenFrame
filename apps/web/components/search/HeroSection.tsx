@@ -1,4 +1,7 @@
+import { MorphingText } from "@workspace/ui/components/textmorph";
 import { AnimatedImage, AnimatedSection, SearchBar } from "../common";
+
+const texts = ["instantly", "quickly", "easily", "smoothly"];
 
 export function HeroSection({
   setSearchText,
@@ -13,6 +16,7 @@ export function HeroSection({
         <AnimatedImage
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/q_auto/f_auto/v1775388042/hero-search_akai93.png"
           alt="hero image"
+          blurDataURL="data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoEAAIAAUAmJYgCdAEO9qIgAP7Svf+P/kJisY6IKg9AQtDl857GF094jX6iszwcyUDbWcAA"
         />
 
         <div className="absolute inset-0 bg-white/60 dark:bg-black/40" />
@@ -22,16 +26,15 @@ export function HeroSection({
 
       <AnimatedSection direction="up" delay={0.1}>
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-center sm:text-left">
-          Search anything
-          <br className="block sm:hidden" />
-          <span className="ml-2 bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent text-center">
-            instantly
+          <span className="bg-gradient-to-r from-primary to-emerald-500 dark:to-emerald-300 bg-clip-text text-transparent text-center">
+            Search anything
           </span>
+          <MorphingText texts={texts} />
         </h1>
       </AnimatedSection>
 
       <AnimatedSection direction="up" delay={0.2}>
-        <p className="text-muted-foreground mt-3">
+        <p className="text-muted-foreground mt-5">
           Users, pictures, tags — all in one place
         </p>
       </AnimatedSection>

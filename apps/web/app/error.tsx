@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { Header } from "@/components/common";
@@ -13,6 +14,7 @@ type ErrorProps = {
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     console.error("Error caught in boundary:", error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

@@ -19,7 +19,7 @@ export function SearchField({ query }: { query?: string | null }) {
   };
 
   return (
-    <div className="relative w-full flex justify-center">
+    <div className="relative z-40 w-full flex justify-center">
       <SearchBar
         value={searchText}
         onChange={setSearchText}

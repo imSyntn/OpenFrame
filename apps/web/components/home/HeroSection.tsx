@@ -4,14 +4,18 @@ import React from "react";
 import { motion } from "motion/react";
 import { AnimatedImage, AnimatedSection } from "../common";
 import { SearchField } from "./SearchField";
+import { MorphingText } from "@workspace/ui/components/textmorph";
+
+const texts = ["creators", "artists", "makers", "dreamers", "visionaries"];
 
 export function HeroSection() {
   return (
-    <div className="relative flex h-[70dvh] min-h-[500px] flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <div className="relative flex h-[70dvh] min-h-[500px] flex-col items-center justify-center overflow-visible px-6 text-center">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <AnimatedImage
           src="https://res.cloudinary.com/dqn1hcl8c/image/upload/v1774718349/20f41277-2043-4f0f-83b8-f1bc4eb31181_rykctm.webp"
           alt="Hero background"
+          blurDataURL="data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoEAAIAAUAmJZACdLoAAwj3jHAA/tKV+tnuv/8NMxX7Ei068KH6khs0g7BGu0Rmf9wZn1df4AA="
         />
 
         <div className="absolute inset-0 bg-white/60 dark:bg-black/40" />
@@ -34,11 +38,10 @@ export function HeroSection() {
 
       <AnimatedSection direction="up" delay={0.1}>
         <h1 className="text-3xl font-extrabold tracking-tight leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
-          Free High-Resolution
-          <br className="hidden sm:block" />
-          <span className="ml-2 inline-block bg-gradient-to-r from-primary via-indigo-500 to-violet-500 bg-[length:200%_auto] bg-clip-text text-transparent">
-            Photos for Creators
+          <span className="bg-gradient-to-r from-primary to-violet-500 dark:to-violet-300 bg-clip-text text-transparent">
+            Free High-Res Photos for
           </span>
+          <MorphingText texts={texts} />
         </h1>
       </AnimatedSection>
 

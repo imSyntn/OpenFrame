@@ -25,7 +25,11 @@
     "PATH",
     "SMTP_HOST",
     "SMTP_USER",
-    "SMTP_PASS"
+    "SMTP_PASS",
+    "NEXT_RUNTIME",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
+    "CI"
   ],
   "tasks": {
     "build": {

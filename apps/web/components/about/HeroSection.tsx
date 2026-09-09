@@ -1,6 +1,20 @@
 import { Card } from "@workspace/ui/components/card";
 import { Camera, ShieldCheck, Sparkles } from "lucide-react";
 import { AnimatedSection } from "../common";
+import { MorphingText } from "@workspace/ui/components/textmorph";
+
+const texts = [
+  "Inspiration",
+  "Creativity",
+  "Freedom",
+  "Possibility",
+  "Imagination",
+  "Innovation",
+  "Resources",
+  "Tools",
+  "Visuals",
+  "Ideas",
+];
 
 export function HeroSection() {
   return (
@@ -18,18 +32,11 @@ export function HeroSection() {
 
         <AnimatedSection delay={0.2} direction="up">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.15]">
-            Empowering Creators with <br className="hidden sm:block" />
-            <span className="relative inline-block mt-2">
-              <span className="bg-gradient-to-r from-primary via-chart-2 to-chart-4 bg-clip-text text-transparent">
-                Open Photography
-              </span>
-              <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary via-chart-2 to-chart-4 rounded-full opacity-40 blur-sm" />
+            <span className="ml-2 bg-gradient-to-r from-primary via-orange-400 to-amber-500 bg-clip-text text-transparent text-center">
+              Empowering Creators with
             </span>
+            <MorphingText texts={texts} />
           </h1>
-        </AnimatedSection>
-
-        <AnimatedSection delay={0.25} direction="up">
-          <div className="mt-8 h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-primary via-chart-2 to-chart-4" />
         </AnimatedSection>
 
         <AnimatedSection delay={0.3} direction="up">
