@@ -3,6 +3,18 @@
 import React from "react";
 import * as motion from "motion/react-client";
 import { AnimatedImage, AnimatedSection } from "../common";
+import { MorphingText } from "@workspace/ui/components/textmorph";
+
+const texts = [
+  "Images",
+  "Visuals",
+  "Artworks",
+  "Creations",
+  "Designs",
+  "Portraits",
+  "Graphics",
+  "Stories",
+];
 
 export function HeroSection() {
   return (
@@ -35,21 +47,10 @@ export function HeroSection() {
       <div className="flex max-w-4xl flex-col items-center">
         <AnimatedSection delay={0.1} direction="up">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-            Turn Prompts into
-            <br />
-            <motion.span
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="inline-block bg-gradient-to-r from-primary via-violet-500 to-amber-500 bg-[length:200%_auto] bg-clip-text text-transparent"
-            >
-              Visual Masterpieces
-            </motion.span>
+            <span className="ml-2 bg-gradient-to-r from-primary via-violet-500 to-fuchsia-500 bg-clip-text text-transparent text-center">
+              Turn Prompts into
+            </span>
+            <MorphingText texts={texts} />
           </h1>
         </AnimatedSection>
 

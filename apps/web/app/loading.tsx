@@ -9,7 +9,8 @@ export default function Loading() {
         width={80}
         height={96}
         priority
-        unoptimized
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nAEoANf/AP/2//vo//ro/wDUy+FBPTy7tscA1tHmGxcXpqKyAL680AABAFdWXhiEFlDG7wpnAAAAAElFTkSuQmCC"
         className="absolute left-[18%] top-[28%] h-24 w-20 -rotate-12 rounded-2xl bg-secondary/20 object-cover object-center shadow-2xl backdrop-blur-md animate-float"
       />
 
@@ -19,7 +20,8 @@ export default function Loading() {
         width={96}
         height={112}
         priority
-        unoptimized
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMUlEQVR4nGP4v6D4f7b3/7W1DP+zvRmZmf5XhjL839biLSj+vy2e4f+CYg5m5kp1ZQCE4hDspA1brwAAAABJRU5ErkJggg=="
         className="absolute right-[18%] top-[24%] h-28 w-24 rotate-[10deg] rounded-2xl bg-secondary/20 object-cover object-center shadow-2xl backdrop-blur-md animate-float-delay"
       />
 
@@ -29,7 +31,8 @@ export default function Loading() {
         width={80}
         height={96}
         priority
-        unoptimized
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nAEoANf/ALjOt22XibLTygDLvqQlAACovqoA/u2+/pdc//vTAHKch5uad3Oqn8t2FuCpDx8dAAAAAElFTkSuQmCC"
         className="absolute bottom-[24%] right-[20%] h-24 w-20 rotate-[14deg] rounded-2xl bg-secondary/20 object-cover object-center shadow-2xl backdrop-blur-md animate-float-slow"
       />
 
@@ -39,7 +42,8 @@ export default function Loading() {
         width={96}
         height={112}
         priority
-        unoptimized
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMklEQVR4nAEnANj/AIyWpNLV0p+ptnyHmwD/6s7/78q8qafKuLsAQBYMIgAAJwQAQBoQyXUSrVfz5JoAAAAASUVORK5CYII="
         className="absolute bottom-[22%] left-[22%] h-28 w-24 -rotate-[8deg] rounded-2xl bg-secondary/20 object-cover object-center shadow-2xl backdrop-blur-md animate-float"
       />
 
