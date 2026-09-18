@@ -22,7 +22,9 @@ export function TooltipButton({
     | "ghost"
     | "secondary"
     | "link"
-    | "destructive";
+    | "destructive"
+    | "gradient"
+    | "success";
   content: string;
   onClick?: () => void;
   disabled?: boolean;

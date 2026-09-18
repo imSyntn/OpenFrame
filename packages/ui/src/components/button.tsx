@@ -10,6 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        gradient:
+          "bg-gradient-to-r from-[oklch(0.62_0.18_250/0.12)] via-[oklch(0.58_0.20_270/0.12)] to-[oklch(0.63_0.20_303/0.12)] text-[oklch(0.52_0.18_270)] hover:from-[oklch(0.62_0.18_250/0.18)] hover:via-[oklch(0.58_0.20_270/0.18)] hover:to-[oklch(0.63_0.20_303/0.18)] dark:from-[oklch(0.62_0.18_250/0.22)] dark:via-[oklch(0.58_0.20_270/0.22)] dark:to-[oklch(0.63_0.20_303/0.22)] dark:text-[oklch(0.82_0.10_270)] dark:hover:from-[oklch(0.62_0.18_250/0.30)] dark:hover:via-[oklch(0.58_0.20_270/0.30)] dark:hover:to-[oklch(0.63_0.20_303/0.30)]",
+        success:
+          "bg-success/10 text-success hover:bg-success/20 focus-visible:border-success/40 focus-visible:ring-success/20 dark:bg-success/20 dark:hover:bg-success/30 dark:focus-visible:ring-success/40",
+
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:

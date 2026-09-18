@@ -205,9 +205,9 @@ External developers can make `GET` requests to public endpoints using an API key
 
 Authenticated users can create and manage their developer API keys:
 
-- `POST /keys` — Generate a new API key _(Rate limit: 20 req/min)_
-- `GET /keys` — List active API keys for the user _(Rate limit: 20 req/min)_
-- `PATCH /keys/:id` — Revoke/disable an API key _(Rate limit: 20 req/min)_
+- `POST /keys` - Generate a new API key _(Rate limit: 20 req/min)_
+- `GET /keys` - List active API keys for the user _(Rate limit: 20 req/min)_
+- `PATCH /keys/:id` - Revoke/disable an API key _(Rate limit: 20 req/min)_
 
 ### 2. Internal Token Authentication (`x-internal-token`)
 

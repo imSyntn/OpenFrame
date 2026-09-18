@@ -1,4 +1,4 @@
-import { Zap, Sparkles, Globe, Code2 } from "lucide-react";
+import { Zap, Sparkles, Globe, Code2, Wand2 } from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import React from "react";
 import { ArrowRightIcon, Database, Github } from "lucide-react";
@@ -29,6 +29,20 @@ const FEATURE_GROUPS = [
       "Creator profiles",
       "Curated collections",
       "Email queue processing",
+    ],
+  },
+  {
+    title: "Image Editing",
+    icon: <Wand2 className="h-5 w-5" />,
+    gradient: "from-chart-1/20 to-chart-4/20",
+    dotColor: "bg-chart-1",
+    features: [
+      "Non-destructive image adjustments",
+      "Crop, rotate, and resize",
+      "Filters, blur, and pixelation",
+      "Drawing, shapes, and text",
+      "AI-powered background removal",
+      "Layer-based editing and export",
     ],
   },
   {

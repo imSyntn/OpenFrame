@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "OpenFrame — The Modern Platform for Images",
+    name: "OpenFrame - The Modern Platform for Images",
     short_name: "OpenFrame",
     description:
       "Generate, upload, process, manage, share and download high-resolution images with AI in one place.",

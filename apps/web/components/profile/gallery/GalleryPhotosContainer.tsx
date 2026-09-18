@@ -47,7 +47,7 @@ export function GalleryPhotosContainer() {
           // },
         };
       }),
-    [pictures, setOpen],
+    [pictures],
   );
 
   if (isLoading) {

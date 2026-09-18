@@ -15,7 +15,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
+    default: "OpenFrame - Free AI Image Generator, Hosting & Image Platform",
     template: "%s | OpenFrame",
   },
   description: DESCRIPTION,
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
+    title: "OpenFrame - Free AI Image Generator, Hosting & Image Platform",
     description: DESCRIPTION,
     url: APP_URL,
     siteName: "OpenFrame",
@@ -61,13 +61,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "OpenFrame — The Modern Platform for Images",
+        alt: "OpenFrame - The Modern Platform for Images",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
+    title: "OpenFrame - Free AI Image Generator, Hosting & Image Platform",
     description: DESCRIPTION,
     site: "@imSyntn",
     creator: "@imSyntn",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "OpenFrame — The Modern Platform for Images",
+        alt: "OpenFrame - The Modern Platform for Images",
       },
     ],
   },
@@ -173,13 +173,18 @@ export default function RootLayout({
         <GlobalProviders>
           <Feature
             storageKey="notice:api-added"
-            title="API Added"
+            title="Developer API"
             description="The OpenFrame API is now available. You can use your API key to access the API."
           />
           <Feature
             storageKey="notice:ai-image-generation-added"
-            title="AI Image Generation Added"
+            title="AI Image Generation"
             description="Create stunning images with AI using simple text prompts. Choose a style, generate your image, and share it with the community gallery."
+          />
+          <Feature
+            storageKey="notice:image-editing-added"
+            title="Image Editing"
+            description="Crop, resize, add filters, text, and more to your images with our built-in editor. AI-powered background removal and layer-based editing included."
           />
 
           {children}

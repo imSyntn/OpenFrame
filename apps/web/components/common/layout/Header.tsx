@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/search", label: "Search" },
   { href: "/generate", label: "Generate", badge: "New" },
   { href: "/api", label: "API", badge: "New" },
+  { href: "/edit", label: "Edit", badge: "New" },
   { href: "/about", label: "About" },
 ];
 

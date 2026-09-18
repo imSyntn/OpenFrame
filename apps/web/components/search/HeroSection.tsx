@@ -35,7 +35,7 @@ export function HeroSection({
 
       <AnimatedSection direction="up" delay={0.2}>
         <p className="text-muted-foreground mt-5">
-          Users, pictures, tags — all in one place
+          Users, pictures, tags - all in one place
         </p>
       </AnimatedSection>
 

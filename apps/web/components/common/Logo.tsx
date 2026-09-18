@@ -10,15 +10,15 @@ export const Logo = () => {
         alt="Logo"
         width={140}
         height={40}
-        // className="hidden sm:block"
+        className="block md:hidden lg:block"
       />
-      {/* <Image
+      <Image
         src="/logo-small.png"
         alt="Logo"
         width={40}
         height={40}
-        className="sm:hidden min-w-10"
-      /> */}
+        className="hidden md:block lg:hidden"
+      />
     </Link>
   );
 };

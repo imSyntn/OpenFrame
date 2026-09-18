@@ -13,6 +13,7 @@ import {
   LucideIcon,
   Home,
   Wand2,
+  Pencil,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { usePathname } from "next/navigation";
@@ -31,6 +32,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   "/generate": Wand2,
   "/api": Code,
   "/about": Info,
+  "/edit": Pencil,
 };
 
 export function MobileNav({ items }: { items: NavItem[] }) {

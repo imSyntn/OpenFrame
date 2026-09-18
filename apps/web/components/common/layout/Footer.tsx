@@ -9,6 +9,7 @@ const navigationLinks = [
   { label: "Search Photos", href: "/search" },
   { label: "Collections", href: "/collections" },
   { label: "Generate", href: "/generate", badge: "New" },
+  { label: "Edit", href: "/edit", badge: "New" },
   { label: "About", href: "/about" },
 ];
 

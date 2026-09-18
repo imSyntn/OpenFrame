@@ -1,4 +1,4 @@
-import { Share2, ThumbsUp, Trash } from "lucide-react";
+import { Pencil, Share2, ThumbsUp, Trash } from "lucide-react";
 import {
   DialogDescription,
   DialogHeader,
@@ -13,6 +13,7 @@ import { OwnerInfo } from "./OwnerInfo";
 import { AddToCollection } from "./AddToCollection";
 import { WarningModal } from "../../WarningModal";
 import { copyToClipboard } from "@/utils";
+import { useRouter } from "next/navigation";
 
 export function ModalHeader() {
   const image = useGlobalStateStore((state) => state.image);
@@ -22,6 +23,8 @@ export function ModalHeader() {
   const userId = useUserStore((state) => state.id);
   const { mutate: incrementLikeCount } = useIncrementLikeCount();
   const { mutateAsync: deletePicture } = useDeletePicture();
+  const router = useRouter();
+
   if (!image) {
     return null;
   }
@@ -45,6 +48,12 @@ export function ModalHeader() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleEdit = () => {
+    const originalSrc = image?.src?.find((s) => s.resolution === "ORIGINAL");
+    router.push(`/edit?image=${originalSrc?.url}`);
+    setOpen(false);
   };
 
   const isModal = open == true && !!image?.id;
@@ -77,11 +86,19 @@ export function ModalHeader() {
           variant="ghost"
           onClick={handleShare}
         />
+        <TooltipButton
+          value={<Pencil />}
+          size="icon"
+          content="Edit"
+          variant="gradient"
+          onClick={handleEdit}
+        />
         {isLoggedIn && (
           <TooltipButton
             value={<ThumbsUp />}
             size="icon"
             content="Like"
+            variant="success"
             onClick={handleLike}
           />
         )}
@@ -89,6 +106,7 @@ export function ModalHeader() {
           <TooltipButton
             value={<AddToCollection />}
             size="icon"
+            variant="outline"
             content="Add to collection"
             as="div"
           />
