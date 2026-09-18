@@ -4,7 +4,7 @@
 
 <p align="center">
 
-**An image-sharing platform with event-driven processing powered by Kafka, direct-to-S3 uploads, BlurHash previews, NSFW detection, dominant color extraction, AI image generation, image exploration, and a developer API - all built as a full-stack monorepo.**
+**An image-sharing platform with event-driven processing powered by Kafka, direct-to-S3 uploads, BlurHash previews, NSFW detection, metadata and color extraction, AI image generation, built-in image editing, image exploration, and a developer API — all built as a full-stack monorepo.**
 
 </p>
 
@@ -26,7 +26,7 @@
   <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" /></a>
   <a href="https://upstash.com/"><img src="https://img.shields.io/badge/Upstash%20Search-000000?style=flat-square&logo=upstash&logoColor=white" /></a>
   <a href="https://aws.amazon.com/s3/"><img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=flat-square&logo=amazons3&logoColor=white" alt="Amazon S3"/></a>
-  <a href="https://aws.amazon.com/s3/"><img src="https://img.shields.io/badge/Cloudflare%20AI-FF9900?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare AI"/></a>
+  <a href="https://developers.cloudflare.com/workers-ai/"><img src="https://img.shields.io/badge/Cloudflare%20AI-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare AI" /></a>
 </p>
 
 ---
@@ -64,6 +64,15 @@
 - Curated collections and creator profiles
 - High-performance image upload and delivery
 - Direct-to-S3 uploads using presigned URLs
+
+### Create & Edit
+
+- AI Text-to-Image generation
+- Prompt-based image generation studio
+- Built-in image editing
+- Image cropping and transformations
+- AI-powered background removal
+- HEIC/HEIF image support
 
 ### Developer API
 
