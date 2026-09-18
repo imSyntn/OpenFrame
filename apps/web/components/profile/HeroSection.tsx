@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { cn } from "@workspace/ui/lib/utils";
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import { useUserDetails } from "@/hooks";
 import { SettingsModal } from "./settings/SettingsModal";
 import { VerifyEmail } from "./VerifyEmail";
@@ -46,6 +46,7 @@ import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { useProfileStore } from "../Provider";
 import { useShallow } from "zustand/react/shallow";
+import { useRouter } from "next/navigation";
 
 export const linkIconMap: Record<string, { icon: LucideIcon; color: string }> =
   {
@@ -98,6 +99,10 @@ export function HeroSection({ id }: { id: string }) {
   );
   const { data, isLoading, error, isError, refetch } = useUserDetails(id);
 
+  const params = useSearchParams();
+  const redirect = params.get("redirect");
+  const router = useRouter();
+
   const isOwner = loggedInUserID === id;
 
   useEffect(() => {
@@ -106,8 +111,12 @@ export function HeroSection({ id }: { id: string }) {
         ...data,
         isLoading: false,
       });
+    } else {
+      if (redirect) {
+        router.push(redirect);
+      }
     }
-  }, [isLoading, isError, data, setData]);
+  }, [isLoading, isError, data, setData, redirect]);
 
   if (isError) {
     const err = error as {
@@ -227,13 +236,15 @@ export function HeroSection({ id }: { id: string }) {
           ) : (
             <>
               {isOwner && (
-                <Button
-                  className="h-8 w-full md:w-[144px]"
-                  variant="outline"
-                  size="sm"
-                >
-                  <Link href="keys">API Key</Link>
-                </Button>
+                <Link href="keys">
+                  <Button
+                    className="h-8 w-full md:w-[144px]"
+                    variant="outline"
+                    size="sm"
+                  >
+                    API Key
+                  </Button>
+                </Link>
               )}
 
               <ul className="flex flex-wrap gap-3 justify-center md:justify-start">

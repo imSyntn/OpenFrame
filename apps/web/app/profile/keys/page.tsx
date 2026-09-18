@@ -1,5 +1,6 @@
 "use client";
 
+import NotLoggedIn from "@/components/common/NotLoggedIn";
 import {
   ActiveKeys,
   KeyDetails,
@@ -9,7 +10,8 @@ import {
 import { useProfileStore } from "@/components/Provider";
 import { useGetApiKeys } from "@/hooks";
 import { useUserStore } from "@/store";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function KeysPage() {
@@ -21,14 +23,22 @@ export default function KeysPage() {
     isLoggedIn && !userProfileLoading && !!pictures,
   );
 
+  const params = useSearchParams();
+  const redirectParams = params.get("redirect");
+  const router = useRouter();
+
   useEffect(() => {
-    if (!isLoggedIn) {
-      redirect("/");
-    }
     if (isLoggedIn && userProfileLoading && userId) {
-      redirect(`/profile/${userId}`);
+      redirect(`/profile/${userId}?redirect=keys`);
     }
-  }, [isLoggedIn, userProfileLoading, userId]);
+    if (redirectParams === "keys") {
+      router.replace(window.location.pathname);
+    }
+  }, [isLoggedIn, userProfileLoading, userId, redirectParams, router]);
+
+  if (!isLoggedIn) {
+    return <NotLoggedIn message="Please login to create/view API key" />;
+  }
 
   const keys = data?.data?.keys ?? [];
 

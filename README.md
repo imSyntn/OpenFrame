@@ -287,7 +287,29 @@ pnpm dev
 pnpm start
 ```
 
-### 3. Access the Application
+### 3. Enable NSFW Detection (Windows Only)
+
+> **Note:** `@tensorflow/tfjs-node` uses native TensorFlow binaries and may require additional setup on **Windows**. On **Linux**, it should work out of the box.
+
+1. Install **Visual Studio Build Tools** with the following workloads:
+   - Desktop development with C++
+   - MSVC
+   - Windows SDK
+
+2. From the project root, rebuild the TensorFlow native addon:
+
+   ```bash
+   npm rebuild @tensorflow/tfjs-node --build-addon-from-source
+   ```
+
+   > If you're using **pnpm** and the rebuild doesn't pick up the package correctly, run `pnpm install` first:
+   >
+   > ```bash
+   > pnpm install
+   > npm rebuild @tensorflow/tfjs-node --build-addon-from-source
+   > ```
+
+### 4. Access the Application
 
 Once all services are running:
 

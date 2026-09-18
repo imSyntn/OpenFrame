@@ -42,9 +42,9 @@ export function GalleryPhotosContainer() {
           title: pic.title,
           created_at: pic.created_at,
           tags: pic.tags,
-          onClick: () => {
-            setOpen(true, pic);
-          },
+          // onClick: () => {
+          //   setOpen(true, pic);
+          // },
         };
       }),
     [pictures, setOpen],
@@ -80,9 +80,20 @@ export function GalleryPhotosContainer() {
     );
   }
 
+  const handleDelagation = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const element = target.closest<HTMLElement>("[data-id]");
+    const id = element?.dataset.id;
+    const pic = pictures.find((p) => p.id === id);
+    if (!pic) return;
+    setOpen(true, pic);
+  };
+
   return (
     <>
-      <MasonryLayout photos={photos} />
+      <div onClick={handleDelagation}>
+        <MasonryLayout photos={photos} />
+      </div>
       <div className="flex-1 flex justify-center mt-5">
         {isFetchingNextPage ? (
           <Loader2 className="animate-spin" />

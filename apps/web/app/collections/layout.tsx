@@ -2,8 +2,21 @@ import { Header } from "@/components/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Collections",
-  description: "Collections",
+  title: "Curated Image Collections & Galleries",
+  description:
+    "Browse curated image collections, themed visual albums, and user-submitted galleries on OpenFrame.",
+  keywords: [
+    "image collections",
+    "photo albums",
+    "curated gallery",
+    "themed stock photos",
+    "visual collections",
+  ],
+  openGraph: {
+    title: "Curated Image Collections & Galleries | OpenFrame",
+    description:
+      "Browse curated image collections, themed visual albums, and user-submitted galleries on OpenFrame.",
+  },
 };
 
 export default function CollectionsLayout({

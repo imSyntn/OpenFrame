@@ -10,20 +10,49 @@ import { GlobalProviders } from "@/components/Provider";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://openframe.page";
 
 const DESCRIPTION =
-  "The modern platform for images. Generate, upload, process, manage, share and download images in one place.";
+  "The modern platform for images. Generate, upload, process, manage, share and download high-resolution images with AI in one place.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "The Modern Platform for Images",
+    default: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
     template: "%s | OpenFrame",
   },
   description: DESCRIPTION,
-  alternates: { canonical: "/" },
+  keywords: [
+    "AI image generator",
+    "free image hosting",
+    "image management platform",
+    "stock photos",
+    "AI art creation",
+    "text to image",
+    "open source image platform",
+    "digital asset management",
+    "photo gallery",
+    "OpenFrame",
+  ],
+  authors: [{ name: "OpenFrame Team", url: APP_URL }],
+  creator: "OpenFrame",
+  publisher: "OpenFrame",
+  category: "technology",
+  alternates: {
+    canonical: "./",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "The Modern Platform for Images",
+    title: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
     description: DESCRIPTION,
-    url: "/",
+    url: APP_URL,
     siteName: "OpenFrame",
     locale: "en_US",
     type: "website",
@@ -38,9 +67,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Modern Platform for Images",
+    title: "OpenFrame — Free AI Image Generator, Hosting & Image Platform",
     description: DESCRIPTION,
     site: "@imSyntn",
+    creator: "@imSyntn",
     images: [
       {
         url: "/og.png",
@@ -50,7 +80,13 @@ export const metadata: Metadata = {
       },
     ],
   },
-  icons: { icon: "/favicon.ico" },
+  icons: {
+    icon: "/favicon.ico",
+  },
+  manifest: "/manifest.webmanifest",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 export const viewport: Viewport = {
   width: "device-width",
@@ -74,21 +110,48 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "OpenFrame",
-    description: DESCRIPTION,
-    url: APP_URL,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${APP_URL}/search?q={search_term_string}`,
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "OpenFrame",
+      alternateName: ["Open Frame", "OpenFrame Platform"],
+      description: DESCRIPTION,
+      url: APP_URL,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${APP_URL}/search?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
       },
-      "query-input": "required name=search_term_string",
     },
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "OpenFrame",
+      url: APP_URL,
+      logo: `${APP_URL}/og.png`,
+      sameAs: [
+        "https://twitter.com/imSyntn",
+        "https://github.com/imSyntn/OpenFrame",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "OpenFrame",
+      applicationCategory: "MultimediaApplication",
+      operatingSystem: "All",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+      description: DESCRIPTION,
+    },
+  ];
 
   return (
     <html lang="en" suppressHydrationWarning>
