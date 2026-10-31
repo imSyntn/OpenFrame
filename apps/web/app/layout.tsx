@@ -4,7 +4,7 @@ import { Toaster } from "@/components/Toaster";
 import { Footer, ImageModal } from "@/components/common";
 import { ViewCollectionModal } from "@/components/collection";
 import type { Metadata, Viewport } from "next";
-import { Feature } from "@/components/common/notice";
+import { Feature, MigrationNotice } from "@/components/common/notice";
 import { GlobalProviders } from "@/components/Provider";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://openframe.page";
@@ -186,6 +186,8 @@ export default function RootLayout({
             title="Image Editing"
             description="Crop, resize, add filters, text, and more to your images with our built-in editor. AI-powered background removal and layer-based editing included."
           />
+
+          <MigrationNotice />
 
           {children}
           <Toaster richColors />
